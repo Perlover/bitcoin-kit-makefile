@@ -53,7 +53,7 @@ boost_install: | bash_profile_install autotools_install
 	git clone https://github.com/boostorg/boost.git
 	cd boost && { \
 		git checkout boost-1.64.0 && git submodule init && git submodule update &&\
-		./bootstrap.sh && ./b2 install --prefix=$$HOME && make && make install && echo "Boost was installed - OK"; \
+		./bootstrap.sh && ./b2 install --prefix=$$HOME && echo "Boost was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
