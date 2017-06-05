@@ -203,7 +203,7 @@ gcc-7.1.0.tar.gz: | autotools_install gmp_install mpfr_install mpc_install isl_i
 gcc_install: gcc-7.1.0.tar.gz | bash_profile_install
 	tar xvzf gcc-7.1.0.tar.gz
 	cd gcc-7.1.0 && { \
-		./configure --prefix=$$HOME --disable-multilib && make && make install && echo "The mpfr was installed - OK"; \
+		./configure --prefix=$$HOME --disable-multilib && make && make install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
