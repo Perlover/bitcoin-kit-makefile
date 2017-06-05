@@ -1,7 +1,7 @@
 # Makefile for CEntOS to compile full bitcoin core node for UASF
 # To run from /home/bitcoin/src
 
-SHELL := /bin/bash
+SHELL := /bin/bash --login
 
 help:
 	@echo $$'*********************\n\n  HELP \n\n*********************\n'
