@@ -153,8 +153,40 @@ mpfr_install: mpfr-3.1.5.tar.bz2
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
+# mpc
+mpc-1.0.3.tar.gz: | gmp_install mpfr_install
+	wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz
+	echo 'd6a1d5f8ddea3abd2cc3e98f58352d26  mpc-1.0.3.tar.gz'|md5sum --check - || \
+		{ \
+			mv mpc-1.0.3.tar.gz mpc-1.0.3.bad.tar.gz &&\
+			echo "Bad mpc md5 sum"; false;\
+		}
+
+mpc_install: mpc-1.0.3.tar.gz
+	tar xzf mpc-1.0.3.tar.gz
+	cd mpc-1.0.3 && { \
+		./configure --prefix=$$HOME && make && make install && echo "The mpc was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
+
+# mpc
+isl-0.18.tar.gz:
+	wget http://isl.gforge.inria.fr/isl-0.18.tar.gz
+	echo '076c69f81067f2f5b908c099f445a338  isl-0.18.tar.gz'|md5sum --check - || \
+		{ \
+			mv isl-0.18.tar.gz isl-0.18.bad.tar.gz &&\
+			echo "Bad isl md5 sum"; false;\
+		}
+
+isl_install: isl-0.18.tar.gz
+	tar xzf isl-0.18.tar.gz
+	cd isl-0.18 && { \
+		./configure --prefix=$$HOME && make && make install && echo "The isl was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
+
 # gcc
-gcc-7.1.0.tar.gz: | gmp_install mpfr_install
+gcc-7.1.0.tar.gz: | gmp_install mpfr_install mpc_install isl_install
 	wget ftp://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.gz
 	echo 'b3d733ad75fdaf88009b52c0cce0ad4c  gcc-7.1.0.tar.gz'|md5sum --check - || \
 		{ \
@@ -165,7 +197,7 @@ gcc-7.1.0.tar.gz: | gmp_install mpfr_install
 gcc_install: gcc-7.1.0.tar.gz
 	tar xvzf gcc-7.1.0.tar.gz
 	cd gcc-7.1.0 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The mpfr was installed - OK"; \
+		./configure --prefix=$$HOME --disable-multilib && make && make install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
