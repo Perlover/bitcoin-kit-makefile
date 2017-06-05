@@ -69,7 +69,7 @@ pkg-config_install: | bash_profile_install autotools_install
 	git clone git://anongit.freedesktop.org/pkg-config
 	cd pkg-config && { \
 		git checkout pkg-config-0.29.2 &&\
-		./autogen.sh && ./configure --with-internal-glib --prefix=$$HOME && make && make install && echo "pkg-config was installed - OK"; \
+		./autogen.sh --with-internal-glib --prefix=$$HOME && make && make install && echo "pkg-config was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
