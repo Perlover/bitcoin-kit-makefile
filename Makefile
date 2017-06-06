@@ -2,6 +2,7 @@
 # To run from /home/bitcoin/src
 
 SHELL := /bin/bash --login
+MAKE_COMPILE := make -j4
 
 help:
 	@echo $$'*********************\n\n  HELP \n\n*********************\n'
@@ -26,7 +27,7 @@ autoconf-2.69.tar.gz: | bash_profile_install
 autoconf_install: autoconf-2.69.tar.gz | bash_profile_install
 	tar xzf autoconf-2.69.tar.gz
 	cd autoconf-2.69 && { \
-		./configure --prefix=$$HOME && make && make install && echo "Autoconf was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Autoconf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -42,18 +43,23 @@ bitcoin-uasf_download: |\
 	cd bitcoin-uasf && git checkout v0.14.1-uasfsegwit0.3
 	@touch $@
 
+# ./configure --with-incompatible-bdb --disable-wallet
+
 openssl_install: | bash_profile_install autotools_install
 	git clone 'https://github.com/openssl/openssl'
 	cd openssl && git checkout 1ee2125922 && { \
-		./config --prefix $$HOME && make && make test && make install && echo "OpenSSL was installed - OK"; \
+		./config --prefix $$HOME && $(MAKE_COMPILE) && make test && make install && echo "OpenSSL was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-boost_install: | bash_profile_install autotools_install
+# src location: https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz
+# MD5:
+# 319c6ffbbeccc366f14bb68767a6db79  boost_1_64_0.tar.gz
+boost_install: | bash_profile_install autotools_install gcc_install
 	git clone https://github.com/boostorg/boost.git
 	cd boost && { \
 		git checkout boost-1.64.0 && git submodule init && git submodule update &&\
-		./bootstrap.sh && ./b2 install --prefix=$$HOME && echo "Boost was installed - OK"; \
+		./bootstrap.sh --prefix=$$HOME && ./b2 install && echo "Boost was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -61,7 +67,7 @@ libevent_install: | bash_profile_install autotools_install
 	git clone https://github.com/libevent/libevent
 	cd libevent && { \
 		git checkout release-2.1.8-stable &&\
-		./autogen.sh && ./configure --prefix=$$HOME && make && make install && echo "Libevent was installed - OK"; \
+		./autogen.sh && ./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Libevent was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -69,7 +75,7 @@ pkg-config_install: | bash_profile_install autotools_install
 	git clone git://anongit.freedesktop.org/pkg-config
 	cd pkg-config && { \
 		git checkout pkg-config-0.29.2 &&\
-		./autogen.sh --with-internal-glib --prefix=$$HOME && make && make install && echo "pkg-config was installed - OK"; \
+		./autogen.sh --with-internal-glib --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "pkg-config was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -86,7 +92,7 @@ libtool-2.4.6.tar.gz: | bash_profile_install
 libtool_install: libtool-2.4.6.tar.gz | bash_profile_install
 	tar xzf libtool-2.4.6.tar.gz
 	cd libtool-2.4.6 && { \
-		./configure --prefix=$$HOME && make && make install && echo "Libtool was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Libtool was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -106,7 +112,7 @@ m4-1.4.18.tar.gz: | bash_profile_install
 m4_install: m4-1.4.18.tar.gz | bash_profile_install
 	tar xzf m4-1.4.18.tar.gz
 	cd m4-1.4.18 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The m4 was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The m4 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -123,7 +129,7 @@ automake-1.15.tar.gz: | bash_profile_install
 automake_install: automake-1.15.tar.gz | bash_profile_install
 	tar xzf automake-1.15.tar.gz
 	cd automake-1.15 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The automake was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -139,7 +145,7 @@ gmp-6.1.2.tar.bz2: | bash_profile_install
 gmp_install: gmp-6.1.2.tar.bz2 | bash_profile_install autotools_install
 	bzip2 -cd gmp-6.1.2.tar.bz2|tar xvf -
 	cd gmp-6.1.2 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The gmp was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The gmp was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -155,7 +161,7 @@ mpfr-3.1.5.tar.bz2: | bash_profile_install gmp_install
 mpfr_install: mpfr-3.1.5.tar.bz2 | bash_profile_install autotools_install
 	bzip2 -cd mpfr-3.1.5.tar.bz2|tar xvf -
 	cd mpfr-3.1.5 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The mpfr was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -171,7 +177,7 @@ mpc-1.0.3.tar.gz: | bash_profile_install gmp_install mpfr_install
 mpc_install: mpc-1.0.3.tar.gz | bash_profile_install autotools_install
 	tar xzf mpc-1.0.3.tar.gz
 	cd mpc-1.0.3 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The mpc was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -187,7 +193,7 @@ isl-0.18.tar.gz: | bash_profile_install
 isl_install: isl-0.18.tar.gz | autotools_install bash_profile_install
 	tar xzf isl-0.18.tar.gz
 	cd isl-0.18 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The isl was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The isl was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -203,7 +209,7 @@ gcc-7.1.0.tar.gz: | autotools_install gmp_install mpfr_install mpc_install isl_i
 gcc_install: gcc-7.1.0.tar.gz | bash_profile_install
 	tar xvzf gcc-7.1.0.tar.gz
 	cd gcc-7.1.0 && { \
-		./configure --prefix=$$HOME --disable-multilib && make && make install && echo "The gcc was installed - OK"; \
+		./configure --prefix=$$HOME --disable-multilib && $(MAKE_COMPILE) && make install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
