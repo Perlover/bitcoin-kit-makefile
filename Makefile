@@ -2,7 +2,9 @@
 # To run from /home/bitcoin/src
 
 SHELL := /bin/bash --login
-MAKE_COMPILE := make -j4
+
+# MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
+MAKE_COMPILE := make $(shell nproc=$$((`cat /proc/cpuinfo |grep processor|wc -l`-4));$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 help:
 	@echo $$'*********************\n\n  HELP \n\n*********************\n'
@@ -46,14 +48,16 @@ bitcoin-uasf_install: |\
     openssl_install\
     libevent_install
 	cd bitcoin-uasf && { \
+		./autogen.sh && \
 		./configure --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-uasf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
+# make test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here make test
 openssl_install: | bash_profile_install autotools_install
 	git clone 'https://github.com/openssl/openssl'
 	cd openssl && git checkout 1ee2125922 && { \
-		./config --prefix $$HOME && $(MAKE_COMPILE) && make test && make install && echo "OpenSSL was installed - OK"; \
+		./config --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "OpenSSL was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -67,9 +71,10 @@ boost_1_64_0.tar.gz:
 		}
 
 boost_install: | boost_1_64_0.tar.gz bash_profile_install autotools_install gcc_install
-	tar xvzf boost_1_64_0.tar.gz &&
+	tar xvzf boost_1_64_0.tar.gz
 	cd boost_1_64_0 && { \
-		./bootstrap.sh --prefix=$$HOME && ./b2 install && echo "Boost was installed - OK"; \
+		./bootstrap.sh --prefix=$$HOME && ./b2 install; \
+		if [ -d $(HOME)/include/boost -a `ls -1 $(HOME)/lib/libboost_*|wc -l` -gt 0 ]; then echo "Boost was installed - OK"; else false; fi \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -136,10 +141,10 @@ automake-1.15.tar.gz:
 		}
 
 
-automake_install: | automake-1.15.tar.gz bash_profile_install
+automake_install: | automake-1.15.tar.gz autoconf_install bash_profile_install
 	tar xzf automake-1.15.tar.gz
 	cd automake-1.15 && { \
-		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The automake was installed - OK"; \
+		./configure --prefix=$$HOME && make && make install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 

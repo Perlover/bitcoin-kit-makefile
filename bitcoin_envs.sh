@@ -8,4 +8,5 @@ export LD_RUN_PATH=$LD_LIBRARY_PATH
 export LIBRARY_PATH=$LD_LIBRARY_PATH
 export MANPATH="/home/bitcoin/share/man:$MANPATH"
 export CPPFLAGS="-I$HOME/include"
-export LDFLAGS="-L$HOME/lib -L/lib64 -L/usr/lib64 -L/usr/local/lib64"
+export LDFLAGS="-L$HOME/lib -L$HOME/lib64 -L/lib64 -L/usr/lib64 -L/usr/local/lib64"
+export PKG_CONFIG_PATH="$HOME/lib/pkgconfig:$HOME/lib64/pkgconfig"
