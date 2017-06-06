@@ -3,7 +3,7 @@ PATH=$HOME/bin:$PATH
 
 export PATH
 
-export LD_LIBRARY_PATH="$HOME/lib:/lib64:/usr/lib64:/usr/local/lib64"
+export LD_LIBRARY_PATH="$HOME/lib:$HOME/lib64:/lib64:/usr/lib64:/usr/local/lib64"
 export LD_RUN_PATH=$LD_LIBRARY_PATH
 export LIBRARY_PATH=$LD_LIBRARY_PATH
 export MANPATH="/home/bitcoin/share/man:$MANPATH"
