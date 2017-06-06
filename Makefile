@@ -7,7 +7,7 @@ help:
 	@echo $$'*********************\n\n  HELP \n\n*********************\n'
 
 # ~/.bash_profile patch...
-$(HOME)/.bitcoin_envs:
+$(HOME)/.bitcoin_envs: bitcoin_envs.sh
 	cp -f bitcoin_envs.sh $@
 
 bash_profile_install: | $(HOME)/.bitcoin_envs
