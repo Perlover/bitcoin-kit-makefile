@@ -49,7 +49,7 @@ bitcoin-uasf_install: |\
     libevent_install
 	cd bitcoin-uasf && { \
 		./autogen.sh && \
-		./configure --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-uasf was installed - OK"; \
+		./configure --prefix=$$HOME --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-uasf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
