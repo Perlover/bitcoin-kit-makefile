@@ -31,7 +31,7 @@ autoconf_install: | autoconf-2.69.tar.gz bash_profile_install
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-bitcoin-uasf_download: |\
+bitcoin-uasf_download:
 	git clone 'https://github.com/UASF/bitcoin.git' bitcoin-uasf
 	cd bitcoin-uasf && git checkout v0.14.1-uasfsegwit0.3
 	@touch $@
