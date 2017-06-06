@@ -24,7 +24,7 @@ autoconf-2.69.tar.gz: | bash_profile_install
 			echo "Bad autoconf md5 sum"; false;\
 		}
 
-autoconf_install: autoconf-2.69.tar.gz | bash_profile_install
+autoconf_install: | autoconf-2.69.tar.gz bash_profile_install
 	tar xzf autoconf-2.69.tar.gz
 	cd autoconf-2.69 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Autoconf was installed - OK"; \
@@ -32,18 +32,23 @@ autoconf_install: autoconf-2.69.tar.gz | bash_profile_install
 	@touch $@
 
 bitcoin-uasf_download: |\
-    bash_profile_install\
-    autotools_install\
-    pkg-config_install\
-    boost_install\
-    gcc_install\
-    openssl_install\
-    libevent_install
 	git clone 'https://github.com/UASF/bitcoin.git' bitcoin-uasf
 	cd bitcoin-uasf && git checkout v0.14.1-uasfsegwit0.3
 	@touch $@
 
-# ./configure --with-incompatible-bdb --disable-wallet
+bitcoin-uasf_install: |\
+    bash_profile_install\
+    bitcoin-uasf_download\
+    gcc_install\
+    autotools_install\
+    pkg-config_install\
+    boost_install\
+    openssl_install\
+    libevent_install
+	cd bitcoin-uasf && { \
+		./configure --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-uasf was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
 
 openssl_install: | bash_profile_install autotools_install
 	git clone 'https://github.com/openssl/openssl'
@@ -52,13 +57,18 @@ openssl_install: | bash_profile_install autotools_install
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-# src location: https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz
-# MD5:
-# 319c6ffbbeccc366f14bb68767a6db79  boost_1_64_0.tar.gz
-boost_install: | bash_profile_install autotools_install gcc_install
-	git clone https://github.com/boostorg/boost.git
-	cd boost && { \
-		git checkout boost-1.64.0 && git submodule init && git submodule update &&\
+# boost
+boost_1_64_0.tar.gz:
+	wget 'https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz'
+	echo '319c6ffbbeccc366f14bb68767a6db79  boost_1_64_0.tar.gz'|md5sum --check - || \
+		{ \
+			mv boost_1_64_0.tar.gz boost_1_64_0.bad.tar.gz &&\
+			echo "Bad boost md5 sum"; false;\
+		}
+
+boost_install: | boost_1_64_0.tar.gz bash_profile_install autotools_install gcc_install
+	tar xvzf boost_1_64_0.tar.gz &&
+	cd boost_1_64_0 && { \
 		./bootstrap.sh --prefix=$$HOME && ./b2 install && echo "Boost was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
@@ -80,7 +90,7 @@ pkg-config_install: | bash_profile_install autotools_install
 	@touch $@
 
 # libtool
-libtool-2.4.6.tar.gz: | bash_profile_install
+libtool-2.4.6.tar.gz:
 	wget 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz'
 	echo 'addf44b646ddb4e3919805aa88fa7c5e  libtool-2.4.6.tar.gz'|md5sum --check - || \
 		{ \
@@ -89,7 +99,7 @@ libtool-2.4.6.tar.gz: | bash_profile_install
 		}
 
 
-libtool_install: libtool-2.4.6.tar.gz | bash_profile_install
+libtool_install: | libtool-2.4.6.tar.gz bash_profile_install
 	tar xzf libtool-2.4.6.tar.gz
 	cd libtool-2.4.6 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Libtool was installed - OK"; \
@@ -100,7 +110,7 @@ autotools_install: | autoconf_install automake_install libtool_install
 	@touch $@
 
 # m4
-m4-1.4.18.tar.gz: | bash_profile_install
+m4-1.4.18.tar.gz:
 	wget 'http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz'
 	echo 'a077779db287adf4e12a035029002d28  m4-1.4.18.tar.gz'|md5sum --check - || \
 		{ \
@@ -109,7 +119,7 @@ m4-1.4.18.tar.gz: | bash_profile_install
 		}
 
 
-m4_install: m4-1.4.18.tar.gz | bash_profile_install
+m4_install: | m4-1.4.18.tar.gz bash_profile_install
 	tar xzf m4-1.4.18.tar.gz
 	cd m4-1.4.18 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The m4 was installed - OK"; \
@@ -117,7 +127,7 @@ m4_install: m4-1.4.18.tar.gz | bash_profile_install
 	@touch $@
 
 # automake
-automake-1.15.tar.gz: | bash_profile_install
+automake-1.15.tar.gz:
 	wget 'http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz'
 	echo '716946a105ca228ab545fc37a70df3a3  automake-1.15.tar.gz'|md5sum --check - || \
 		{ \
@@ -126,7 +136,7 @@ automake-1.15.tar.gz: | bash_profile_install
 		}
 
 
-automake_install: automake-1.15.tar.gz | bash_profile_install
+automake_install: | automake-1.15.tar.gz bash_profile_install
 	tar xzf automake-1.15.tar.gz
 	cd automake-1.15 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The automake was installed - OK"; \
@@ -134,7 +144,7 @@ automake_install: automake-1.15.tar.gz | bash_profile_install
 	@touch $@
 
 # gmp
-gmp-6.1.2.tar.bz2: | bash_profile_install
+gmp-6.1.2.tar.bz2:
 	wget 'https://gmplib.org/download/gmp/gmp-6.1.2.tar.bz2'
 	echo '8ddbb26dc3bd4e2302984debba1406a5  gmp-6.1.2.tar.bz2'|md5sum --check - || \
 		{ \
@@ -142,7 +152,7 @@ gmp-6.1.2.tar.bz2: | bash_profile_install
 			echo "Bad gmp md5 sum"; false;\
 		}
 
-gmp_install: gmp-6.1.2.tar.bz2 | bash_profile_install autotools_install
+gmp_install: | gmp-6.1.2.tar.bz2 bash_profile_install autotools_install
 	bzip2 -cd gmp-6.1.2.tar.bz2|tar xvf -
 	cd gmp-6.1.2 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The gmp was installed - OK"; \
@@ -150,7 +160,7 @@ gmp_install: gmp-6.1.2.tar.bz2 | bash_profile_install autotools_install
 	@touch $@
 
 # mpfr
-mpfr-3.1.5.tar.bz2: | bash_profile_install gmp_install
+mpfr-3.1.5.tar.bz2:
 	wget http://www.mpfr.org/mpfr-current/mpfr-3.1.5.tar.bz2
 	echo 'b1d23a55588e3b2a13e3be66bc69fd8d  mpfr-3.1.5.tar.bz2'|md5sum --check - || \
 		{ \
@@ -158,7 +168,7 @@ mpfr-3.1.5.tar.bz2: | bash_profile_install gmp_install
 			echo "Bad mpfr md5 sum"; false;\
 		}
 
-mpfr_install: mpfr-3.1.5.tar.bz2 | bash_profile_install autotools_install
+mpfr_install: | mpfr-3.1.5.tar.bz2 bash_profile_install gmp_install autotools_install
 	bzip2 -cd mpfr-3.1.5.tar.bz2|tar xvf -
 	cd mpfr-3.1.5 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpfr was installed - OK"; \
@@ -166,7 +176,7 @@ mpfr_install: mpfr-3.1.5.tar.bz2 | bash_profile_install autotools_install
 	@touch $@
 
 # mpc
-mpc-1.0.3.tar.gz: | bash_profile_install gmp_install mpfr_install
+mpc-1.0.3.tar.gz:
 	wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz
 	echo 'd6a1d5f8ddea3abd2cc3e98f58352d26  mpc-1.0.3.tar.gz'|md5sum --check - || \
 		{ \
@@ -174,7 +184,7 @@ mpc-1.0.3.tar.gz: | bash_profile_install gmp_install mpfr_install
 			echo "Bad mpc md5 sum"; false;\
 		}
 
-mpc_install: mpc-1.0.3.tar.gz | bash_profile_install autotools_install
+mpc_install: | mpc-1.0.3.tar.gz bash_profile_install gmp_install mpfr_install autotools_install
 	tar xzf mpc-1.0.3.tar.gz
 	cd mpc-1.0.3 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpc was installed - OK"; \
@@ -182,7 +192,7 @@ mpc_install: mpc-1.0.3.tar.gz | bash_profile_install autotools_install
 	@touch $@
 
 # mpc
-isl-0.18.tar.gz: | bash_profile_install
+isl-0.18.tar.gz:
 	wget http://isl.gforge.inria.fr/isl-0.18.tar.gz
 	echo '076c69f81067f2f5b908c099f445a338  isl-0.18.tar.gz'|md5sum --check - || \
 		{ \
@@ -190,7 +200,7 @@ isl-0.18.tar.gz: | bash_profile_install
 			echo "Bad isl md5 sum"; false;\
 		}
 
-isl_install: isl-0.18.tar.gz | autotools_install bash_profile_install
+isl_install: | bash_profile_install isl-0.18.tar.gz autotools_install
 	tar xzf isl-0.18.tar.gz
 	cd isl-0.18 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The isl was installed - OK"; \
@@ -198,7 +208,7 @@ isl_install: isl-0.18.tar.gz | autotools_install bash_profile_install
 	@touch $@
 
 # gcc
-gcc-7.1.0.tar.gz: | autotools_install gmp_install mpfr_install mpc_install isl_install bash_profile_install
+gcc-7.1.0.tar.gz:
 	wget ftp://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.gz
 	echo 'b3d733ad75fdaf88009b52c0cce0ad4c  gcc-7.1.0.tar.gz'|md5sum --check - || \
 		{ \
@@ -206,7 +216,7 @@ gcc-7.1.0.tar.gz: | autotools_install gmp_install mpfr_install mpc_install isl_i
 			echo "Bad gcc md5 sum"; false;\
 		}
 
-gcc_install: gcc-7.1.0.tar.gz | bash_profile_install
+gcc_install: | gcc-7.1.0.tar.gz bash_profile_install autotools_install gmp_install mpfr_install mpc_install isl_install
 	tar xvzf gcc-7.1.0.tar.gz
 	cd gcc-7.1.0 && { \
 		./configure --prefix=$$HOME --disable-multilib && $(MAKE_COMPILE) && make install && echo "The gcc was installed - OK"; \
