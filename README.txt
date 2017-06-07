@@ -18,10 +18,10 @@ libraries installed to $HOME directory (for example to home of 'bitcoin' user).
 
 The motivation to do it was because the CentOS 6.* has many old packages for the
 Bitcoin Core compiling. These packages are: libtools, pkg-config, autotools, gcc
-compiler and so on... You will not be able to build from sources the Bitcoin
-Core without hardcore...
+compiler and so on... You will not be able to build the Bitcoin Core from
+sources without hardcore f*cking...
 
-This makefile has this the hardcore stuff for you!
+This makefile makes this f*cking for you you! ;-)
 
 How install
 -----------
