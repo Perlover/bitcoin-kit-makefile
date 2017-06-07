@@ -23,7 +23,7 @@ sources without hardcore f*cking...
 
 This makefile makes this f*cking for you! ;-)
 
-How install
+How to install
 -----------
 
 1.  First, you need to do by hands the prepare process:
