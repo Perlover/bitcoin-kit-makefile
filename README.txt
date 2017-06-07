@@ -10,9 +10,9 @@ more information or see https://opensource.org/licenses/MIT.
 What is this?
 -------------
 
-This is my Makefile for building of Bitcoin Core node v0.14.1 UASF/SegWit patch
-from sources with compiling & building of many prerequisites from sources too
-under local user environment (not root).
+This is my Makefile for building of Bitcoin Core node (without wallet feature!)
+v0.14.1 UASF/SegWit patch from sources with compiling & building of many
+prerequisites from sources too under local user environment (not root).
 
 The motivation to do it was because the CentOS 6.* has many old packages for the
 Bitcoin Core compiling. These packages are: libtools, pkg-config, autotools, gcc
@@ -88,6 +88,9 @@ How install
 
 	Please ATTENTION! Both make targets to be needed actions from user:
 	twice pressing of ENTER
+
+P.S. I think this bitcoin's folder can be packed by any archivators (tar/zip)
+and unpacked in any same-platform machine for moving bitcoin core node
 
 Have a nice day ;-)
 
