@@ -21,7 +21,7 @@ Bitcoin Core compiling. These packages are: libtools, pkg-config, autotools, gcc
 compiler and so on... You will not be able to build the Bitcoin Core from
 sources without hardcore f*cking...
 
-This makefile makes this f*cking for you you! ;-)
+This makefile makes this f*cking for you! ;-)
 
 How install
 -----------
