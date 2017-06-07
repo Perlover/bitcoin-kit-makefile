@@ -28,7 +28,7 @@ How install
 
     For CentOS 6.*
 
-    # yum -y install git make coreutils screen
+    # yum -y install git make coreutils screen db4 db4-devel db4-utils
 
     And then next (and for a rest OSes may be):
 
