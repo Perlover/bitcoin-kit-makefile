@@ -1,8 +1,4 @@
-PATH=$HOME/bin:$PATH
-#PATH=/home/bitcoin/gcc/bin:$PATH:$HOME/bin:/home/bitcoin/bitcoin-core/bin
-
-export PATH
-
+export PATH=$HOME/bin:$PATH
 export LD_LIBRARY_PATH="$HOME/lib:$HOME/lib64:/lib64:/usr/lib64:/usr/local/lib64"
 export LD_RUN_PATH=$LD_LIBRARY_PATH
 export LIBRARY_PATH=$LD_LIBRARY_PATH
