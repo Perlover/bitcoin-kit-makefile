@@ -67,7 +67,7 @@ How install
 
     This daemon will be located in ~bitcoin/bin folder. Your .bash_profile will be patched
 
-5.  ATTENTION! If your OS has firewall rules - DON'T FORGET TO OPEN 8333 TCP PORT
+5.  ATTENTION! If your OS has firewall rules - DON'T FORGET TO OPEN the 8333 TCP PORT
 
 	This Makefile has helpers:
 
@@ -82,12 +82,13 @@ How install
 	without bitcoin TCP port) For bitcoin rules to do next step:
 
     b)
-	To install addition line for iptable rules (to my vased example) to do from root:
+	To install addition line for iptable rules (to my based example) to do by root:
 
 	# make bitcoin_iptables_install
 
-	Please ATTENTION! Both make targets to be needed actions from user:
-	twice pressing of ENTER
+	Please ATTENTION! Both make targets requires some actions from root user:
+	twice pressing of ENTER (to check internet activity after firewall
+	applying and if it's not - an auto resetting to all)
 
 P.S. I think this bitcoin's folder can be packed by any archivators (tar/zip)
 and unpacked in any same-platform machine for moving bitcoin core node
