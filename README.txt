@@ -30,7 +30,7 @@ How install
 
     # yum -y install git make coreutils
 
-    For a rest OSes may be:
+    And then next (and for a rest OSes may be):
 
     # adduser bitcoin
 
