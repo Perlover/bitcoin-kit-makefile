@@ -34,24 +34,31 @@ How install
 
     # adduser bitcoin
 
-2.  To login under 'bitcoin':
+2.  To login under 'bitcoin' by following ways:
 
+    # screen -S bitcoin-uasf
     # su -l bitcoin
 
     OR
 
     ssh bitcoin@your-host.com
+    $ screen -S bitcoin-uasf
 
     And to do the next:
 
-    $ screen -S bitcoin-uasf
     $ git clone https://github.com/Perlover/bitcoin-uasf-makefile.git
     $ cd bitcoin-uasf-makefile
     $ make bitcoin-uasf_install |& tee my_make_output.txt
 
     wait, wait, wait...
 
-    You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by screen -r bitcoin-uasf
+    You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
+
+    # screen -r bitcoin-uasf
+
+    OR (if you logged through ssh under 'bitcoin' user)
+
+    $ screen -r bitcoin-uasf
 
 3.  If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
 
