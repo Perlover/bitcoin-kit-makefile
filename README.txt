@@ -28,7 +28,7 @@ How install
 
     For CentOS 6.*
 
-    # yum -y install git make coreutils
+    # yum -y install git make coreutils screen
 
     And then next (and for a rest OSes may be):
 
@@ -44,11 +44,14 @@ How install
 
     And to do the next:
 
+    $ screen -S bitcoin-uasf
     $ git clone https://github.com/Perlover/bitcoin-uasf-makefile.git
     $ cd bitcoin-uasf-makefile
     $ make bitcoin-uasf_install |& tee my_make_output.txt
 
     wait, wait, wait...
+
+    You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by screen -r bitcoin-uasf
 
 3.  If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
 
