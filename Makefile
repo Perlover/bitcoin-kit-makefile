@@ -13,7 +13,7 @@
 #   - m4
 #   - gcc 7.1
 #   - bitcoin core node v0.14.1 with UASF/SegWit patch
-# To run from /home/bitcoin/src
+# To run from /home/bitcoin/bitcoin-uasf-makefile for example
 
 SHELL := /bin/bash --login
 
