@@ -24,42 +24,53 @@ This makefile has this the hardcore stuff for you!
 How install
 -----------
 
-1. First, you need to do by hands the prepare process:
+1.  First, you need to do by hands the prepare process:
 
-   For CentOS 6.*
+    For CentOS 6.*
 
-   # yum -y install git make coreutils
+    # yum -y install git make coreutils
 
-   For a rest OSes may be:
+    For a rest OSes may be:
 
-   # adduser bitcoin
+    # adduser bitcoin
 
-2. To login under 'bitcoin' user and to do the next:
+2.  To login under 'bitcoin' user and to do the next:
 
-    $ git clone URL_OF_THIS_REPO
+    $ git clone https://github.com/Perlover/bitcoin-uasf-makefile.git
     $ cd bitcoin-uasf-makefile
     $ make bitcoin-uasf_install |& tee my_make_output.txt
 
     wait, wait, wait...
 
-3. If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
+3.  If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
 
-4. You can start bitcoin daemon as:
+4.  You can start bitcoin daemon as:
     bitcoind -daemon
 
-5. ATTENTION! If your OS has firewall rules - don't forget to open 8333 TCP port
-   This Makefile has helpers:
+    This daemon will be located in ~bitcoin/bin folder. Your .bash_profile will be patched
 
-    a) If your OS doesn't have firewall rules but you want to have you can (if eth0 is WAN interface):
-      From root from current repositary directory to do:
+5.  ATTENTION! If your OS has firewall rules - DON'T FORGET TO OPEN 8333 TCP PORT
 
-      # make iptables_install
+	This Makefile has helpers:
 
-      It will install my default suggested iptable rules for CentOS (but without bitcoin TCP port)
-      For bitcoin rules to do next step:
+    a)
+	If your OS doesn't have firewall rules but you want to have you can (if
+	eth0 is WAN interface):
+	From root from current repositary directory to do:
 
-    b) To install addition line for iptable rules (to my vased example) to do from root:
+	# make iptables_install
 
-      # make bitcoin_iptables_install
+	It will install my default suggested iptable rules for CentOS (but
+	without bitcoin TCP port) For bitcoin rules to do next step:
 
-    Please ATTENTION! Both make targets to be needed actions from user: twice pressing of ENTER
+    b)
+	To install addition line for iptable rules (to my vased example) to do from root:
+
+	# make bitcoin_iptables_install
+
+	Please ATTENTION! Both make targets to be needed actions from user:
+	twice pressing of ENTER
+
+Have a nice day ;-)
+
+// Perlover

@@ -1,0 +1,16 @@
+/autoconf-*
+/automake-*
+/libtool-*
+/gmp-*
+/mpfr-*
+/mpc-*
+/isl-*
+/gcc-*
+/pkg-config
+/boost_*
+/openssl
+/libevent
+/bitcoin-uasf
+*.tar.gz
+/*_install
+/*_download
