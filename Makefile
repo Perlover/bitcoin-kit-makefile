@@ -1,13 +1,30 @@
-# Makefile for CEntOS to compile full bitcoin core node for UASF
+# Copyright (c) 2017 Perlover
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+# Makefile for CentOS to compile full bitcoin core node for UASF
+# This make does many things under user local folder ( NOT root! ;-) ):
+#   Compiling and installing from fresh sources (actual at 2017-06-06):
+#   - autotools
+#   - pkg-config
+#   - libevent
+#   - openssl
+#   - automake
+#   - m4
+#   - gcc 7.1
+#   - bitcoin core node v0.14.1 with UASF/SegWit patch
 # To run from /home/bitcoin/src
 
 SHELL := /bin/bash --login
 
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
-MAKE_COMPILE := make $(shell nproc=$$((`cat /proc/cpuinfo |grep processor|wc -l`-4));$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
+MAKE_COMPILE := make $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 help:
-	@echo $$'*********************\n\n  HELP \n\n*********************\n'
+	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
+	@echo $$'make bitcoin-uasf_install\t- install bitcoind in $$HOME/bin\n'\
+	$$'\n\nFROM ROOT:\n\nmake iptables_install\n\tThe setup of my example iptables config.\n\tToo see the iptables.template file here (there are no bitcoin rules)\n\tBE CAREFULLY! It'\'$$'s risk!\n\n'\
+	$$'make bitcoin_iptables_install\n\tpatch iptables config for bitcoin node\n\t(To do after "make iptables_install" for example)\n\tYou will need to press ENTER twice when will be asked!\n\tIf you will not press ENTER twiceyour firewall settings will be reset to full access again\n\t(it prevents from wrong firewall rules through network)\n\n*******************************************************************************\n'
 
 # ~/.bash_profile patch...
 $(HOME)/.bitcoin_envs: bitcoin_envs.sh
@@ -229,3 +246,34 @@ gcc_install: | gcc-7.1.0.tar.gz bash_profile_install autotools_install gmp_insta
 	@touch $@
 
 full_install: bitcoin-uasf_download
+
+define reloadIPTables
+	@ echo -n $$'***************************************************************\n***************************************************************\n\nPress now enter and then press enter too (firewall settings)'; read waiting
+	@ sleep 60 && service iptables stop >/dev/null & \
+	service iptables restart; alex_pid=$$! ; strstr() { [ "$${1#*$$2*}" = "$$1" ] && return 1; return 0; }; \
+	echo -n "To kill sleep ? (Y)es/(N)o [Y] "; read answer; echo $$answer; \
+	if strstr $$"yY" "$$answer" || [ "$$answer" = "" ] ; then kill $$alex_pid; echo "All is OK" ; else echo 'ATTENTION! Firewall will be flushed!' ; fi
+endef
+
+bitcoin_iptables_install:
+	if [ `grep -c -- '-dport 8333' /etc/sysconfig/iptables` -le 0 ]; then \
+		sed -ri -e 's#^.*--reject-with tcp-reset#-A RH-Firewall-1-INPUT -p tcp -m state --state NEW -m tcp --dport 8333 -j ACCEPT\n&#' /etc/sysconfig/iptables; \
+	fi
+	$(reloadIPTables)
+	@touch $@
+
+iptables_install: /etc/sysconfig/iptables reload_iptables startup_iptables
+	echo $$'If you see this message through ssh - your network works fine ;-)'
+
+/etc/sysconfig/iptables:
+	cat iptables.template >$@
+	@touch $@
+
+reload_iptables :
+	$(reloadIPTables)
+	@touch $@
+
+startup_iptables :
+	chkconfig iptables reset
+	service iptables start
+	@touch $@
