@@ -245,14 +245,12 @@ gcc_install: | gcc-7.1.0.tar.gz bash_profile_install autotools_install gmp_insta
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-full_install: bitcoin-uasf_download
-
 define reloadIPTables
 	@ echo -n $$'***************************************************************\n***************************************************************\n\nPress now enter and then press enter too (firewall settings)'; read waiting
-	@ sleep 60 && service iptables stop >/dev/null & \
-	service iptables restart; alex_pid=$$! ; strstr() { [ "$${1#*$$2*}" = "$$1" ] && return 1; return 0; }; \
+	@ { sleep 60 && service iptables stop >/dev/null & } &> /dev/null;\
+	service iptables restart; backgroup_pid=$$! ; strstr() { [ "$${1#*$$2*}" = "$$1" ] && return 1; return 0; }; \
 	echo -n "To kill sleep ? (Y)es/(N)o [Y] "; read answer; echo $$answer; \
-	if strstr $$"yY" "$$answer" || [ "$$answer" = "" ] ; then kill $$alex_pid; echo "All is OK" ; else echo 'ATTENTION! Firewall will be flushed!' ; fi
+	if strstr $$"yY" "$$answer" || [ "$$answer" = "" ] ; then kill $$backgroup_pid; echo "All is OK" ; else echo 'ATTENTION! Firewall will be flushed!' ; fi
 endef
 
 bitcoin_iptables_install:
@@ -267,7 +265,6 @@ iptables_install: /etc/sysconfig/iptables reload_iptables startup_iptables
 
 /etc/sysconfig/iptables:
 	cat iptables.template >$@
-	@touch $@
 
 reload_iptables :
 	$(reloadIPTables)
