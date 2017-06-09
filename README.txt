@@ -65,7 +65,14 @@ How to install
 3.  If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
 
 4.  You can start bitcoin daemon as:
+
     bitcoind -daemon
+
+    OR
+
+    make start   - start through this makefile
+    make stop    - stop through this makefile
+    make restart - restart through this makefile
 
     This daemon will be located in ~bitcoin/bin folder. Your .bash_profile will be patched
 

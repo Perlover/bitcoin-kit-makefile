@@ -24,7 +24,7 @@ help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
 	@echo $$'make bitcoin-uasf_install\t- install bitcoind in $$HOME/bin\n'\
 	$$'\n\nFROM ROOT:\n\nmake iptables_install\n\tThe setup of my example iptables config.\n\tToo see the iptables.template file here (there are no bitcoin rules)\n\tBE CAREFULLY! It'\'$$'s risk!\n\n'\
-	$$'make bitcoin_iptables_install\n\tpatch iptables config for bitcoin node\n\t(To do after "make iptables_install" for example)\n\tYou will need to press ENTER twice when will be asked!\n\tIf you will not press ENTER twiceyour firewall settings will be reset to full access again\n\t(it prevents from wrong firewall rules through network)\n\n*******************************************************************************\n'
+	$$'make bitcoin_iptables_install\n\tpatch iptables config for bitcoin node\n\t(To do after "make iptables_install" for example)\n\tYou will need to press ENTER twice when will be asked!\n\tIf you will not press ENTER twiceyour firewall settings will be reset to full access again\n\t(it prevents from wrong firewall rules through network)\n\nmake [start|stop|restart]\n\tThe helper - to start/stop/restart daemon after installation ;-)\n\n*******************************************************************************\n'
 
 # ~/.bash_profile patch...
 $(HOME)/.bitcoin_envs: bitcoin_envs.sh
@@ -274,3 +274,17 @@ startup_iptables :
 	chkconfig iptables reset
 	service iptables start
 	@touch $@
+
+start:
+	nice -n 20 bitcoind -daemon -upnp=0 -maxconnections=500 -maxmempool=100 -mempoolexpiry=24
+	@echo "The bitcoind started"
+
+stop:
+	bitcoin-cli stop
+	@echo "The bitcoind stoped"
+
+restart:
+	sleep 5 && $(MAKE) stop && sleep 5 && $(MAKE) start
+	@echo "The bitcoind restarted"
+
+.PHONY: start stop restart
