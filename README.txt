@@ -24,7 +24,7 @@ sources without hardcore f*cking...
 This makefile makes this f*cking for you! ;-)
 
 How to install
------------
+--------------
 
 1.  First, you need to do by hands the prepare process:
 
@@ -98,6 +98,44 @@ How to install
 	Please ATTENTION! Both make targets requires some actions from root user:
 	twice pressing of ENTER (to check internet activity after firewall
 	applying and if it's not - an auto resetting to all)
+
+How to update to v0.14.2-uasfsegwit1.0 already previous installed
+-----------------------------------------------------------------
+
+If you already have installed the v0.14.1-uasfsegwit0.3 version (this is git
+tag) you can easy upgrade to v0.14.2-uasfsegwit1.0 version
+
+1.  To login under 'bitcoin' by following ways:
+
+    # screen -S bitcoin-uasf
+    # su -l bitcoin
+
+    OR
+
+    ssh bitcoin@your-host.com
+    $ screen -S bitcoin-uasf
+
+    And to do the next:
+
+    $ cd bitcoin-uasf-makefile
+    $ git pull https://github.com/Perlover/bitcoin-uasf-makefile.git
+    $ make bitcoin-uasf_update |& tee my_make_output.txt
+
+    wait, wait, wait...
+
+    You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
+
+    # screen -r bitcoin-uasf
+
+    OR (if you logged through ssh under 'bitcoin' user)
+
+    $ screen -r bitcoin-uasf
+
+2. If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
+
+3. Only stop & start new daemon:
+    make restart
+
 
 P.S. I think this bitcoin's folder can be packed by any archivators (tar/zip)
 and unpacked in any same-platform machine for moving bitcoin core node

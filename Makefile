@@ -23,6 +23,7 @@ MAKE_COMPILE := make $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-
 help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
 	@echo $$'make bitcoin-uasf_install\t- install bitcoind in $$HOME/bin\n'\
+	$$'make bitcoin-uasf_update\t- update already installed bitcoind in $$HOME/bin\n'\
 	$$'\n\nFROM ROOT:\n\nmake iptables_install\n\tThe setup of my example iptables config.\n\tToo see the iptables.template file here (there are no bitcoin rules)\n\tBE CAREFULLY! It'\'$$'s risk!\n\n'\
 	$$'make bitcoin_iptables_install\n\tpatch iptables config for bitcoin node\n\t(To do after "make iptables_install" for example)\n\tYou will need to press ENTER twice when will be asked!\n\tIf you will not press ENTER twiceyour firewall settings will be reset to full access again\n\t(it prevents from wrong firewall rules through network)\n\nmake [start|stop|restart]\n\tThe helper - to start/stop/restart daemon after installation ;-)\n\n*******************************************************************************\n'
 
@@ -52,7 +53,7 @@ autoconf_install: | autoconf-2.69.tar.gz bash_profile_install
 
 bitcoin-uasf_download:
 	git clone 'https://github.com/UASF/bitcoin.git' bitcoin-uasf
-	cd bitcoin-uasf && git checkout v0.14.1-uasfsegwit0.3
+	cd bitcoin-uasf && git checkout v0.14.2-uasfsegwit1.0
 	@touch $@
 
 bitcoin-uasf_install: |\
@@ -69,6 +70,11 @@ bitcoin-uasf_install: |\
 		./configure --prefix=$$HOME --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-uasf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+bitcoin-uasf_update:
+	-rm -f bitcoin-uasf_download bitcoin-uasf_install
+	-rm -rf bitcoin-uasf
+	$(MAKE) bitcoin-uasf_install
 
 # make test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here make test
 openssl_install: | bash_profile_install autotools_install
