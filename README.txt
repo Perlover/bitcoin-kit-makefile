@@ -99,8 +99,8 @@ How to install the v0.14.2-uasfsegwit1.0 version from sources:
 	twice pressing of ENTER (to check internet activity after firewall
 	applying and if it's not - an auto resetting to all)
 
-How to update to v0.14.2-uasfsegwit1.0 already previous installed
------------------------------------------------------------------
+How to update to v0.14.2-uasfsegwit1.0 already previous installed one
+---------------------------------------------------------------------
 
 If you already have installed the v0.14.1-uasfsegwit0.3 version (previous
 version of this make file) you can easy upgrade to v0.14.2-uasfsegwit1.0 version
