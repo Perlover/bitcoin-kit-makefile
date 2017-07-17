@@ -23,8 +23,8 @@ sources without hardcore f*cking...
 
 This makefile makes this f*cking for you! ;-)
 
-How to install
---------------
+How to install the v0.14.2-uasfsegwit1.0 version from sources:
+--------------------------------------------------------------
 
 1.  First, you need to do by hands the prepare process:
 
@@ -102,8 +102,8 @@ How to install
 How to update to v0.14.2-uasfsegwit1.0 already previous installed
 -----------------------------------------------------------------
 
-If you already have installed the v0.14.1-uasfsegwit0.3 version (this is git
-tag) you can easy upgrade to v0.14.2-uasfsegwit1.0 version
+If you already have installed the v0.14.1-uasfsegwit0.3 version (previous
+version of this make file) you can easy upgrade to v0.14.2-uasfsegwit1.0 version
 
 1.  To login under 'bitcoin' by following ways:
 
