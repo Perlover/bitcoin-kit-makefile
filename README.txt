@@ -50,6 +50,7 @@ How to install the v0.14.2-uasfsegwit1.0 version from sources:
 
     $ git clone https://github.com/Perlover/bitcoin-uasf-makefile.git
     $ cd bitcoin-uasf-makefile
+    $ git checkout bitcoin-v0.15.0.1
     $ make bitcoin-uasf_install |& tee my_make_output.txt
 
     wait, wait, wait...

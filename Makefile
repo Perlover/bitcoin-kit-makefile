@@ -188,17 +188,17 @@ gmp_install: | gmp-6.1.2.tar.bz2 bash_profile_install autotools_install
 	@touch $@
 
 # mpfr
-mpfr-3.1.5.tar.bz2:
-	wget http://www.mpfr.org/mpfr-current/mpfr-3.1.5.tar.bz2
-	echo 'b1d23a55588e3b2a13e3be66bc69fd8d  mpfr-3.1.5.tar.bz2'|md5sum --check - || \
+mpfr-3.1.6.tar.bz2:
+	wget http://www.mpfr.org/mpfr-current/mpfr-3.1.6.tar.bz2
+	echo '320c28198def956aeacdb240b46b8969  mpfr-3.1.6.tar.bz2'|md5sum --check - || \
 		{ \
-			mv mpfr-3.1.5.tar.bz2 mpfr-3.1.5.bad.tar.bz2 &&\
+			mv mpfr-3.1.6.tar.bz2 mpfr-3.1.6.bad.tar.bz2 &&\
 			echo "Bad mpfr md5 sum"; false;\
 		}
 
-mpfr_install: | mpfr-3.1.5.tar.bz2 bash_profile_install gmp_install autotools_install
-	bzip2 -cd mpfr-3.1.5.tar.bz2|tar xvf -
-	cd mpfr-3.1.5 && { \
+mpfr_install: | mpfr-3.1.6.tar.bz2 bash_profile_install gmp_install autotools_install
+	bzip2 -cd mpfr-3.1.6.tar.bz2|tar xvf -
+	cd mpfr-3.1.6 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
