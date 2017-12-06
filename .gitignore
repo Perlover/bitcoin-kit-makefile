@@ -16,3 +16,5 @@
 /*_install
 /*_download
 my_make_output.txt
+*.komodoproject
+Python-*

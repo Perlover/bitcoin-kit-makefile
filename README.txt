@@ -33,7 +33,7 @@ How to install the Bitcoin Core v0.15.1 version from sources:
 
     For Ubuntu/Mint/Debian Linux:
 
-    $ sudo apt install build-essential
+    $ sudo apt install build-essential zlibc zlib1g zlib1g-dev
 
     And then next (and for a rest OSes may be):
 

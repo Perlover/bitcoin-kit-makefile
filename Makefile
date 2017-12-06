@@ -294,3 +294,5 @@ restart:
 	@echo "The bitcoind restarted"
 
 .PHONY: start stop restart
+
+include mk/python3.mk
