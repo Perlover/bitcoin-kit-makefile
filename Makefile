@@ -53,7 +53,7 @@ autoconf_install: | autoconf-2.69.tar.gz bash_profile_install
 
 bitcoin-core_download:
 	git clone 'https://github.com/bitcoin/bitcoin.git' bitcoin-core
-	cd bitcoin-core && git checkout v0.15.0.1
+	cd bitcoin-core && git checkout v0.15.1
 	@touch $@
 
 bitcoin-core_install: |\
@@ -78,7 +78,7 @@ bitcoin-core_update:
 
 # make test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here make test
 openssl_install: | bash_profile_install autotools_install
-	git clone 'https://github.com/openssl/openssl'
+	git clone 'https://github.com/openssl/openssl.git'
 	cd openssl && git checkout 1ee2125922 && { \
 		./config --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "OpenSSL was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
@@ -102,7 +102,7 @@ boost_install: | boost_1_64_0.tar.gz bash_profile_install autotools_install gcc_
 	@touch $@
 
 libevent_install: | bash_profile_install autotools_install
-	git clone https://github.com/libevent/libevent
+	git clone 'https://github.com/libevent/libevent.git'
 	cd libevent && { \
 		git checkout release-2.1.8-stable &&\
 		./autogen.sh && ./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Libevent was installed - OK"; \
