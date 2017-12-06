@@ -11,6 +11,8 @@
 /openssl
 /libevent
 /bitcoin-uasf
+/bitcoin-core
 *.tar.gz
 /*_install
 /*_download
+my_make_output.txt

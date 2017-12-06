@@ -10,8 +10,7 @@ more information or see https://opensource.org/licenses/MIT.
 What is this?
 -------------
 
-This is my Makefile for building from sources the Bitcoin Core node (v0.14.1 +
-UASF/SegWit enforce-patch but without wallet feature!) with compiling & building
+This is my Makefile for building from sources the Bitcoin Core node (v0.15.1 but without wallet feature!) with compiling & building
 of many prerequisites from sources under local user environment (not root). This
 compiling and installing doesn't affect to Unix system because all binaries and
 libraries installed to $HOME directory (for example to home of 'bitcoin' user).
@@ -23,47 +22,51 @@ sources without hardcore f*cking...
 
 This makefile makes this f*cking for you! ;-)
 
-How to install the v0.14.2-uasfsegwit1.0 version from sources:
+How to install the Bitcoin Core v0.15.1 version from sources:
 --------------------------------------------------------------
 
 1.  First, you need to do by hands the prepare process:
 
     For CentOS 6.*
 
-    # yum -y install git make coreutils screen db4 db4-devel db4-utils
+    $ sudo yum -y install git make coreutils screen db4 db4-devel db4-utils
+
+    For Ubuntu/Mint/Debian Linux:
+
+    $ sudo apt install build-essential
 
     And then next (and for a rest OSes may be):
 
-    # adduser bitcoin
+    $ sudo adduser bitcoin
 
 2.  To login under 'bitcoin' by following ways:
 
-    # screen -S bitcoin-uasf
+    # screen -S bitcoin-core
     # su -l bitcoin
 
     OR
 
     ssh bitcoin@your-host.com
-    $ screen -S bitcoin-uasf
+    $ screen -S bitcoin-core
 
     And to do the next:
 
-    $ git clone https://github.com/Perlover/bitcoin-uasf-makefile.git
-    $ cd bitcoin-uasf-makefile
+    $ git clone https://github.com/Perlover/bitcoin-core-makefile.git
+    $ cd bitcoin-core-makefile
     $ git checkout bitcoin-v0.15.0.1
-    $ make bitcoin-uasf_install |& tee my_make_output.txt
+    $ make bitcoin-core_install |& tee my_make_output.txt
 
     wait, wait, wait...
 
     You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
 
-    # screen -r bitcoin-uasf
+    # screen -r bitcoin-core
 
     OR (if you logged through ssh under 'bitcoin' user)
 
-    $ screen -r bitcoin-uasf
+    $ screen -r bitcoin-core
 
-3.  If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
+3.  If you will see the last line as "The bitcoin-core was installed - OK" - everything was done! :)
 
 4.  You can start bitcoin daemon as:
 
@@ -100,39 +103,39 @@ How to install the v0.14.2-uasfsegwit1.0 version from sources:
 	twice pressing of ENTER (to check internet activity after firewall
 	applying and if it's not - an auto resetting to all)
 
-How to update to v0.14.2-uasfsegwit1.0 already previous installed one
+How to update to v0.15.1 already previous installed one
 ---------------------------------------------------------------------
 
-If you already have installed the v0.14.1-uasfsegwit0.3 version (previous
-version of this make file) you can easy upgrade to v0.14.2-uasfsegwit1.0 version
+If you already have installed the v0.14.*-uasfsegwit0.3 version (previous
+version of this make file) you can easy upgrade to v0.15.1 version
 
 1.  To login under 'bitcoin' by following ways:
 
-    # screen -S bitcoin-uasf
+    # screen -S bitcoin-core
     # su -l bitcoin
 
     OR
 
     ssh bitcoin@your-host.com
-    $ screen -S bitcoin-uasf
+    $ screen -S bitcoin-core
 
     And to do the next:
 
-    $ cd bitcoin-uasf-makefile
-    $ git pull https://github.com/Perlover/bitcoin-uasf-makefile.git
-    $ make bitcoin-uasf_update |& tee my_make_output.txt
+    $ cd bitcoin-core-makefile
+    $ git pull https://github.com/Perlover/bitcoin-core-makefile.git
+    $ make bitcoin-core_install |& tee my_make_output.txt
 
     wait, wait, wait...
 
     You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
 
-    # screen -r bitcoin-uasf
+    # screen -r bitcoin-core
 
     OR (if you logged through ssh under 'bitcoin' user)
 
-    $ screen -r bitcoin-uasf
+    $ screen -r bitcoin-core
 
-2. If you will see the last line as "The bitcoin-uasf was installed - OK" - everything was done! :)
+2. If you will see the last line as "The bitcoin-core was installed - OK" - everything was done! :)
 
 3. Only stop & start new daemon:
     make restart
