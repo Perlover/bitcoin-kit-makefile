@@ -296,3 +296,4 @@ restart:
 .PHONY: start stop restart
 
 include mk/python3.mk
+include mk/electrumx.mk

@@ -12,6 +12,7 @@
 /libevent
 /bitcoin-uasf
 /bitcoin-core
+/electrumx
 *.tar.gz
 /*_install
 /*_download
