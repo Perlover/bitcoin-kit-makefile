@@ -1,3 +1,8 @@
+PRESENT TIME
+    * Actual bitcoind's version is v0.16.0
+    + Added installation of electrumx server
+    + Some makefile pieces are splitted by *.mk files
+
 17.07.2017
     + Now actual version of UASF is v0.14.2-uasfsegwit1.0 (this is the tag of original git repo)
     + Added the new make target: bitcoin-uasf_update
