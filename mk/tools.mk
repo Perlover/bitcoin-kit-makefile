@@ -142,17 +142,17 @@ mpfr_install: | mpfr-4.0.1.tar.bz2 bash_profile_install gmp_install autotools_in
 	@touch $@
 
 # mpc
-mpc-1.0.3.tar.gz:
-	wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz
-	echo 'd6a1d5f8ddea3abd2cc3e98f58352d26  mpc-1.0.3.tar.gz'|md5sum --check - || \
+mpc-1.1.0.tar.gz:
+	wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+	echo '4125404e41e482ec68282a2e687f6c73  mpc-1.1.0.tar.gz'|md5sum --check - || \
 		{ \
-			mv mpc-1.0.3.tar.gz mpc-1.0.3.bad.tar.gz &&\
+			mv mpc-1.1.0.tar.gz mpc-1.1.0.bad.tar.gz &&\
 			echo "Bad mpc md5 sum"; false;\
 		}
 
-mpc_install: | mpc-1.0.3.tar.gz bash_profile_install gmp_install mpfr_install autotools_install
-	tar xzf mpc-1.0.3.tar.gz
-	cd mpc-1.0.3 && { \
+mpc_install: | mpc-1.1.0.tar.gz bash_profile_install gmp_install mpfr_install autotools_install
+	tar xzf mpc-1.1.0.tar.gz
+	cd mpc-1.1.0 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The mpc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
