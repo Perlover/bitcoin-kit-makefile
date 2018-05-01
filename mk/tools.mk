@@ -105,7 +105,7 @@ automake-1.15.tar.gz:
 automake_install: | automake-1.15.tar.gz autoconf_install bash_profile_install
 	tar xzf automake-1.15.tar.gz
 	cd automake-1.15 && { \
-		./configure --prefix=$$HOME && make && make install && echo "The automake was installed - OK"; \
+		PERL=/usr/bin/perl ./configure --prefix=$$HOME && make && make install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 

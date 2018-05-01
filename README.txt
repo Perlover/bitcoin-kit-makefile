@@ -53,7 +53,7 @@ How to install the Bitcoin Core v0.15.1 version from sources:
 
     $ git clone https://github.com/Perlover/bitcoin-core-makefile.git
     $ cd bitcoin-core-makefile
-    $ git checkout bitcoin-v0.15.0.1
+    $ git checkout lightning
     $ make bitcoin-core_install |& tee my_make_output.txt
 
     wait, wait, wait...
