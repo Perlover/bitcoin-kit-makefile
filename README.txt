@@ -10,7 +10,7 @@ more information or see https://opensource.org/licenses/MIT.
 What is this?
 -------------
 
-This is my Makefile for building from sources the Bitcoin Core node (v0.15.1 but without wallet feature!) with compiling & building
+This is my Makefile for building from sources the Bitcoin Core node (v0.16.0 but without wallet feature!) with compiling & building
 of many prerequisites from sources under local user environment (not root). This
 compiling and installing doesn't affect to Unix system because all binaries and
 libraries installed to $HOME directory (for example to home of 'bitcoin' user).
@@ -22,7 +22,7 @@ sources without hardcore f*cking...
 
 This makefile makes this f*cking for you! ;-)
 
-How to install the Bitcoin Core v0.15.1 version from sources:
+How to install the Bitcoin Core v0.16.0 version from sources:
 --------------------------------------------------------------
 
 1.  First, you need to do by hands the prepare process:
@@ -53,7 +53,7 @@ How to install the Bitcoin Core v0.15.1 version from sources:
 
     $ git clone https://github.com/Perlover/bitcoin-core-makefile.git
     $ cd bitcoin-core-makefile
-    $ git checkout lightning
+    $ git checkout master
     $ make bitcoin-core_install |& tee my_make_output.txt
 
     wait, wait, wait...
@@ -103,7 +103,7 @@ How to install the Bitcoin Core v0.15.1 version from sources:
 	twice pressing of ENTER (to check internet activity after firewall
 	applying and if it's not - an auto resetting to all)
 
-How to update to v0.15.1 already previous installed one
+How to update to v0.16.0 already previous installed one (DEPRECATED)
 ---------------------------------------------------------------------
 
 If you already have installed the v0.14.*-uasfsegwit0.3 version (previous
