@@ -49,3 +49,5 @@ include mk/bitcoind.mk
 include mk/iptables.mk
 include mk/python3.mk
 include mk/electrumx.mk
+include mk/sqlite3.mk
+include mk/c-lightning.mk
