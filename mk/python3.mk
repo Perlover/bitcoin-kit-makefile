@@ -11,6 +11,6 @@ python3_install: |\
     Python-3.6.3.tgz
 	tar xzf Python-3.6.3.tgz
 	cd Python-3.6.3 && { \
-		./configure --prefix=$$HOME && make test && make install && echo "The python3 was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make test && make install && echo "The python3 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
