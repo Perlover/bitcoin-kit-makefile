@@ -1,16 +1,16 @@
-Python-3.6.3.tgz:
-	wget 'https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz'
-	echo 'e9180c69ed9a878a4a8a3ab221e32fa9  Python-3.6.3.tgz'|md5sum --check - || \
+Python-3.6.5.tgz:
+	wget 'https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz'
+	echo 'ab25d24b1f8cc4990ade979f6dc37883  Python-3.6.5.tgz'|md5sum --check - || \
 		{ \
-			mv Python-3.6.3.tgz Python-3.6.3.bad.tgz &&\
+			mv Python-3.6.5.tgz Python-3.6.5.bad.tgz &&\
 			echo "Bad automake md5 sum"; false;\
 		}
 
 python3_install: |\
     required_for_configure_install\
-    Python-3.6.3.tgz
-	tar xzf Python-3.6.3.tgz
-	cd Python-3.6.3 && { \
+    Python-3.6.5.tgz
+	tar xzf Python-3.6.5.tgz
+	cd Python-3.6.5 && { \
 		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make test && make install && echo "The python3 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
