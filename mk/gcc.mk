@@ -10,7 +10,7 @@ gcc_install: |\
 	cd gcc-7.1.0 && { \
 		./configure --prefix=$$HOME --disable-multilib && $(MAKE_COMPILE) && make install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
- 	ln -s $$HOME/bin/gcc $$HOME/bin/cc
+	ln -s $$HOME/bin/gcc $$HOME/bin/cc
 	@touch $@
 
 # gcc
