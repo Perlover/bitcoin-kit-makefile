@@ -6,7 +6,9 @@ Python-3.6.3.tgz:
 			echo "Bad automake md5 sum"; false;\
 		}
 
-python3_install: | bash_profile_install autotools_install gcc_install autoconf_install pkg-config_install Python-3.6.3.tgz
+python3_install: |\
+    required_for_configure_install\
+    Python-3.6.3.tgz
 	tar xzf Python-3.6.3.tgz
 	cd Python-3.6.3 && { \
 		./configure --prefix=$$HOME && make test && make install && echo "The python3 was installed - OK"; \

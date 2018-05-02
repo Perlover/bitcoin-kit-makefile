@@ -4,14 +4,11 @@ bitcoin-core_download:
 	@touch $@
 
 bitcoin-core_install: |\
-    bash_profile_install\
-    bitcoin-core_download\
-    gcc_install\
-    autotools_install\
-    pkg-config_install\
+    required_for_configure_install\
     boost_install\
     openssl_install\
-    libevent_install
+    libevent_install\
+    bitcoin-core_download
 	cd bitcoin-core && { \
 		./autogen.sh && \
 		./configure --prefix=$$HOME --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && make && make install && echo "The bitcoin-core was installed - OK"; \
@@ -29,4 +26,3 @@ bitcoin_iptables_install:
 	fi
 	$(reloadIPTables)
 	@touch $@
-

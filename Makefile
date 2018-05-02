@@ -43,11 +43,14 @@ bitcoind-restart:
 
 .PHONY: start stop restart
 
-include mk/tools.mk
 include mk/common.mk
+include mk/autotools.mk
+include mk/gcc.mk
+include mk/tools.mk
+include mk/libs.mk
 include mk/bitcoind.mk
-include mk/iptables.mk
 include mk/python3.mk
 include mk/electrumx.mk
 include mk/sqlite3.mk
 include mk/c-lightning.mk
+include mk/iptables.mk

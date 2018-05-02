@@ -6,3 +6,10 @@ bash_profile_install: | $(HOME)/.bitcoin_envs
 	echo $$'\n. $(HOME)/.bitcoin_envs' >> $(HOME)/.bash_profile
 	touch $@
 
+required_for_configure_install: \
+    bash_profile_install\
+    autotools_install\
+    autoconf_install\
+    gcc_install\
+    pkg-config_install
+	touch $@
