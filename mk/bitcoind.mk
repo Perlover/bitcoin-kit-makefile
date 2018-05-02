@@ -8,6 +8,7 @@ bitcoin-core_install: |\
     boost_install\
     openssl_install\
     libevent_install\
+    zlib_install\
     bitcoin-core_download
 	cd bitcoin-core && { \
 		./autogen.sh && \

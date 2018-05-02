@@ -35,3 +35,15 @@ libevent_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
+zlib-1.2.11.tar.gz:
+	wget 'https://zlib.net/$@' &&\
+	echo 'c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+
+zlib_install: |\
+    required_for_configure_install\
+    zlib-1.2.11.tar.gz
+	tar xzf zlib-1.2.11.tar.gz
+	cd zlib-1.2.11 && { \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The zlib was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@

@@ -8,6 +8,7 @@ Python-3.6.5.tgz:
 
 python3_install: |\
     required_for_configure_install\
+    zlib_install\
     Python-3.6.5.tgz
 	tar xzf Python-3.6.5.tgz
 	cd Python-3.6.5 && { \

@@ -1,6 +1,6 @@
 sqlite-autoconf-3230100.tar.gz:
-	wget 'https://www.sqlite.org/2018/sqlite-autoconf-3230100.tar.gz' &&\
-	echo '0edbfd75ececb95e8e6448d6ff33df82774c9646  sqlite-autoconf-3230100.tar.gz'|sha1sum --check - || { echo "Bad checksum"; false; }
+	wget 'https://www.sqlite.org/2018/$@' &&\
+	echo '0edbfd75ececb95e8e6448d6ff33df82774c9646  $@'|sha1sum --check - || { echo "Bad checksum"; false; }
 
 sqlite3_install: |\
     required_for_configure_install\
