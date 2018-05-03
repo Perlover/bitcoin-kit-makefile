@@ -3,7 +3,7 @@ Python-3.6.5.tgz:
 	echo 'ab25d24b1f8cc4990ade979f6dc37883  Python-3.6.5.tgz'|md5sum --check - || \
 		{ \
 			mv Python-3.6.5.tgz Python-3.6.5.bad.tgz &&\
-			echo "Bad automake md5 sum"; false;\
+			echo "Bad python3 md5 sum"; false;\
 		}
 
 python3_install: |\
