@@ -49,9 +49,10 @@ include mk/gcc.mk
 include mk/tools.mk
 include mk/libs.mk
 include mk/bitcoind.mk
+include mk/electrumx.mk
 include mk/python3.mk
 include mk/python2.mk
-include mk/electrumx.mk
 include mk/sqlite3.mk
+include mk/binutils.mk
 include mk/c-lightning.mk
 include mk/iptables.mk
