@@ -4,7 +4,7 @@ node-v10.0.0.tar.gz:
 	grep $@ $@-SHASUMS256.txt.asc | sha256sum -c - || { echo "Bad sign of $@"; false; }
 
 # LANG=C ./configure... for correct version of assembler
-nodejs_install: |\
+nodejs_pre_install: |\
     required_for_configure_install\
     binutils_install\
     python2_install\
@@ -14,3 +14,11 @@ nodejs_install: |\
 		LANG=C ./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The node.js was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+nodejs_install: |\
+	nodejs_pre_install\
+	nodejs_global_in_home
+
+nodejs_global_in_home:
+	-mkdir $$HOME/.npm-global
+	npm config set prefix '$$HOME/.npm-global'
