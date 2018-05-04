@@ -10,7 +10,7 @@ git_submodule_install: .gitmodules
 	git submodule update --init --recursive
 	@touch $@
 
-required_for_configure_install: \
+required_for_configure_install: |\
     bash_profile_install\
     autotools_install\
     autoconf_install\
