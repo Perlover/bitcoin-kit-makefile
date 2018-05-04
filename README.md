@@ -1,45 +1,43 @@
-Makefile for local-user compiling Bitcoin Core UASF/SegWit patched daemon
-=========================================================================
+# Makefile for local-user compiling: *Bitcoin Core*, *Lightning* and *ElectrumX* server in CentOS 6.x
 
-License
--------
+## License
 
 This Makefile is released under the terms of the MIT license. See COPYING for
 more information or see https://opensource.org/licenses/MIT.
 
-What is this?
--------------
+## What is this?
 
-This is my Makefile for building from sources the Bitcoin Core node (v0.16.0 but without wallet feature!) with compiling & building
-of many prerequisites from sources under local user environment (not root). This
-compiling and installing doesn't affect to Unix system because all binaries and
-libraries installed to $HOME directory (for example to home of 'bitcoin' user).
+This is my Makefile for building from sources the Bitcoin Core node (v0.16.0 but
+without wallet feature!) with compiling & building of many prerequisites from
+sources under local user environment (not root). This compiling and installing
+doesn't affect to Unix system because all binaries and libraries installed to
+$HOME directory (for example to home of 'bitcoin' user).
 
 The motivation to do it was because the CentOS 6.* has many old packages for the
-Bitcoin Core compiling. These packages are: libtools, pkg-config, autotools, gcc
-compiler and so on... You will not be able to build the Bitcoin Core from
-sources without hardcore f*cking...
+Bitcoin Core compiling. These packages are: autotools, libtools, pkg-config,
+gcc, binutils, python 2.x, python 3.x (to be needed for c-lightning) compiler
+and so on... You will not be able to build the these applications (Bitcoin Core,
+c-lightning and ElectrumX) from sources without hardcore f*cking...
 
 This makefile makes this f*cking for you! ;-)
 
-How to install the Bitcoin Core v0.16.0 version from sources:
---------------------------------------------------------------
+## How to install the Bitcoin Core v0.16.0 version from sources:
 
 1.  First, you need to do by hands the prepare process:
 
     For CentOS 6.*
 
-    $ sudo yum -y install git make coreutils screen db4 db4-devel db4-utils
+    `$ sudo yum -y install git make coreutils screen db4 db4-devel db4-utils`
 
     For Ubuntu/Mint/Debian Linux:
 
-    $ sudo apt install build-essential zlibc zlib1g zlib1g-dev libleveldb-dev
+    `$ sudo apt install build-essential zlibc zlib1g zlib1g-dev libleveldb-dev`
 
     And then next (and for a rest OSes may be):
 
-    $ sudo adduser bitcoin
+    `$ sudo adduser bitcoin`
 
-2.  To login under 'bitcoin' by following ways:
+2.  To login under *bitcoin* by following ways:
 
     # screen -S bitcoin-core
     # su -l bitcoin
@@ -53,7 +51,7 @@ How to install the Bitcoin Core v0.16.0 version from sources:
 
     $ git clone https://github.com/Perlover/bitcoin-core-makefile.git
     $ cd bitcoin-core-makefile
-    $ git checkout master
+    $ git submodule update --init --recursive
     $ make bitcoin-core_install |& tee my_make_output.txt
 
     wait, wait, wait...

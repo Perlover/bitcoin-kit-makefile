@@ -18,7 +18,7 @@
 SHELL := /bin/bash --login
 
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
-MAKE_COMPILE := make $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
+MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
@@ -55,4 +55,5 @@ include mk/python2.mk
 include mk/sqlite3.mk
 include mk/binutils.mk
 include mk/c-lightning.mk
+include mk/nodejs.mk
 include mk/iptables.mk
