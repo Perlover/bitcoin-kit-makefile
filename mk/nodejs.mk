@@ -22,5 +22,5 @@ nodejs_install: |\
 
 nodejs_global_in_home:
 	-mkdir $$HOME/.npm-global
-	npm config set prefix '$$HOME/.npm-global'
+	npm config set prefix '~/.npm-global'
 	@touch $@
