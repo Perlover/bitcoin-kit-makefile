@@ -7,7 +7,8 @@ node-v10.0.0.tar.gz:
 nodejs_install: |\
     required_for_configure_install\
     binutils_install\
-    python2_install
+    python2_install\
+    node-v10.0.0.tar.gz
 	tar xzf node-v10.0.0.tar.gz
 	cd node-v10.0.0 && { \
 		LANG=C ./configure --prefix=$HOME && $(MAKE_COMPILE) && make install && echo "The node.js was installed - OK"; \
