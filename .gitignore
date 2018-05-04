@@ -8,6 +8,8 @@
 /mpc-*
 /isl-*
 /gcc-*
+/binutils-*
+/node-*
 /pkg-config
 /boost_*
 /openssl
