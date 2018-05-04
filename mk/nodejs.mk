@@ -16,9 +16,11 @@ nodejs_pre_install: |\
 	@touch $@
 
 nodejs_install: |\
-	nodejs_pre_install\
-	nodejs_global_in_home
+    nodejs_pre_install\
+    nodejs_global_in_home
+	@touch $@
 
 nodejs_global_in_home:
 	-mkdir $$HOME/.npm-global
 	npm config set prefix '$$HOME/.npm-global'
+	@touch $@
