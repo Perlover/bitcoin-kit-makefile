@@ -21,8 +21,8 @@ SHELL := /bin/bash --login
 MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 # For configure script: make variables for implicit rules
-ifneq ($(LD_LIBRARY_PATH),)
-CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(LD_LIBRARY_PATH)))"
+ifneq ($(LIBRARY_PATH),)
+CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(LIBRARY_PATH)))"
 endif
 
 ifneq ($(CPATH),)
