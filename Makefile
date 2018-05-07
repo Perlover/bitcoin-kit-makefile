@@ -21,13 +21,8 @@ SHELL := /bin/bash --login
 MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 # For configure script: make variables for implicit rules
-ifneq ($(LIBRARY_PATH),)
-CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(LIBRARY_PATH)))"
-endif
-
-ifneq ($(CPATH),)
-CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(CPATH)))"
-endif
+CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
+CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
 
 help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
