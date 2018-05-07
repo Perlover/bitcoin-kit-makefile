@@ -29,9 +29,6 @@ ifneq ($(CPATH),)
 CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(CPATH)))"
 endif
 
-alex:
-	echo $(CONFIGURE_VARS)
-
 help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
 	@echo $$'make bitcoin-core_install\t- install bitcoind in $$HOME/bin\n'\
