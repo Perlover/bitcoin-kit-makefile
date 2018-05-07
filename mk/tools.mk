@@ -23,6 +23,6 @@ m4_install: |\
     m4-1.4.18.tar.gz
 	tar xzf m4-1.4.18.tar.gz
 	cd m4-1.4.18 && { \
-		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The m4 was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "The m4 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

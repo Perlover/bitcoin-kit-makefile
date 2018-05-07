@@ -11,7 +11,7 @@ nodejs_pre_install: |\
     node-v10.0.0.tar.gz
 	tar xzf node-v10.0.0.tar.gz
 	cd node-v10.0.0 && { \
-		LANG=C ./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The node.js was installed - OK"; \
+		LANG=C ./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "The node.js was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 

@@ -20,6 +20,18 @@ SHELL := /bin/bash --login
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
 MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
+# For configure script: make variables for implicit rules
+ifneq ($(LD_LIBRARY_PATH),)
+CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(LD_LIBRARY_PATH)))"
+endif
+
+ifneq ($(CPATH),)
+CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(CPATH)))"
+endif
+
+alex:
+	echo $(CONFIGURE_VARS)
+
 help:
 	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
 	@echo $$'make bitcoin-core_install\t- install bitcoind in $$HOME/bin\n'\

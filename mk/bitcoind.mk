@@ -12,7 +12,7 @@ bitcoin-core_install: |\
     bitcoin-core_download
 	cd bitcoin-core && { \
 		./autogen.sh && \
-		./configure --prefix=$$HOME --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && $(MAKE_COMPILE) && make install && echo "The bitcoin-core was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && $(MAKE_COMPILE) && make install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 

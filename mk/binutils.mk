@@ -8,6 +8,6 @@ binutils_install: |\
     binutils-2.30.tar.gz
 	tar xzf binutils-2.30.tar.gz
 	cd binutils-2.30 && { \
-		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The bintuils was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "The bintuils was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

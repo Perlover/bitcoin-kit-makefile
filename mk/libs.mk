@@ -31,7 +31,7 @@ libevent_install: |\
 	git clone 'https://github.com/libevent/libevent.git'
 	cd libevent && { \
 		git checkout release-2.1.8-stable &&\
-		./autogen.sh && ./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "Libevent was installed - OK"; \
+		./autogen.sh && ./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "Libevent was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -44,6 +44,6 @@ zlib_install: |\
     zlib-1.2.11.tar.gz
 	tar xzf zlib-1.2.11.tar.gz
 	cd zlib-1.2.11 && { \
-		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "The zlib was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "The zlib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
