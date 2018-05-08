@@ -7,19 +7,26 @@ more information or see https://opensource.org/licenses/MIT.
 
 ## What is this?
 
-This is my Makefile for building from sources the Bitcoin Core node (v0.16.0 but
-without wallet feature!) with compiling & building of many prerequisites from
-sources under local user environment (not root). This compiling and installing
-doesn't affect to Unix system because all binaries and libraries installed to
-$HOME directory (for example to home of 'bitcoin' user).
+This is the Makefile for building from sources the software for the Bitcoin:
 
-The motivation to do it was because the CentOS 6.* has many old packages for the
-Bitcoin Core compiling. These packages are: autotools, libtools, pkg-config,
-gcc, binutils, python 2.x, python 3.x (to be needed for c-lightning) compiler
-and so on... You will not be able to build the these applications (Bitcoin Core,
-c-lightning and ElectrumX) from sources without hardcore f*cking...
+1. [Bitcoin Core][bitcoin-core]
+2. [C-Lightning][c-lightning]
+3. [LND][lnd] *(recommened)*
+4. [ElectrumX][electrumx] server.
 
-This makefile makes this f*cking for you! ;-)
+This makefile was written for the CentOS 6.x because this OS very conservative
+for new libraries and tools. There are many dependencies which should have new
+versions (gcc, autotools, libtools, pkg-config, gcc, binutils, python 2.x,
+python 3.x).
+
+[bitcoin-core]: https://github.com/bitcoin/bitcoin "Bitcoin Core full-node"
+[c-lightning]:  https://github.com/ElementsProject/lightning "Lightning node from BlockStream"
+[lnd]:          https://github.com/lightningnetwork/lnd "Lightning node from Lightning Labs"
+[electrumx]:    https://github.com/kyuupichan/electrumx "Alternative Electrum server"
+
+This compiling and installing doesn't affect to Unix system because all binaries
+and libraries installed to $HOME directory (for example to home of 'bitcoin'
+user).
 
 ## How to install the Bitcoin Core v0.16.0 version from sources:
 
