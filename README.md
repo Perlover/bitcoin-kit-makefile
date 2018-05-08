@@ -28,6 +28,10 @@ This compiling and installing doesn't affect to Unix system because all binaries
 and libraries installed to $HOME directory (for example to home of 'bitcoin'
 user).
 
+The **install process is maximally secure** for installation. Wherever possible
+**MD5/SHA256** checksums or **GPG signatures** are checked before compilation and
+installing. The *git sources* are secured by commit ID checkout.
+
 ## How to install the Bitcoin Core v0.16.0 version from sources:
 
 1.  First, you need to do by hands the prepare process:
@@ -105,48 +109,6 @@ user).
     Please ATTENTION! Both make targets requires some actions from root user:
     twice pressing of ENTER (to check internet activity after firewall
     applying and if it's not - an auto resetting to all)
-
-## How to update to v0.16.0 already previous installed one **(DEPRECATED)**
-
-If you already have installed the v0.14.*-uasfsegwit0.3 version (previous
-version of this make file) you can easy upgrade to v0.15.1 version
-
-1.  To login under 'bitcoin' by following ways:
-
-        # screen -S bitcoin-core
-        # su -l bitcoin
-
-    OR
-
-        ssh bitcoin@your-host.com
-        $ screen -S bitcoin-core
-
-    And to do the next:
-
-        $ cd bitcoin-core-makefile
-        $ git pull https://github.com/Perlover/bitcoin-core-makefile.git
-        $ make bitcoin-core_install |& tee my_make_output.txt
-
-    wait, wait, wait...
-
-    You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
-
-        # screen -r bitcoin-core
-
-    OR (if you logged through ssh under 'bitcoin' user)
-
-        $ screen -r bitcoin-core
-
-2. If you will see the last line as "The bitcoin-core was installed - OK" - everything was done! :)
-
-3. Only stop & start new daemon:
-
-        make restart
-
-## P.S.
-
-P.S. I think this bitcoin's folder can be packed by any archivators (tar/zip)
-and unpacked in any same-platform machine for moving bitcoin core node
 
 Have a nice day ;-)
 
