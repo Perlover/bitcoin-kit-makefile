@@ -44,6 +44,6 @@ zlib_install: |\
     zlib-1.2.11.tar.gz
 	tar xzf zlib-1.2.11.tar.gz
 	cd zlib-1.2.11 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "The zlib was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make test && make install && echo "The zlib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
