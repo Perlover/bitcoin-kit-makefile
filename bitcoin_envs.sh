@@ -1,4 +1,4 @@
-export PATH=$HOME/.npm-global/bin:$HOME/bin:$HOME/go1.10.2/bin:$PATH
+export PATH=$HOME/.npm-global/bin:$HOME/bin:$PATH
 
 # man ld.so(8) - run time execution (not link time)
 export LD_LIBRARY_PATH="$HOME/lib:$HOME/lib64:/lib64:/usr/lib64:/usr/local/lib64"
