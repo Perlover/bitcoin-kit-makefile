@@ -4,3 +4,9 @@ lnd_install: |\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
 	$(MAKE) && $(MAKE) install
 	@touch $@
+
+btcd_install: |\
+    lnd_install
+	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
+	make btcd
+	@touch $@
