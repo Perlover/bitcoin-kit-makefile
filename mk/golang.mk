@@ -17,6 +17,8 @@ $(HOME)/go:
 $(HOME)/.golang_envs: golang_envs.sh
 	cp -f $< $@
 
-golang_bash_profile_install: | $(HOME)/.golang_envs
+golang_bash_profile_install: |\
+    $(HOME)/go
+    $(HOME)/.golang_envs
 	echo $$'\n. $(HOME)/.golang_envs' >> $(HOME)/.bash_profile
 	@touch $@
