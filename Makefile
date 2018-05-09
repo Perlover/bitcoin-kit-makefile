@@ -61,4 +61,5 @@ include mk/binutils.mk
 include mk/c-lightning.mk
 include mk/nodejs.mk
 include mk/golang.mk
+include mk/lnd.mk
 include mk/iptables.mk
