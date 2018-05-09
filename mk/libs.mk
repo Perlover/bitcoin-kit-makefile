@@ -1,9 +1,9 @@
-# make test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here make test
+# $(MAKE) test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here $(MAKE) test
 openssl_install: |\
     required_for_configure_install
 	git clone 'https://github.com/openssl/openssl.git'
 	cd openssl && git checkout 1ee2125922 && { \
-		./config --prefix=$$HOME && $(MAKE_COMPILE) && make install && echo "OpenSSL was installed - OK"; \
+		./config --prefix=$$HOME && $(MAKE_COMPILE) && $(MAKE) install && echo "OpenSSL was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -31,7 +31,7 @@ libevent_install: |\
 	git clone 'https://github.com/libevent/libevent.git'
 	cd libevent && { \
 		git checkout release-2.1.8-stable &&\
-		./autogen.sh && ./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "Libevent was installed - OK"; \
+		./autogen.sh && ./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Libevent was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -44,6 +44,6 @@ zlib_install: |\
     zlib-1.2.11.tar.gz
 	tar xzf zlib-1.2.11.tar.gz
 	cd zlib-1.2.11 && { \
-		./configure --prefix=$$HOME && $(MAKE_COMPILE) && make test && make install && echo "The zlib was installed - OK"; \
+		./configure --prefix=$$HOME && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The zlib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

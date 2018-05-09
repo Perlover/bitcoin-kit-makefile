@@ -2,7 +2,7 @@ golang_pre_install: |\
     required_for_configure_install\
     binutils_install\
     golang_bash_profile_install
-	cd $(HOME) && git clone -b release-branch.go1.4 'https://go.googlesource.com/go' go1.4 && cd go1.4/src && ./make.bash
+	cd $(HOME) && git clone -b release-branch.go1.4 'https://go.googlesource.com/go' go1.4 && cd go1.4/src && ./$(MAKE).bash
 	@touch $@
 
 golang_install: |\

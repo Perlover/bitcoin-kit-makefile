@@ -13,7 +13,7 @@ autoconf_install: |\
     autoconf-2.69.tar.gz
 	tar xzf autoconf-2.69.tar.gz
 	cd autoconf-2.69 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "Autoconf was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Autoconf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -39,7 +39,7 @@ automake_install: |\
     automake-1.15.tar.gz
 	tar xzf automake-1.15.tar.gz
 	cd automake-1.15 && { \
-		PERL=/usr/bin/perl ./configure --prefix=$$HOME $(CONFIGURE_VARS) && make && make install && echo "The automake was installed - OK"; \
+		PERL=/usr/bin/perl ./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE) && $(MAKE) install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -57,6 +57,6 @@ libtool_install: |\
     libtool-2.4.6.tar.gz
 	tar xzf libtool-2.4.6.tar.gz
 	cd libtool-2.4.6 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && make install && echo "Libtool was installed - OK"; \
+		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Libtool was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
