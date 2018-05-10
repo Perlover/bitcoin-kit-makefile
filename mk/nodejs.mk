@@ -17,10 +17,17 @@ nodejs_pre_install: |\
 
 nodejs_install: |\
     nodejs_pre_install\
-    nodejs_global_in_home
+    nodejs_global_in_home\
+    npm_update
 	@touch $@
 
 nodejs_global_in_home:
 	-mkdir $$HOME/.npm-global
 	npm config set prefix '~/.npm-global'
+	@touch $@
+
+npm_update: |\
+    nodejs_pre_install\
+    nodejs_global_in_home
+	npm install npm@latest -g
 	@touch $@
