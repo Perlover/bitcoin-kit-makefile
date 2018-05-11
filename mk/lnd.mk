@@ -11,19 +11,40 @@ btcd_install: |\
 	make btcd
 	@touch $@
 
-MAKE_DIRS +=  build/bitcoind
+####################### CONFIGS ###################################
 
-$(call COPY_FILE,build/bitcoind,$(HOME)/.lnd,077)
+MAKE_DIRS +=  build/lnd/bitcoind
 
-build/bitcoind/lnd-testnet.conf :\
+$(HOME)/.lnd/lnd-testnet.conf: build/lnd/bitcoind/lnd-testnet.conf
+
+$(HOME)/.lnd/lnd-mainnet.conf: build/lnd/bitcoind/lnd-mainnet.conf
+
+$(eval $(call COPY_FILE,build/lnd/bitcoind,$(HOME)/.lnd,077))
+
+build/lnd/bitcoind/lnd-testnet.conf :\
     configs/lnd/bitcoind/lnd-testnet.conf\
     $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
     |\
-    build/bitcoind
+    build/lnd/bitcoind
 	cp -f $< $@ &&\
-	RPC_PASS=`awk '/blah/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` sed -ri\
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#'\
-	-e 's#\$$\$$RPC_PASS\$$\$$#$RPC_PASS#'\
+	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
+	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
-lnd_testnet_config_for_bitcoind_install: $(HOME)/.lnd/lnd-testnet.conf
+build/lnd/bitcoind/lnd-mainnet.conf :\
+    configs/lnd/bitcoind/lnd-mainnet.conf\
+    $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt\
+    |\
+    build/lnd/bitcoind
+	cp -f $< $@ &&\
+	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
+	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
+	$@
+
+lnd_configs_bitcoind_bundle_install: $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd-mainnet.conf
+
+###### TODO
+# tsl certificates for node.js
+# lncli-web & tsl & *.macaroon files

@@ -72,3 +72,4 @@ include mk/lnd.mk
 include mk/iptables.mk
 include mk/zeromq.mk
 include mk/rsync.mk
+include mk/finally.mk

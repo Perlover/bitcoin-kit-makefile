@@ -10,15 +10,15 @@ git_submodule_install: .gitmodules
 	git submodule update --init --recursive
 	@touch $@
 
-# To make here directories
-$(MAKE_DIRS) :
-	mkdir -p $@
-
 # For copying of config files
 # $(call COPY_FILE,FROM_WHERE_DIR,TO_WHERE_DIR,UMASK)
 define COPY_FILE
+
+MAKE_DIRS += $(2)
+
 $(2)/% : | $(2)
 	umask $(3) && cp -f $(1)/$$(subst $$|,,$$@) $$@
+
 endef
 
 required_for_configure_install: |\
@@ -28,3 +28,6 @@ required_for_configure_install: |\
     gcc_install\
     pkg-config_install
 	@touch $@
+
+clean:
+	rm -rf build

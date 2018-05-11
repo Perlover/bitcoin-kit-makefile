@@ -18,10 +18,6 @@ bitcoin-core_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-MAKE_DIRS +=  $(HOME)/.bitcoin
-
-$(call COPY_FILE,configs/bitcoind,$(HOME)/.bitcoin,077)
-
 MAKE_DIRS +=  $(CREDENTIALS_DIR)
 
 $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
@@ -41,3 +37,37 @@ bitcoin_iptables_install:
 	fi
 	$(reloadIPTables)
 	@touch $@
+
+####################### CONFIGS ###################################
+
+MAKE_DIRS +=  build/bitcoind
+
+$(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf
+
+$(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf
+
+$(eval $(call COPY_FILE,build/bitcoind,$(HOME)/.bitcoin,077))
+
+build/bitcoind/bitcoin-testnet.conf :\
+    configs/bitcoind/bitcoin-testnet.conf\
+    $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
+    |\
+    build/bitcoind
+	cp -f $< $@ &&\
+	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
+	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
+	$@
+
+build/bitcoind/bitcoin-mainnet.conf :\
+    configs/bitcoind/bitcoin-mainnet.conf\
+    $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt\
+    |\
+    build/bitcoind
+	cp -f $< $@ &&\
+	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
+	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
+	$@
+
+bitcoind_configs_install: $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin-mainnet.conf
