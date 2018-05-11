@@ -1,3 +1,7 @@
+# Please wait few days :)
+
+This repo is now ative developing. This README has some errors. Please wait few days and repo will be fine :)
+
 # Makefile for local-user compiling: *Bitcoin Core*, *Lightning* and *ElectrumX* server in CentOS 6.x
 
 ## License
