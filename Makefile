@@ -25,13 +25,7 @@ CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitco
 CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
 
 help:
-	@echo $$'*******************************************************************************\n\n  HELP \n\n*******************************************************************************\n'
-	@echo $$'make bitcoin-core_install\t- install bitcoind in $$HOME/bin\n'\
-	$$'make bitcoin-core_update\t- update already installed bitcoind in $$HOME/bin\n'\
-	$$'\n\nFROM ROOT:\n\nmake iptables_install\n\tThe setup of my example iptables config.\n\tToo see the iptables.template file here (there are no bitcoin rules)\n\tBE CAREFULLY! It'\'$$'s risk!\n\n'\
-	$$'make bitcoin_iptables_install\n\tpatch iptables config for bitcoin node\n\t(To do after "make iptables_install" for example)\n\tYou will need to press ENTER twice when will be asked!\n\tIf you will not press ENTER twiceyour firewall settings will be reset to full access again\n\t(it prevents from wrong firewall rules through network)\n\n'\
-	$$'make [bitcoind-start|bitcoind-stop|bitcoind-restart]\n\tThe helper - to start/stop/restart daemon after installation ;-)\n\n'\
-	$$'*******************************************************************************\n'
+	@cat Usage.txt
 
 bitcoind-start:
 	nice -n 20 bitcoind -daemon -upnp=0 -maxconnections=500 -maxmempool=100 -mempoolexpiry=24

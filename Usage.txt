@@ -1,0 +1,49 @@
+*******************************************************************************
+*                                                                             *
+*                                 Usage                                       *
+*                                                                             *
+*******************************************************************************
+
+ONLY DESIRED NOW! NOT REALISED! Commin soon ;-)
+
+-------------------------------------------------------------------------------
+
+EASY INSTALLATION (may be a config files creation too):
+
+
+make i-want-lightning
+    My recommended installation: lnd + bitcoin core
+
+make i-want-bitcoin-node
+    My recommended installation: bitcoin core installation
+
+-------------------------------------------------------------------------------
+
+FINE TUNING:
+
+make bitcoin-core-install
+    The official bitcoin-core install
+    Version: v0.16.0
+
+make btcd-install
+    The official bitcoin-core install
+    Version: v0.16.0
+
+make lnd-install
+    The lnd daemon install
+    Version: current
+
+make lnd-bitcoin-core-bundle-install
+    The bundle of: lnd + bitcoin-core install
+    Same as: make bitcoin-core-install lnd-install
+
+make lnd-btcd-bundle-install
+    The bundle of: lnd + btcd install ()
+    Same as: make lnd-install btcd-install
+
+make lnd-webclient-install
+    The lncli-web installation
+
+make electrumx-install
+
+-------------------------------------------------------------------------------
