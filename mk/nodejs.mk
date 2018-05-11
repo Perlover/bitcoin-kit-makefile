@@ -11,7 +11,7 @@ nodejs_pre_install: |\
     node-v10.0.0.tar.gz
 	tar xzf node-v10.0.0.tar.gz
 	cd node-v10.0.0 && { \
-		LANG=C ./configure --prefix=$$HOME && $(MAKE_COMPILE) && $(MAKE) install && echo "The node.js was installed - OK"; \
+		LANG=C ./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The node.js was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -22,7 +22,7 @@ nodejs_install: |\
 	@touch $@
 
 nodejs_global_in_home:
-	-mkdir $$HOME/.npm-global
+	-mkdir $(HOME)/.npm-global
 	npm config set prefix '~/.npm-global'
 	@touch $@
 

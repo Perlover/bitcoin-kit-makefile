@@ -7,6 +7,6 @@ sqlite3_install: |\
     sqlite-autoconf-3230100.tar.gz
 	tar xzf sqlite-autoconf-3230100.tar.gz
 	cd sqlite-autoconf-3230100 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The sqlite3 was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The sqlite3 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

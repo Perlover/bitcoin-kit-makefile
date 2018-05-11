@@ -15,7 +15,20 @@
 #   - bitcoin core node v0.14.1 with UASF/SegWit patch
 # To run from /home/bitcoin/bitcoin-core-makefile for example
 
+# --login is important here. It forces read ~/.bash_profile file before each execution of make command in rules
 SHELL := /bin/bash --login
+
+# The base directory of all packages. It's home directory now but in a future it can be used for common directory in OS, for example /opt/
+BASE_INSTALL_DIR := $(HOME)
+
+# Here will be some password files and etc. for authorization of services
+CREDENTIALS_DIR := $(HOME)/credentials
+
+# Our external ip address. If we have only like 192.168.*.* it's be as failover
+EXTERNAL_IP_ADDRESS := $(shell ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^192\.168\.|^127\.')
+ifeq ($(EXTERNAL_IP_ADDRESS),)
+EXTERNAL_IP_ADDRESS := $(shell ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.')
+endif
 
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
 MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)

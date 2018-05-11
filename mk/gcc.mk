@@ -8,9 +8,9 @@ gcc_install: |\
     gcc-7.1.0.tar.gz
 	tar xvzf gcc-7.1.0.tar.gz
 	cd gcc-7.1.0 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) --disable-multilib && $(MAKE_COMPILE) && $(MAKE) install && echo "The gcc was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --disable-multilib && $(MAKE_COMPILE) && $(MAKE) install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
-	ln -s $$HOME/bin/gcc $$HOME/bin/cc
+	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
 	@touch $@
 
 # gcc
@@ -37,7 +37,7 @@ gmp_install: |\
     gmp-6.1.2.tar.bz2
 	bzip2 -cd gmp-6.1.2.tar.bz2|tar xvf -
 	cd gmp-6.1.2 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmp was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmp was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -57,7 +57,7 @@ mpfr_install: |\
     mpfr-4.0.1.tar.bz2
 	bzip2 -cd mpfr-4.0.1.tar.bz2|tar xvf -
 	cd mpfr-4.0.1 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpfr was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -78,7 +78,7 @@ mpc_install: |\
     mpc-1.1.0.tar.gz
 	tar xzf mpc-1.1.0.tar.gz
 	cd mpc-1.1.0 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpc was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -97,6 +97,6 @@ isl_install: |\
     isl-0.18.tar.gz
 	tar xzf isl-0.18.tar.gz
 	cd isl-0.18 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The isl was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The isl was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

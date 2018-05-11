@@ -44,6 +44,10 @@ make lnd-btcd-bundle-install
 make lnd-webclient-install
     The lncli-web installation
 
+make bitcoin-core-update
+    Update up to current bitcoin core version
+    Version: master beanch at github.com
+
 make electrumx-install
 
 -------------------------------------------------------------------------------

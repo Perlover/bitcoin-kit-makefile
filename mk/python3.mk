@@ -8,10 +8,13 @@ Python-3.6.5.tgz:
 
 python3_install: |\
     required_for_configure_install\
+    openssl_install\
+    libevent_install\
     zlib_install\
+    zeromq_install\
     Python-3.6.5.tgz
 	tar xzf Python-3.6.5.tgz
 	cd Python-3.6.5 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The python3 was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The python3 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

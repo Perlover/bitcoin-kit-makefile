@@ -4,7 +4,7 @@ pkg-config_install: |\
 	git clone git://anongit.freedesktop.org/pkg-config
 	cd pkg-config && { \
 		git checkout pkg-config-0.29.2 &&\
-		./autogen.sh --with-internal-glib --prefix=$$HOME && $(MAKE_COMPILE) && $(MAKE) install && echo "pkg-config was installed - OK"; \
+		./autogen.sh --with-internal-glib --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "pkg-config was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -23,6 +23,6 @@ m4_install: |\
     m4-1.4.18.tar.gz
 	tar xzf m4-1.4.18.tar.gz
 	cd m4-1.4.18 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The m4 was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The m4 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

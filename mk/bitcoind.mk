@@ -9,12 +9,26 @@ bitcoin-core_install: |\
     openssl_install\
     libevent_install\
     zlib_install\
+    zeromq_install\
+    python3_install\
     bitcoin-core_download
 	cd bitcoin-core && { \
 		./autogen.sh && \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(HOME) --with-boost-libdir=$(HOME)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+MAKE_DIRS +=  $(HOME)/.bitcoin
+
+$(call COPY_FILE,configs/bitcoind,$(HOME)/.bitcoin,077)
+
+MAKE_DIRS +=  $(CREDENTIALS_DIR)
+
+$(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
+$(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
+    bitcoin-core_install\
+    $(CREDENTIALS_DIR)
+	cd bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
 bitcoin-core_update:
 	-rm -f bitcoin-core_download bitcoin-core_install

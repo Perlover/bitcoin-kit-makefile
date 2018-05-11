@@ -12,6 +12,6 @@ python2_install: |\
     Python-2.7.15.tgz
 	tar xzf Python-2.7.15.tgz
 	cd Python-2.7.15 && { \
-		./configure --prefix=$$HOME $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The python2 was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The python2 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
