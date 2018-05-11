@@ -63,5 +63,5 @@ include mk/nodejs.mk
 include mk/golang.mk
 include mk/lnd.mk
 include mk/iptables.mk
-include mk/dev-rsync.mk
 include mk/zeromq.mk
+include mk/rsync.mk
