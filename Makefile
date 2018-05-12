@@ -38,8 +38,8 @@ PROFILE_FILE := $(shell if [ -f $(HOME)/.bash_profile ]; then \
 		echo $(HOME)/.profile; \
 	fi )
 
-# MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
-MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
+# MAKE_COMPILE: make or make -jN, where N = amount processors in system - 1
+MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-1));nproc=$$(($$nproc<=1?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
 # For configure script: make variables for implicit rules
 CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
