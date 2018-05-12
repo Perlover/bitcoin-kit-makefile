@@ -1,5 +1,5 @@
 pkg-config_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autotools_install
 	git clone git://anongit.freedesktop.org/pkg-config
 	cd pkg-config && { \
@@ -19,7 +19,7 @@ m4-1.4.18.tar.gz:
 
 
 m4_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     m4-1.4.18.tar.gz
 	tar xzf m4-1.4.18.tar.gz
 	cd m4-1.4.18 && { \

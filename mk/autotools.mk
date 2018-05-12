@@ -1,6 +1,6 @@
 # autoconf...
 autoconf-2.69.tar.gz: |\
-    bash_profile_install
+    $(HOME)/.bitcoin_envs
 	wget 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz'
 	echo '82d05e03b93e45f5a39b828dc9c6c29b  autoconf-2.69.tar.gz'|md5sum --check - || \
 		{ \
@@ -9,7 +9,7 @@ autoconf-2.69.tar.gz: |\
 		}
 
 autoconf_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autoconf-2.69.tar.gz
 	tar xzf autoconf-2.69.tar.gz
 	cd autoconf-2.69 && { \
@@ -34,7 +34,7 @@ automake-1.15.tar.gz:
 
 
 automake_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autoconf_install \
     automake-1.15.tar.gz
 	tar xzf automake-1.15.tar.gz
@@ -53,7 +53,7 @@ libtool-2.4.6.tar.gz:
 		}
 
 libtool_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     libtool-2.4.6.tar.gz
 	tar xzf libtool-2.4.6.tar.gz
 	cd libtool-2.4.6 && { \

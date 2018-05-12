@@ -1,5 +1,5 @@
 gcc_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_install\
     mpfr_install\
@@ -32,7 +32,7 @@ gmp-6.1.2.tar.bz2:
 		}
 
 gmp_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp-6.1.2.tar.bz2
 	bzip2 -cd gmp-6.1.2.tar.bz2|tar xvf -
@@ -51,7 +51,7 @@ mpfr-4.0.1.tar.bz2:
 		}
 
 mpfr_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     gmp_install\
     autotools_install\
     mpfr-4.0.1.tar.bz2
@@ -71,7 +71,7 @@ mpc-1.1.0.tar.gz:
 		}
 
 mpc_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     gmp_install\
     mpfr_install\
     autotools_install\
@@ -92,7 +92,7 @@ isl-0.18.tar.gz:
 		}
 
 isl_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autotools_install\
     isl-0.18.tar.gz
 	tar xzf isl-0.18.tar.gz
