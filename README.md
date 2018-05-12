@@ -46,7 +46,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
     For Ubuntu/Mint/Debian Linux:
 
-        $ sudo apt install build-essential zlibc zlib1g zlib1g-dev libleveldb-dev
+        $ sudo apt install build-essential zlibc zlib1g zlib1g-dev libleveldb-dev screen
 
     And then next (and for a rest OSes may be):
 

@@ -25,9 +25,9 @@ BASE_INSTALL_DIR := $(HOME)
 CREDENTIALS_DIR := $(HOME)/credentials
 
 # Our external ip address. If we have only like 192.168.*.* it's be as failover
-EXTERNAL_IP_ADDRESS := $(shell ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^192\.168\.|^127\.')
+EXTERNAL_IP_ADDRESS := $(shell /sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^192\.168\.|^127\.')
 ifeq ($(EXTERNAL_IP_ADDRESS),)
-EXTERNAL_IP_ADDRESS := $(shell ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.')
+EXTERNAL_IP_ADDRESS := $(shell /sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.')
 endif
 
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4

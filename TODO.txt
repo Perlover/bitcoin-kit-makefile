@@ -1,3 +1,5 @@
+BUGS in Ubuntu, fix:
+
 * All git repos under this Makefile can be described as git's submodules
 
 * Many makefile sections can be realised through define/endef directives and $(call) functions
