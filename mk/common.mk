@@ -1,16 +1,7 @@
 # ~/.bash_profile of .profile patch...
 $(HOME)/.bitcoin_envs: bitcoin_envs.sh
 	cp -f $< $@
-
-bash_profile_install: | $(HOME)/.bitcoin_envs
-	if [ -f $(HOME)/.bash_profile ]; then \
-		echo $$'\n. $(HOME)/.bitcoin_envs' >> $(HOME)/.bash_profile; \
-	elif [ -f $(HOME)/.bash_login ]; then \
-		echo $$'\n. $(HOME)/.bitcoin_envs' >> $(HOME)/.bash_login; \
-	else \
-		echo $$'\n. $(HOME)/.bitcoin_envs' >> $(HOME)/.profile; \
-	fi
-	@touch $@
+	echo $$'\n. $(HOME)/.bitcoin_envs' >> $(PROFILE_FILE)
 
 git_submodule_install: .gitmodules
 	git submodule update --init --recursive
@@ -28,7 +19,7 @@ $(2)/% : | $(2)
 endef
 
 required_for_configure_install: |\
-    bash_profile_install\
+    $(HOME)/.bitcoin_envs\
     autotools_install\
     autoconf_install\
     gcc_install\

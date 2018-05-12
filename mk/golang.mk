@@ -1,7 +1,7 @@
 golang_pre_install: |\
     required_for_configure_install\
     binutils_install\
-    golang_bash_profile_install
+    $(HOME)/.golang_envs
 	cd $(BASE_INSTALL_DIR) && git clone -b release-branch.go1.4 'https://go.googlesource.com/go' go1.4 && cd go1.4/src && ./make.bash
 	@touch $@
 
@@ -14,11 +14,7 @@ $(BASE_INSTALL_DIR)/go:
 	mkdir -p $(BASE_INSTALL_DIR)/go
 
 # ~/.bash_profile patch...
-$(HOME)/.golang_envs: golang_envs.sh
+$(HOME)/.golang_envs: golang_envs.sh | $(BASE_INSTALL_DIR)/go
 	cp -f $< $@
+	echo $$'\n. $(HOME)/.golang_envs' >> $(PROFILE_FILE)
 
-golang_bash_profile_install: |\
-    $(BASE_INSTALL_DIR)/go\
-    $(BASE_INSTALL_DIR)/.golang_envs
-	echo $$'\n. $(HOME)/.golang_envs' >> $(HOME)/.bash_profile
-	@touch $@

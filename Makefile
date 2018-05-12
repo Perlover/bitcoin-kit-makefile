@@ -30,6 +30,14 @@ ifeq ($(EXTERNAL_IP_ADDRESS),)
 EXTERNAL_IP_ADDRESS := $(shell /sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.')
 endif
 
+PROFILE_FILE := $(shell if [ -f $(HOME)/.bash_profile ]; then \
+		echo $(HOME)/.bash_profile; \
+	elif [ -f $(HOME)/.bash_login ]; then \
+		echo $(HOME)/.bash_login; \
+	else \
+		echo $(HOME)/.profile; \
+	fi )
+
 # MAKE_COMPILE: make or make -jN, where N = amount processors in system - 4
 MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -l`-4));nproc=$$(($$nproc<=0?0:$$nproc));if [ $$nproc -le 0 ] ; then echo -n '' ; else echo "-j$$nproc" ; fi)
 
