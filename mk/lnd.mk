@@ -2,7 +2,7 @@ lnd_install: |\
     golang_install
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
-	$(MAKE) && $(MAKE) install
+	$(MAKE_COMPILE) && $(MAKE) install
 	@touch $@
 
 btcd_install: |\
@@ -43,7 +43,7 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
 	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
-lnd_configs_bitcoind_bundle_install: $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd-mainnet.conf
+lnd_configs_bitcoind_bundle_install: lnd_install $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd-mainnet.conf
 
 ###### TODO
 # tsl certificates for node.js
