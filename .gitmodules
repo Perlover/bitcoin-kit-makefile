@@ -5,3 +5,15 @@
 [submodule "external/libzmq"]
 	path = external/libzmq
 	url = https://github.com/zeromq/libzmq.git
+[submodule "external/bitcoin-core"]
+	path = external/bitcoin-core
+	url = https://github.com/bitcoin/bitcoin.git
+[submodule "external/openssl"]
+	path = external/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "external/libevent"]
+	path = external/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "external/pkg-config"]
+	path = external/pkg-config
+	url = git://anongit.freedesktop.org/pkg-config

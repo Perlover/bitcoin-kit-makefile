@@ -1,9 +1,7 @@
 pkg-config_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install
-	git clone git://anongit.freedesktop.org/pkg-config
-	cd pkg-config && { \
-		git checkout pkg-config-0.29.2 &&\
+	cd external/pkg-config && { \
 		./autogen.sh --with-internal-glib --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "pkg-config was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
