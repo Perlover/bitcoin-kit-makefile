@@ -43,7 +43,11 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
 	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
-lnd_configs_bitcoind_bundle_install: lnd_install $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd-mainnet.conf
+lnd_configs_bitcoind_bundle_install: \
+    lnd_install\
+    $(HOME)/.lnd/lnd-testnet.conf\
+    $(HOME)/.lnd/lnd-mainnet.conf\
+    lncli-web_lnd_certs_install
 
 ###### TODO
 # tsl certificates for node.js

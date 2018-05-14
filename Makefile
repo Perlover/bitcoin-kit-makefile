@@ -77,6 +77,7 @@ include mk/c-lightning.mk
 include mk/nodejs.mk
 include mk/golang.mk
 include mk/lnd.mk
+include mk/lncli-web.mk
 include mk/iptables.mk
 include mk/zeromq.mk
 include mk/rsync.mk
