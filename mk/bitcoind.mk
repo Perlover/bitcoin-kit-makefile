@@ -64,4 +64,7 @@ build/bitcoind/bitcoin-mainnet.conf :\
 	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
 	$@
 
-bitcoind_configs_install: $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin-mainnet.conf
+bitcoind_configs_install: |\
+    $(HOME)/.bitcoin/bitcoin-testnet.conf\
+    $(HOME)/.bitcoin/bitcoin-mainnet.conf
+	@touch $@

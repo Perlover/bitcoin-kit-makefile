@@ -60,6 +60,15 @@ bitcoind-restart:
 	sleep 5 && $(MAKE) stop && sleep 5 && $(MAKE) start
 	@echo "The bitcoind restarted"
 
+i-want-lightning: |\
+    bitcoin-core_install\
+    lnd_install\
+    lncli-web_install\
+    bitcoind_configs_install\
+    lnd_configs_bitcoind_bundle_install\
+    lncli-web_configs_install
+	@touch $@
+
 .PHONY: start stop restart
 
 include mk/common.mk

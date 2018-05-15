@@ -43,11 +43,18 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
 	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
-lnd_configs_bitcoind_bundle_install: \
-    lnd_install\
+lnd_configs_bitcoind_bundle_install: |\
+    bitcoind_configs_install\
+    lncli-web_lnd_certs_install\
     $(HOME)/.lnd/lnd-testnet.conf\
-    $(HOME)/.lnd/lnd-mainnet.conf\
-    lncli-web_lnd_certs_install
+    $(HOME)/.lnd/lnd-mainnet.conf
+	@touch $@
+
+# TODO creation of
+$(HOME)/.lnd/admin.macaroon: |\
+    $(HOME)/.lnd\
+    lnd_install\
+    lncli-web_configs_install
 
 ###### TODO
 # tsl certificates for node.js

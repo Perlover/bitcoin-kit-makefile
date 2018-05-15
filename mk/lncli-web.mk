@@ -2,7 +2,7 @@ MAKE_DIRS += $(HOME)/opt
 
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
-	git_path=`pwd` && cd $(HOME)/opt && git clone $$git_path/external/lncli-web
+	cp -r external/lncli-web $(HOME)/opt
 
 lncli-web_install: |\
     nodejs_install\
@@ -48,3 +48,8 @@ $(HOME)/opt/lncli-web/ssl: |\
 	-nodes \
 	-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" && \
 	mkdir -p $@ && mv -f * $@
+
+lncli-web_configs_install: |\
+    lncli-web_lnd_certs_install\
+    $(HOME)/opt/lncli-web/ssl
+	@touch $@
