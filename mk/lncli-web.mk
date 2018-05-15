@@ -2,13 +2,13 @@ MAKE_DIRS += $(HOME)/opt
 
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
-	cp -r external/lncli-web $(HOME)/opt
+	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git
 
 lncli-web_install: |\
     nodejs_install\
     openssl_install\
     $(HOME)/opt/lncli-web
-	cd lncli-web && { \
+	cd $(HOME)/opt/lncli-web && { \
 		npm install && echo "lncli-web for lnd was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
@@ -28,7 +28,7 @@ lncli-web_lnd_certs_install: |\
 	openssl req -new -sha256 -key tls.key -out csr.csr -subj '/CN=localhost/O=lnd' && \
 	openssl req -x509 -sha256 -days 36500 -key tls.key -in csr.csr -out tls.cert && \
 	rm csr.csr && \
-	cp -f build/lnd/lncli-web/* $(HOME)/.lnd && cp -f build/lnd/lncli-web/tls.cert $(HOME)/opt/lncli-web
+	cp -f * $(HOME)/.lnd && cp -f tls.cert $(HOME)/opt/lncli-web
 	@touch $@
 
 MAKE_DIRS += build/lnd/lncli-web/ssl

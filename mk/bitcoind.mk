@@ -5,8 +5,8 @@ bitcoin-core_install: |\
     libevent_install\
     zlib_install\
     zeromq_install\
-    python3_install\
-	cd cd external/bitcoin-core && { \
+    python3_install
+	cd external/bitcoin-core && { \
 		./autogen.sh && \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
@@ -18,7 +18,7 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
 $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
     bitcoin-core_install\
     $(CREDENTIALS_DIR)
-	cd bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
+	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
 bitcoin-core_update:
 	-rm -f bitcoin-core_install

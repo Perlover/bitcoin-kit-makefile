@@ -17,6 +17,3 @@
 [submodule "external/pkg-config"]
 	path = external/pkg-config
 	url = git://anongit.freedesktop.org/pkg-config
-[submodule "external/lncli-web"]
-	path = external/lncli-web
-	url = https://github.com/mably/lncli-web.git
