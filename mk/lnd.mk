@@ -50,12 +50,38 @@ lnd_configs_bitcoind_bundle_install: |\
     $(HOME)/.lnd/lnd-mainnet.conf
 	@touch $@
 
-# TODO creation of
-$(HOME)/.lnd/admin.macaroon: |\
-    $(HOME)/.lnd\
+i-want-lightning: |\
+    bitcoin-core_install\
     lnd_install\
+    lncli-web_install\
+    bitcoind_configs_install\
+    lnd_configs_bitcoind_bundle_install\
     lncli-web_configs_install
+	@touch $@
 
-###### TODO
-# tsl certificates for node.js
-# lncli-web & tsl & *.macaroon files
+lnd_create_wallet_macaroon_install:
+	@[ -f $(HOME)/.lnd/admin.macaroon ] && echo "You already setted up the lnd daemon (the file $(HOME)/.lnd/admin.macaroon exists)" && touch $@ && false
+	@umask 077 && nohup lnd &>.$@.out.txt & echo $$! >.$@.pid.txt
+	@echo $$'********************************************************************************\n\n\n Now the 'lncli create' was run (creation of wallet). It's important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
+	@echo 'Please press ENTER to next step:'; read
+	lncli create
+	-@kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt
+	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
+	@touch $@
+
+set-up-lightning: |\
+    i-want-lightning\
+    lnd_install\
+    lnd_configs_bitcoind_bundle_install\
+    $(HOME)/.bitcoin_aliases\
+    lncli-web_configs_install\
+    lnd_create_wallet_macaroon_install\
+    $(HOME)/opt/lncli-web/start.sh
+
+set-up-lightning-testnet: | set-up-lightning
+	ln -s $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin.conf
+	ln -s $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd.conf
+
+set-up-lightning-mainnet: | set-up-lightning
+	ln -s $(HOME)/.bitcoin/bitcoin-mainnet.conf $(HOME)/.bitcoin/bitcoin.conf
+	ln -s $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/lnd.conf

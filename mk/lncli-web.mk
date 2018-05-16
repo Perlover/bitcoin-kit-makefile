@@ -53,3 +53,21 @@ lncli-web_configs_install: |\
     lncli-web_lnd_certs_install\
     $(HOME)/opt/lncli-web/ssl
 	@touch $@
+
+$(CREDENTIALS_DIR)/lncli-web-passwords.txt: |\
+    $(CREDENTIALS_DIR)
+	@umask 077 && echo $$'Admin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
+
+build/lnd/lncli-web/start.sh: $(CREDENTIALS_DIR)/lncli-web-passwords.txt configs/lncli-web/start.sh | build/lnd/lncli-web
+	cp -f configs/lncli-web/start.sh $@ &&\
+	LNCLI_WEB_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
+	LNCLI_WEB_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
+	sed -ri \
+	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$LNCLI_WEB_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_ADMIN_PASS'#' \
+	-e 's#\$$\$$LNCLI_WEB_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_LIMIT_PASS'#' \
+	$@
+
+$(HOME)/opt/lncli-web/start.sh: build/lnd/lncli-web/start.sh
+	cp $< $@ && chmod 700 $@
+

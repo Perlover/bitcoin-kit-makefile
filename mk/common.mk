@@ -1,7 +1,12 @@
 # ~/.bash_profile of .profile patch...
 $(HOME)/.bitcoin_envs: bitcoin_envs.sh
 	cp -f $< $@
-	echo $$'\n. $(HOME)/.bitcoin_envs' >> $(PROFILE_FILE)
+	if [ `grep '$(HOME)/.bitcoin_envs' $(PROFILE_FILE)` = "" ]; then echo $$'\n. $(HOME)/.bitcoin_envs' >> $(PROFILE_FILE); fi
+
+# ~/.bash_profile of .profile patch...
+$(HOME)/.bitcoin_aliases: configs/aliases.sh
+	cp -f $< $@
+	if [ `grep '$(HOME)/.bitcoin_aliases' $(BASHRC_FILE)` = "" ]; then echo $$'\n. $(HOME)/.bitcoin_aliases' >> $(BASHRC_FILE); fi
 
 git_submodule_install: .gitmodules
 	git submodule update --init --recursive
@@ -28,3 +33,6 @@ required_for_configure_install: |\
 
 clean:
 	rm -rf build
+
+
+GENERATE_PASSWORD = $(shell cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $(1) | head -n 1)
