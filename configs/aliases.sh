@@ -1,5 +1,5 @@
 alias bitcoind-start="bitcoind"
 alias bitcoind-stop="bitcoin-cli stop"
-alias lnd-start="lnd"
+alias lnd-start="{ nohup lnd & } &>/dev/null; sleep 1; echo 'Please unlock daemon, enter password:'; lncli unlock"
 alias lnd-stop="lncli stop"
 alias lncli-web-start="cwd=`pwd`; cd $HOME/opt/lncli-web; ; cd $cwd"

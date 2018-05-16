@@ -24,11 +24,21 @@ BASE_INSTALL_DIR := $(HOME)
 # Here will be some password files and etc. for authorization of services
 CREDENTIALS_DIR := $(HOME)/credentials
 
+ifneq ($(MAKECMDGOALS),rsync)
+
 # Our external ip address. If we have only like 192.168.*.* it's be as failover
-EXTERNAL_IP_ADDRESS := $(shell /sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^192\.168\.|^127\.')
-ifeq ($(EXTERNAL_IP_ADDRESS),)
-EXTERNAL_IP_ADDRESS := $(shell /sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.')
+LISTEN_IP_ADDRESS := $(shell ./define_listen_ip_address.sh)
+ifeq ($(LISTEN_IP_ADDRESS),)
+$(error The external IP address should be defined!)
 endif
+
+PUBLIC_IP_ADDRESS := $(shell ./define_public_ip_address.sh)
+ifeq ($(PUBLIC_IP_ADDRESS),)
+$(error The public IP address should be defined!)
+endif
+
+endif
+
 
 PROFILE_FILE := $(shell if [ -f $(HOME)/.bash_profile ]; then \
 		echo $(HOME)/.bash_profile; \

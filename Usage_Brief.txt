@@ -13,24 +13,17 @@ LIGHTNING:
 
     Stage 1:
 
-	make i-want-lightning [ EXTERNAL_IP_ADDRESS=your_ip_address ]
+	make i-want-lightning
 	    My recommended installation: lnd + bitcoin core
 
-	    If your have many some ip interfaces (OpenVPN, Wifi, Ethernet) -
-	    highly recommended to define the EXTERNAL_IP_ADDRESS variable.
-	    Otherwise it will be define automatically.
 
     Stage 2:
 
-	make set-up-lightning-mainnet [ EXTERNAL_IP_ADDRESS=your_ip_address ]
+	make set-up-lightning-mainnet
 	OR
-	make set-up-lightning-testnet [ EXTERNAL_IP_ADDRESS=your_ip_address ]
+	make set-up-lightning-testnet
 	    You will be asked about wallet password, you will be suggested to write seed of lnd.
 	    It's few interactive process
-
-	    If your have many some ip interfaces (OpenVPN, Wifi, Ethernet) -
-	    highly recommended to define the EXTERNAL_IP_ADDRESS variable.
-	    Otherwise it will be define automatically.
 
 make i-want-bitcoin-node
     My recommended installation: bitcoin core installation

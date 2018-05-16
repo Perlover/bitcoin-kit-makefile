@@ -63,7 +63,7 @@ build/lnd/lncli-web/start.sh: $(CREDENTIALS_DIR)/lncli-web-passwords.txt configs
 	LNCLI_WEB_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
 	LNCLI_WEB_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
 	sed -ri \
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
 	-e 's#\$$\$$LNCLI_WEB_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_ADMIN_PASS'#' \
 	-e 's#\$$\$$LNCLI_WEB_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_LIMIT_PASS'#' \
 	$@

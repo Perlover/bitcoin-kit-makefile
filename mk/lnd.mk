@@ -28,7 +28,8 @@ build/lnd/bitcoind/lnd-testnet.conf :\
     build/lnd/bitcoind
 	cp -f $< $@ &&\
 	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
+	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
 	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
@@ -39,7 +40,8 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
     build/lnd/bitcoind
 	cp -f $< $@ &&\
 	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
+	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
 	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#' \
 	$@
 
@@ -79,9 +81,9 @@ set-up-lightning: |\
     $(HOME)/opt/lncli-web/start.sh
 
 set-up-lightning-testnet: | set-up-lightning
-	ln -s $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin.conf
-	ln -s $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd.conf
+	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
+	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd.conf; fi
 
 set-up-lightning-mainnet: | set-up-lightning
-	ln -s $(HOME)/.bitcoin/bitcoin-mainnet.conf $(HOME)/.bitcoin/bitcoin.conf
-	ln -s $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/lnd.conf
+	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-mainnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
+	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/lnd.conf; fi

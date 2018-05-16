@@ -49,7 +49,8 @@ build/bitcoind/bitcoin-testnet.conf :\
     build/bitcoind
 	cp -f $< $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
+	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
 	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
 	$@
 
@@ -60,7 +61,8 @@ build/bitcoind/bitcoin-mainnet.conf :\
     build/bitcoind
 	cp -f $< $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$EXTERNAL_IP_ADDRESS\$$\$$#$(EXTERNAL_IP_ADDRESS)#' \
+	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
+	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
 	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
 	$@
 
