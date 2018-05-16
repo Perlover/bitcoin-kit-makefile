@@ -4,22 +4,7 @@
 *                                                                             *
 *******************************************************************************
 
-ONLY DESIRED NOW! NOT REALISED! Commin soon ;-)
-
--------------------------------------------------------------------------------
-
-EASY INSTALLATION (may be a config files creation too):
-
-
-make i-want-lightning
-    My recommended installation: lnd + bitcoin core
-
-make i-want-bitcoin-node
-    My recommended installation: bitcoin core installation
-
--------------------------------------------------------------------------------
-
-FINE TUNING:
+MORE TARGETS:
 
 make bitcoin-core-install
     The official bitcoin-core install

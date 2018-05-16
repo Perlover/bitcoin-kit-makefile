@@ -1,0 +1,26 @@
+*******************************************************************************
+*                                                                             *
+*                                 Usage                                       *
+*                                                                             *
+*******************************************************************************
+
+EASY INSTALLATION:
+
+make help-more
+    Show more targets
+
+LIGHTNING:
+
+    Stage 1:
+
+	make i-want-lightning
+	    My recommended installation: lnd + bitcoin core
+
+    Stage 2:
+
+	make set-up-lightning
+	    You will be asked about wallet password, you will be suggested to write seed of lnd.
+	    It's few interactive process
+
+make i-want-bitcoin-node
+    My recommended installation: bitcoin core installation
