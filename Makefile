@@ -25,6 +25,9 @@ BASE_INSTALL_DIR := $(HOME)
 CREDENTIALS_DIR := $(HOME)/credentials
 
 ifneq ($(MAKECMDGOALS),rsync)
+ifneq ($(MAKECMDGOALS),help)
+ifneq ($(MAKECMDGOALS),help-more)
+ifneq ($(MAKECMDGOALS),)
 
 # Our external ip address. If we have only like 192.168.*.* it's be as failover
 LISTEN_IP_ADDRESS := $(shell ./define_listen_ip_address.sh)
@@ -38,7 +41,9 @@ $(error The public IP address should be defined!)
 endif
 
 endif
-
+endif
+endif
+endif
 
 PROFILE_FILE := $(shell if [ -f $(HOME)/.bash_profile ]; then \
 		echo $(HOME)/.bash_profile; \

@@ -1,8 +1,6 @@
-# Please wait few days :)
+# Makefile for compiling Full Lightning Node
 
-This repo is now ative developing. This README has some errors. Please wait few days and repo will be fine :)
-
-# Makefile for local-user compiling: *Bitcoin Core*, *Lightning* and *ElectrumX* server in CentOS 6.x
+The local-user compiling if *Bitcoin Core*, *Lightning* in CentOS 6.x and other *nix.
 
 ## License
 
@@ -11,22 +9,32 @@ more information or see https://opensource.org/licenses/MIT.
 
 ## What is this?
 
+### Brief:
+
+`make i-want-lightning` and you will have compiled bitcoind with lnd daemons with preconfigured files.
+
+`make set-up-lightning-mainnet` and you will be ready to run immediately the
+**lnd** and **bitcoind** daemons.
+
+### More info:
+
 This is the Makefile for building from sources the software for the Bitcoin:
 
 1. [Bitcoin Core][bitcoin-core]
-2. [C-Lightning][c-lightning]
-3. [LND][lnd] *(recommened)*
-4. [ElectrumX][electrumx] server.
+2. [LND][lnd]
+3. [Lncli-Web][lncli-web] (web interface to *lnd*)
 
 This makefile was written for the CentOS 6.x because this OS very conservative
 for new libraries and tools. There are many dependencies which should have new
-versions (gcc, autotools, libtools, pkg-config, gcc, binutils, python 2.x,
-python 3.x).
+versions (gcc, autotools, libtools, pkg-config, gcc, boost, binutils, python 2.x,
+python 3.x, nodeJS, Golang and etc etc etc...). But you can use this makefile
+packet for any *nix i think.
 
 [bitcoin-core]: https://github.com/bitcoin/bitcoin "Bitcoin Core full-node"
 [c-lightning]:  https://github.com/ElementsProject/lightning "Lightning node from BlockStream"
 [lnd]:          https://github.com/lightningnetwork/lnd "Lightning node from Lightning Labs"
 [electrumx]:    https://github.com/kyuupichan/electrumx "Alternative Electrum server"
+[lncli-web]:    https://github.com/mably/lncli-web
 
 This compiling and installing doesn't affect to Unix system because all binaries
 and libraries installed to $HOME directory (for example to home of 'bitcoin'
@@ -42,17 +50,17 @@ installing. The *git sources* are secured by commit ID checkout.
 
     For CentOS 6.*
 
-        $ sudo yum -y install git make coreutils screen db4 db4-devel db4-utils
+        $ sudo yum -y install git make coreutils screen
 
     For Ubuntu/Mint/Debian Linux:
 
-        $ sudo apt install build-essential zlibc zlib1g zlib1g-dev libleveldb-dev screen
+        $ sudo apt install build-essential screen
 
     And then next (and for a rest OSes may be):
 
         $ sudo adduser bitcoin
 
-2.  To login under *bitcoin* by following ways:
+2.  To login under *bitcoin* user by following ways:
 
         # screen -S bitcoin-core
         # su -l bitcoin
@@ -64,10 +72,9 @@ installing. The *git sources* are secured by commit ID checkout.
 
     And to do the next:
 
-        $ git clone https://github.com/Perlover/bitcoin-core-makefile.git
+        $ git clone --recursive https://github.com/Perlover/bitcoin-core-makefile.git
         $ cd bitcoin-core-makefile
-        $ git submodule update --init --recursive
-        $ make bitcoin-core_install |& tee my_make_output.txt
+        $ make i-want-lightning |& tee my_make_output.txt
 
     wait, wait, wait...
 
@@ -79,19 +86,41 @@ installing. The *git sources* are secured by commit ID checkout.
 
         $ screen -r bitcoin-core
 
-3.  If you will see the last line as "The bitcoin-core was installed - OK" - everything was done! :)
+3.  After you need to create lnd's wallet:
 
-4.  You can start bitcoin daemon as:
-
-        bitcoind -daemon
+        $ make set-up-lightning-mainnet
 
     OR
 
-        make start   - start through this makefile
-        make stop    - stop through this makefile
-        make restart - restart through this makefile
+        $ make set-up-lightning-testnet
 
-    This daemon will be located in `~bitcoin/bin` folder. Your .bash_profile will be patched
+4.  To logout from terminal/shell and login again. After you will have all environment variables for normal work.
+
+    And you will have alias commands for start:
+
+    * `bitcoind-start`
+    * `bitcoind-stop`
+    * `lnd-start`
+    * `lnd-stop`
+    * `lncli-web-start` (the https protocol)
+    * `lncli-web-stop`
+
+5.  You can start bitcoin & lnd daemons as:
+
+        bitcoind-start
+        lnd-start
+
+    Stop daemon:
+
+        bitcoind-stop
+        lnd-stop
+
+    And you can use browser to control and manage lightning node:
+
+        lncli-web-start
+
+    And after this you can to login to *https://your_listen_ip_address:8280/*
+    (the passwords can be found in ~/credentials directory).
 
 5.  **ATTENTION!** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 

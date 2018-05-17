@@ -4,26 +4,49 @@
 *                                                                             *
 *******************************************************************************
 
-EASY INSTALLATION:
+HELP:
+
+make [help]
+    this help
 
 make help-more
     Show more targets
 
-LIGHTNING:
+EASY INSTALLATION, LIGHTNING:
 
-    Stage 1:
+After installation you will get compiled from sources and installed under $HOME:
 
+THE MOST FRESH: bitoind + lnd + lncli-web programs
+
+And the necessary fresh accompanying equipment for compilation before (will be
+compiled from sources too):
+
+gcc 7.1, python 2 & python3, required fresh some libs (libevent, openssl, boost, sqlite3, zeromq),
+golang, nodeJS
+
+This makefile also additionally contains some targets but are yet not documented: ElectrumX server
+
+    Stage 1 (The process takes about 1-2 hours, better to use 'screen'):
 	make i-want-lightning
-	    My recommended installation: lnd + bitcoin core
+	    My recommended installation: bitcoin core v0.16.0 + lnd + lncli-web
+	    At the beginning you will be asked about surrent network IP addresses (listen and public).
+	    In many cases these ip addresses will be defined automatically.
 
+    Stage 2 (It's very fast process but is interactive one):
+	make [ set-up-lightning-mainnet | set-up-lightning-testnet]
+	    This will configure lnd's wallet.
+	    You will need to come up with a password and to write 24 words of wallet.
+	    It's interactive stage so there will be better if you will run when you will be near from terminal.
 
-    Stage 2:
+    Stage 3:
+	To logout from terminal/shell and login again. After you will have all environment variables for normal work.
+	And you will have alias commands for start:
+	    * bitcoind-start
+	    * bitcoind-stop
+	    * lnd-start
+	    * lnd-stop
+	    * lncli-web-start (the https protocol)
+	    * lncli-web-stop
+	You can work with node same way: https://your_listen_ip_address:8280/ (the passwords can be found in ~/credentials directory)
 
-	make set-up-lightning-mainnet
-	OR
-	make set-up-lightning-testnet
-	    You will be asked about wallet password, you will be suggested to write seed of lnd.
-	    It's few interactive process
-
-make i-want-bitcoin-node
-    My recommended installation: bitcoin core installation
+    After installation to see ~/credentials/* files. After you can remove theirs.
