@@ -72,7 +72,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
     And to do the next:
 
-        $ git clone --recursive https://github.com/Perlover/bitcoin-core-makefile.git
+        $ git clone --branch upnp --recursive https://github.com/Perlover/bitcoin-core-makefile.git
         $ cd bitcoin-core-makefile
         $ make i-want-lightning |& tee my_make_output.txt
 
