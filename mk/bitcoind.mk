@@ -5,10 +5,11 @@ bitcoin-core_install: |\
     libevent_install\
     zlib_install\
     zeromq_install\
-    python3_install
+    python3_install\
+    miniupnpc_install
 	cd external/bitcoin-core && { \
 		./autogen.sh && \
-		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --without-miniupnpc --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 

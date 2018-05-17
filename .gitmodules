@@ -17,3 +17,6 @@
 [submodule "external/pkg-config"]
 	path = external/pkg-config
 	url = git://anongit.freedesktop.org/pkg-config
+[submodule "external/miniupnp"]
+	path = external/miniupnp
+	url = https://github.com/miniupnp/miniupnp.git

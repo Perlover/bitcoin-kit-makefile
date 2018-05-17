@@ -105,5 +105,6 @@ include mk/lnd.mk
 include mk/lncli-web.mk
 include mk/iptables.mk
 include mk/zeromq.mk
+include mk/miniupnp.mk
 include mk/rsync.mk
 include mk/finally.mk
