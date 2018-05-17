@@ -28,7 +28,7 @@ lncli-web_lnd_certs_install: |\
 	openssl req -new -sha256 -key tls.key -out csr.csr -subj '/CN=localhost/O=lnd' && \
 	openssl req -x509 -sha256 -days 36500 -key tls.key -in csr.csr -out tls.cert && \
 	rm csr.csr && \
-	cp -f * $(HOME)/.lnd && cp -f tls.cert $(HOME)/opt/lncli-web
+	cp -f * $(HOME)/.lnd && cp -f tls.cert $(HOME)/opt/lncli-web/lnd.cert
 	@touch $@
 
 MAKE_DIRS += build/lnd/lncli-web/ssl
@@ -56,7 +56,7 @@ lncli-web_configs_install: |\
 
 $(CREDENTIALS_DIR)/lncli-web-passwords.txt: |\
     $(CREDENTIALS_DIR)
-	@umask 077 && echo $$'Admin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
+	@umask 077 && echo $$'URL: https://$(LISTEN_IP_ADDRESS):8280/\n\nAdmin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
 
 build/lnd/lncli-web/start.sh: $(CREDENTIALS_DIR)/lncli-web-passwords.txt configs/lncli-web/start.sh | build/lnd/lncli-web
 	cp -f configs/lncli-web/start.sh $@ &&\
@@ -70,4 +70,3 @@ build/lnd/lncli-web/start.sh: $(CREDENTIALS_DIR)/lncli-web-passwords.txt configs
 
 $(HOME)/opt/lncli-web/start.sh: build/lnd/lncli-web/start.sh
 	cp $< $@ && chmod 700 $@
-

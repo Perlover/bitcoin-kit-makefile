@@ -61,15 +61,25 @@ i-want-lightning: |\
     lncli-web_configs_install
 	@touch $@
 
-lnd_create_wallet_macaroon_install:
-	@[ -f $(HOME)/.lnd/admin.macaroon ] && echo "You already setted up the lnd daemon (the file $(HOME)/.lnd/admin.macaroon exists)" && touch $@ && false
-	@umask 077 && nohup lnd &>.$@.out.txt & echo $$! >.$@.pid.txt
-	@echo $$'********************************************************************************\n\n\n Now the 'lncli create' was run (creation of wallet). It's important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
-	@echo 'Please press ENTER to next step:'; read
-	lncli create
+BITCOIN_NETWORK ?= mainnet
+
+lnd_create_wallet_macaroon_install: | lnd_$(BITCOIN_NETWORK)_set_config_links
+	if [ -f $(HOME)/.lnd/admin.macaroon ]; then echo "You already setted up the lnd daemon (the file $(HOME)/.lnd/admin.macaroon exists)"; touch $@ && false; fi
+	umask 077 && nohup lnd &>.$@.out.txt & echo $$! >.$@.pid.txt
+	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
+	echo 'Please press ENTER to next step:'; read
+	lncli create && sleep 2
 	-@kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt
-	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
+	sleep 2 && cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
+
+lnd_testnet_set_config_links:
+	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
+	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd.conf; fi
+
+lnd_mainnet_set_config_links:
+	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-mainnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
+	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/lnd.conf; fi
 
 set-up-lightning: |\
     i-want-lightning\
@@ -80,10 +90,12 @@ set-up-lightning: |\
     lnd_create_wallet_macaroon_install\
     $(HOME)/opt/lncli-web/start.sh
 
-set-up-lightning-testnet: | set-up-lightning
-	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-testnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
-	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/lnd.conf; fi
+export LISTEN_IP_ADDRESS PUBLIC_IP_ADDRESS
 
-set-up-lightning-mainnet: | set-up-lightning
-	if [ ! -f $(HOME)/.bitcoin/bitcoin.conf ]; then ln -s $(HOME)/.bitcoin/bitcoin-mainnet.conf $(HOME)/.bitcoin/bitcoin.conf; fi
-	if [ ! -f $(HOME)/.lnd/lnd.conf ]; then ln -s $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/lnd.conf; fi
+set-up-lightning-testnet:
+	$(MAKE) set-up-lightning BITCOIN_NETWORK=testnet
+
+set-up-lightning-mainnet:
+	$(MAKE) set-up-lightning BITCOIN_NETWORK=mainnet
+
+unexport
