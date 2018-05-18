@@ -24,23 +24,32 @@ BASE_INSTALL_DIR := $(HOME)
 # Here will be some password files and etc. for authorization of services
 CREDENTIALS_DIR := $(HOME)/credentials
 
+# This hash will be used when defining the network configuration (as cache ID)
+HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $1}')
+
 ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
 ifneq ($(MAKECMDGOALS),)
 
-# Our external ip address. If we have only like 192.168.*.* it's be as failover
-LISTEN_IP_ADDRESS ?= $(shell ./define_listen_ip_address.sh)
-LISTEN_IP_ADDRESS := $(LISTEN_IP_ADDRESS)
-ifeq ($(LISTEN_IP_ADDRESS),)
-$(error The external IP address should be defined!)
+ifneq ($(wildcard $(HASH_NETWORK_CONFIG).mk),$(HASH_NETWORK_CONFIG).mk)
+$(shell ./define_all_ipaddresses.sh $(HASH_NETWORK_CONFIG) $(CREDENTIALS_DIR)/network-summary.txt)
 endif
 
-PUBLIC_IP_ADDRESS ?= $(shell ./define_public_ip_address.sh)
-PUBLIC_IP_ADDRESS := $(PUBLIC_IP_ADDRESS)
-ifeq ($(PUBLIC_IP_ADDRESS),)
-$(error The public IP address should be defined!)
-endif
+include $(HASH_NETWORK_CONFIG).mk
+
+# # Our external ip address. If we have only like 192.168.*.* it's be as failover
+# LISTEN_IP_ADDRESS ?= $(shell ./define_listen_ip_address.sh)
+# LISTEN_IP_ADDRESS := $(LISTEN_IP_ADDRESS)
+# ifeq ($(LISTEN_IP_ADDRESS),)
+# $(error The external IP address should be defined!)
+# endif
+#
+# PUBLIC_IP_ADDRESS ?= $(shell ./define_public_ip_address.sh)
+# PUBLIC_IP_ADDRESS := $(PUBLIC_IP_ADDRESS)
+# ifeq ($(PUBLIC_IP_ADDRESS),)
+# $(error The public IP address should be defined!)
+# endif
 
 endif
 endif
@@ -106,5 +115,6 @@ include mk/lncli-web.mk
 include mk/iptables.mk
 include mk/zeromq.mk
 include mk/miniupnp.mk
+include mk/i-want-lightning.mk
 include mk/rsync.mk
 include mk/finally.mk

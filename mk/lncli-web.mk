@@ -54,19 +54,43 @@ lncli-web_configs_install: |\
     $(HOME)/opt/lncli-web/ssl
 	@touch $@
 
-$(CREDENTIALS_DIR)/lncli-web-passwords.txt: |\
+$(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt: |\
     $(CREDENTIALS_DIR)
-	@umask 077 && echo $$'URL: https://$(LISTEN_IP_ADDRESS):8280/\n\nAdmin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
+	@umask 077 && echo $$'URL: https://$(BITCOIN_KIT_LOCAL_IP):8280/\n\nAdmin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
 
-build/lnd/lncli-web/start.sh: $(CREDENTIALS_DIR)/lncli-web-passwords.txt configs/lncli-web/start.sh | build/lnd/lncli-web
-	cp -f configs/lncli-web/start.sh $@ &&\
-	LNCLI_WEB_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
-	LNCLI_WEB_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-passwords.txt|sed -e 's#Password: ##'` && \
+$(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt: |\
+    $(CREDENTIALS_DIR)
+	@umask 077 && echo $$'URL: https://$(BITCOIN_KIT_LOCAL_IP):8281/\n\nAdmin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
+
+build/bin/lncli-web/mainnet-lncli-web-start: \
+    $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt\
+    configs/bin/lncli-web/mainnet-lncli-web-start\
+    |\
+    build/bin/lncli-web
+	cp -f configs/bin/lncli-web/mainnet-lncli-web-start $@ &&\
+	LNCLI_WEB_MAINNET_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt|sed -e 's#Password: ##'` && \
+	LNCLI_WEB_MAINNET_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt|sed -e 's#Password: ##'` && \
 	sed -ri \
-	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
-	-e 's#\$$\$$LNCLI_WEB_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_ADMIN_PASS'#' \
-	-e 's#\$$\$$LNCLI_WEB_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_LIMIT_PASS'#' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
+	-e 's#\$$\$$LNCLI_WEB_MAINNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_ADMIN_PASS'#' \
+	-e 's#\$$\$$LNCLI_WEB_MAINNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_LIMIT_PASS'#' \
 	$@
 
-$(HOME)/opt/lncli-web/start.sh: build/lnd/lncli-web/start.sh
-	cp $< $@ && chmod 700 $@
+build/bin/lncli-web/testnet-lncli-web-start: \
+    $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt\
+    configs/bin/lncli-web/testnet-lncli-web-start\
+    |\
+    build/bin/lncli-web
+	cp -f configs/bin/lncli-web/testnet-lncli-web-start $@ &&\
+	LNCLI_WEB_TESTNET_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt|sed -e 's#Password: ##'` && \
+	LNCLI_WEB_TESTNET_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt|sed -e 's#Password: ##'` && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
+	-e 's#\$$\$$LNCLI_WEB_TESTNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_ADMIN_PASS'#' \
+	-e 's#\$$\$$LNCLI_WEB_TESTNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_LIMIT_PASS'#' \
+	$@
+
+$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start
+
+$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. $HOME/.bitcoin_envs
+
+pid_file=$HOME/.testnet-lncli-web.pid
+
+cd $HOME/opt/lncli-web &&
+if [ ! -f $pid_file ] || ! kill -0 `cat $pid_file` &>/dev/null; then
+    nohup node server --lndhost localhost:10010 --serverport 8281 --usetls ssl --user admin --pwd $$LNCLI_WEB_TESTNET_ADMIN_PASS$$ --limituser limit --limitpwd $$LNCLI_WEB_TESTNET_LIMIT_PASS$$ --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
+    echo $! >$pid_file
+else
+    echo 'testnet-lncli-web is already run (pid: '`cat $pid_file`')'
+fi

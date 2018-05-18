@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. $HOME/.bitcoin_envs
+
+bitcoind -conf $HOME/.bitcoin/bitcoin-mainnet.conf -pid $HOME/.mainnet-bitcoind.pid && echo "OK - bitcoind (mainnet) started"

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. $HOME/.bitcoin_envs
+
+bitcoin-cli -conf $HOME/.bitcoin/bitcoin-mainnet.conf stop
+

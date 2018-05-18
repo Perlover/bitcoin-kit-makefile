@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. $HOME/.bitcoin_envs
+
+bitcoind -conf $HOME/.bitcoin/bitcoin-testnet.conf -pid $HOME/.testnet-bitcoind.pid && echo "OK - bitcoind (testnet) started"

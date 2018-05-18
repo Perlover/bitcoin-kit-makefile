@@ -41,7 +41,7 @@ $(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf
 
 $(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf
 
-$(eval $(call COPY_FILE,build/bitcoind,$(HOME)/.bitcoin,077))
+$(eval $(call COPY_FILE,$(HOME)/.bitcoin,077))
 
 build/bitcoind/bitcoin-testnet.conf :\
     configs/bitcoind/bitcoin-testnet.conf\
@@ -50,8 +50,8 @@ build/bitcoind/bitcoin-testnet.conf :\
     build/bitcoind
 	cp -f $< $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
-	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
+	-e 's#\$$\$$BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET\$$\$$#$(BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET)#' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
 	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
 	$@
 
@@ -62,8 +62,8 @@ build/bitcoind/bitcoin-mainnet.conf :\
     build/bitcoind
 	cp -f $< $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
-	-e 's#\$$\$$PUBLIC_IP_ADDRESS\$$\$$#$(PUBLIC_IP_ADDRESS)#' \
-	-e 's#\$$\$$LISTEN_IP_ADDRESS\$$\$$#$(LISTEN_IP_ADDRESS)#' \
+	-e 's#\$$\$$BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET\$$\$$#$(BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET)#' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
 	-e 's#\$$\$$LND_RPC_PASS\$$\$$#'$$LND_RPC_PASS'#' \
 	$@
 
@@ -71,3 +71,23 @@ bitcoind_configs_install: |\
     $(HOME)/.bitcoin/bitcoin-testnet.conf\
     $(HOME)/.bitcoin/bitcoin-mainnet.conf
 	@touch $@
+
+MAKE_DIRS += build/bin/bitcoind
+
+build/bin/bitcoind/mainnet-bitcoin-start: \
+    configs/bin/bitcoind/mainnet-bitcoind-start\
+    |\
+    bitcoin-core_install\
+    build/bin/bitcoind
+	cp -f $< $@ && chmod 755 $@
+
+build/bin/bitcoind/testnet-bitcoin-start: \
+    configs/bin/bitcoind/testnet-bitcoind-start\
+    |\
+    bitcoin-core_install\
+    build/bin/bitcoind
+	cp -f $< $@ && chmod 755 $@
+
+$(HOME)/bin/mainnet-bitcoin-start: build/bin/bitcoind/mainnet-bitcoin-start
+
+$(HOME)/bin/testnet-bitcoin-start: build/bin/bitcoind/testnet-bitcoin-start
