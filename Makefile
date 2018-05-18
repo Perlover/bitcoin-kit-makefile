@@ -25,18 +25,20 @@ BASE_INSTALL_DIR := $(HOME)
 CREDENTIALS_DIR := $(HOME)/credentials
 
 # This hash will be used when defining the network configuration (as cache ID)
-HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $1}')
+HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
 ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
 ifneq ($(MAKECMDGOALS),)
 
-ifneq ($(wildcard $(HASH_NETWORK_CONFIG).mk),$(HASH_NETWORK_CONFIG).mk)
-$(shell ./define_all_ipaddresses.sh $(HASH_NETWORK_CONFIG) $(CREDENTIALS_DIR)/network-summary.txt)
+NETWORK_MK_FILE := network_$(HASH_NETWORK_CONFIG).mk
+ 
+ifneq ($(wildcard $(NETWORK_MK_FILE)),$(NETWORK_MK_FILE))
+$(shell ./define_all_ipaddresses.sh $(NETWORK_MK_FILE) $(CREDENTIALS_DIR)/network-summary.txt)
 endif
 
-include $(HASH_NETWORK_CONFIG).mk
+include $(NETWORK_MK_FILE)
 
 # # Our external ip address. If we have only like 192.168.*.* it's be as failover
 # LISTEN_IP_ADDRESS ?= $(shell ./define_listen_ip_address.sh)

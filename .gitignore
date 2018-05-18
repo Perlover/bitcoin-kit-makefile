@@ -26,3 +26,5 @@ my_make_output.txt
 Python-*
 /build
 /upnp
+/network_*.mk
+/i-want-lightning

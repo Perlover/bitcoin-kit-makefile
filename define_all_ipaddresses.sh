@@ -1,5 +1,16 @@
 #!/bin/bash
 
+if [ ! -d ./upnp ]; then
+	mkdir ./upnp
+fi
+
+if [ ! -f ./upnp/bin/upnpc ]; then
+	cd ./upnp && cwd=`pwd` && cd .. &&
+	cd external/miniupnp/miniupnpc && {
+		INSTALLPREFIX=$cwd make install && make clean && echo "miniUPnP client FOR THIS MAKE was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+fi
+
 {
 echo -n $'
 
@@ -129,6 +140,7 @@ BITCOIN_KIT_SHOULD_CONFIGURE_ROUTER_PORT_FORWARDING := $BITCOIN_KIT_SHOULD_CONFI
 	echo "BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET :="
     fi
 
-} >$1.mk
+} >$1
 
 } >&2
+

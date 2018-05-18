@@ -62,6 +62,8 @@ $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt: |\
     $(CREDENTIALS_DIR)
 	@umask 077 && echo $$'URL: https://$(BITCOIN_KIT_LOCAL_IP):8281/\n\nAdmin auth:\nUser: admin\nPassword: $(call GENERATE_PASSWORD,16)\n\nLimited user auth:\nUser: limit\nPassword: $(call GENERATE_PASSWORD,16)' >$@
 
+MAKE_DIRS += build/bin/lncli-web
+
 build/bin/lncli-web/mainnet-lncli-web-start: \
     $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt\
     configs/bin/lncli-web/mainnet-lncli-web-start\

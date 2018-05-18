@@ -22,11 +22,12 @@ $(HOME)/.lnd/lnd-mainnet.conf: build/lnd/bitcoind/lnd-mainnet.conf
 $(eval $(call COPY_FILE,$(HOME)/.lnd,077))
 
 build/lnd/bitcoind/lnd-testnet.conf :\
+    $(NETWORK_MK_FILE)\
     configs/lnd/bitcoind/lnd-testnet.conf\
     $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
     |\
     build/lnd/bitcoind
-	cp -f $< $@ &&\
+	cp -f configs/lnd/bitcoind/lnd-testnet.conf $@ &&\
 	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
 	-e 's#\$$\$$BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET\$$\$$#$(BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET)#' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
@@ -34,11 +35,12 @@ build/lnd/bitcoind/lnd-testnet.conf :\
 	$@
 
 build/lnd/bitcoind/lnd-mainnet.conf :\
+    $(NETWORK_MK_FILE)\
     configs/lnd/bitcoind/lnd-mainnet.conf\
     $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt\
     |\
     build/lnd/bitcoind
-	cp -f $< $@ &&\
+	cp -f configs/lnd/bitcoind/lnd-mainnet.conf $@ &&\
 	RPC_PASS=`awk '/Your password:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
 	-e 's#\$$\$$BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET\$$\$$#$(BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET)#' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
@@ -62,23 +64,25 @@ lnd_create_macaroon_install: | $(HOME)/.lnd/lnd-mainnet.conf
 	    umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>.$@.out.txt & echo $$! >.$@.pid.txt;\
 	    sleep 2 && kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt;\
 	    sleep 2;\
-	fi \
+	fi;\
 	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 
-lnd_create_mainnet_wallet_install: | lnd_create_macaroon_install
-	umask 077 && nohup lnd &>.$@.out.txt & echo $$! >.$@.pid.txt
+$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
+$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | lnd_create_macaroon_install
+	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo 'Please press ENTER to next step:'; read
 	lncli --rpcserver=localhost:10009 create && sleep 2
-	-@kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt
+	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 	@touch $@
 
-lnd_create_testnet_wallet_install: | lnd_create_macaroon_install
-	umask 077 && nohup lnd &>.$@.out.txt & echo $$! >.$@.pid.txt
+$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
+$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | lnd_create_macaroon_install
+	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo '!!! THIS IS TESTNODE WALLET! Please press ENTER to next step:'; read
 	lncli --rpcserver=localhost:10010 create && sleep 2
-	-@kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt
+	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 	@touch $@
 

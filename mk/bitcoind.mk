@@ -44,6 +44,7 @@ $(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf
 $(eval $(call COPY_FILE,$(HOME)/.bitcoin,077))
 
 build/bitcoind/bitcoin-testnet.conf :\
+    $(NETWORK_MK_FILE)\
     configs/bitcoind/bitcoin-testnet.conf\
     $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
     |\
@@ -56,6 +57,7 @@ build/bitcoind/bitcoin-testnet.conf :\
 	$@
 
 build/bitcoind/bitcoin-mainnet.conf :\
+    $(NETWORK_MK_FILE)\
     configs/bitcoind/bitcoin-mainnet.conf\
     $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt\
     |\
@@ -88,6 +90,25 @@ build/bin/bitcoind/testnet-bitcoin-start: \
     build/bin/bitcoind
 	cp -f $< $@ && chmod 755 $@
 
+build/bin/bitcoind/mainnet-bitcoin-stop: \
+    configs/bin/bitcoind/mainnet-bitcoind-stop\
+    |\
+    bitcoin-core_install\
+    build/bin/bitcoind
+	cp -f $< $@ && chmod 755 $@
+
+build/bin/bitcoind/testnet-bitcoin-stop: \
+    configs/bin/bitcoind/testnet-bitcoind-stop\
+    |\
+    bitcoin-core_install\
+    build/bin/bitcoind
+	cp -f $< $@ && chmod 755 $@
+
 $(HOME)/bin/mainnet-bitcoin-start: build/bin/bitcoind/mainnet-bitcoin-start
 
 $(HOME)/bin/testnet-bitcoin-start: build/bin/bitcoind/testnet-bitcoin-start
+
+$(HOME)/bin/mainnet-bitcoin-stop: build/bin/bitcoind/mainnet-bitcoin-stop
+
+$(HOME)/bin/testnet-bitcoin-stop: build/bin/bitcoind/testnet-bitcoin-stop
+
