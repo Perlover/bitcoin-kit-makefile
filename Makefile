@@ -35,23 +35,10 @@ ifneq ($(MAKECMDGOALS),)
 NETWORK_MK_FILE := network_$(HASH_NETWORK_CONFIG).mk
  
 ifneq ($(wildcard $(NETWORK_MK_FILE)),$(NETWORK_MK_FILE))
-$(shell ./define_all_ipaddresses.sh $(NETWORK_MK_FILE) $(CREDENTIALS_DIR)/network-summary.txt)
+$(shell mkdir -p $(CREDENTIALS_DIR) && ./define_all_ipaddresses.sh $(NETWORK_MK_FILE) $(CREDENTIALS_DIR)/network-summary.txt)
 endif
 
 include $(NETWORK_MK_FILE)
-
-# # Our external ip address. If we have only like 192.168.*.* it's be as failover
-# LISTEN_IP_ADDRESS ?= $(shell ./define_listen_ip_address.sh)
-# LISTEN_IP_ADDRESS := $(LISTEN_IP_ADDRESS)
-# ifeq ($(LISTEN_IP_ADDRESS),)
-# $(error The external IP address should be defined!)
-# endif
-#
-# PUBLIC_IP_ADDRESS ?= $(shell ./define_public_ip_address.sh)
-# PUBLIC_IP_ADDRESS := $(PUBLIC_IP_ADDRESS)
-# ifeq ($(PUBLIC_IP_ADDRESS),)
-# $(error The public IP address should be defined!)
-# endif
 
 endif
 endif
