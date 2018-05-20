@@ -61,9 +61,10 @@ $(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.co
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo 'Please press ENTER to next step:'; read
-	lncli --rpcserver=localhost:10009 create && sleep 2
+	lncli --rpcserver=localhost:10009 create
+	for i in {1..5}; do [ -f $(HOME)/.lnd/admin.macaroon ] && break; sleep 1; done
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
-	[ ! -f $(HOME)/.lnd/admin.macaroon ] && echo "No file $(HOME)/.lnd/admin.macaroon" && false
+	if [ ! -f $(HOME)/.lnd/admin.macaroon ]; then echo "No file $(HOME)/.lnd/admin.macaroon"; false; fi
 	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 
@@ -72,9 +73,10 @@ $(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.co
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo '!!! THIS IS TESTNODE WALLET! Please press ENTER to next step:'; read
-	lncli --rpcserver=localhost:10010 create && sleep 2
+	lncli --rpcserver=localhost:10010 create
+	for i in {1..5}; do [ -f $(HOME)/.lnd/admin.macaroon ] && break; sleep 1; done
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
-	[ ! -f $(HOME)/.lnd/admin.macaroon ] && echo "No file $(HOME)/.lnd/admin.macaroon" && false
+	if [ ! -f $(HOME)/.lnd/admin.macaroon ]; then echo "No file $(HOME)/.lnd/admin.macaroon"; false; fi
 	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 
