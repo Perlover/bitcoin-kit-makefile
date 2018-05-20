@@ -76,39 +76,39 @@ bitcoind_configs_install: |\
 
 MAKE_DIRS += build/bin/bitcoind
 
-build/bin/bitcoind/mainnet-bitcoin-start: \
+build/bin/bitcoind/mainnet-bitcoind-start: \
     configs/bin/bitcoind/mainnet-bitcoind-start\
     |\
     bitcoin-core_install\
     build/bin/bitcoind
 	cp -f $< $@ && chmod 755 $@
 
-build/bin/bitcoind/testnet-bitcoin-start: \
+build/bin/bitcoind/testnet-bitcoind-start: \
     configs/bin/bitcoind/testnet-bitcoind-start\
     |\
     bitcoin-core_install\
     build/bin/bitcoind
 	cp -f $< $@ && chmod 755 $@
 
-build/bin/bitcoind/mainnet-bitcoin-stop: \
+build/bin/bitcoind/mainnet-bitcoind-stop: \
     configs/bin/bitcoind/mainnet-bitcoind-stop\
     |\
     bitcoin-core_install\
     build/bin/bitcoind
 	cp -f $< $@ && chmod 755 $@
 
-build/bin/bitcoind/testnet-bitcoin-stop: \
+build/bin/bitcoind/testnet-bitcoind-stop: \
     configs/bin/bitcoind/testnet-bitcoind-stop\
     |\
     bitcoin-core_install\
     build/bin/bitcoind
 	cp -f $< $@ && chmod 755 $@
 
-$(HOME)/bin/mainnet-bitcoin-start: build/bin/bitcoind/mainnet-bitcoin-start
+$(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install
 
-$(HOME)/bin/testnet-bitcoin-start: build/bin/bitcoind/testnet-bitcoin-start
+$(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | miniupnpc_install
 
-$(HOME)/bin/mainnet-bitcoin-stop: build/bin/bitcoind/mainnet-bitcoin-stop
+$(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install
 
-$(HOME)/bin/testnet-bitcoin-stop: build/bin/bitcoind/testnet-bitcoin-stop
+$(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install
 
