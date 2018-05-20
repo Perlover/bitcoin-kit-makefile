@@ -2,4 +2,6 @@
 
 . $HOME/.bitcoin_envs
 
+# TODO upnpc ports settuping
 bitcoind -conf $HOME/.bitcoin/bitcoin-testnet.conf -pid $HOME/.testnet-bitcoind.pid && echo "OK - bitcoind (testnet) started"
+

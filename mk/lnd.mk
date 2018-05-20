@@ -54,35 +54,27 @@ lnd_configs_bitcoind_bundle_install: |\
     $(HOME)/.lnd/lnd-mainnet.conf
 	@touch $@
 
-
 BITCOIN_NETWORK ?= mainnet
 
-lnd_create_macaroon_install: | $(HOME)/.lnd/lnd-mainnet.conf
-	if [ -f $(HOME)/.lnd/admin.macaroon ]; then \
-	    echo "You already setted up the lnd daemon (the file $(HOME)/.lnd/admin.macaroon exists)";\
-	else\
-	    umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>.$@.out.txt & echo $$! >.$@.pid.txt;\
-	    sleep 2 && kill `cat .$@.pid.txt`; rm -f .$@.pid.txt .$@.out.txt;\
-	    sleep 2;\
-	fi;\
-	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
-	@touch $@
-
 $(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
-$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | lnd_create_macaroon_install
+$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.conf
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo 'Please press ENTER to next step:'; read
 	lncli --rpcserver=localhost:10009 create && sleep 2
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
+	[ ! -f $(HOME)/.lnd/admin.macaroon ] && echo "No file $(HOME)/.lnd/admin.macaroon" && false
+	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 
 $(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
-$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | lnd_create_macaroon_install
+$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.conf
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo '!!! THIS IS TESTNODE WALLET! Please press ENTER to next step:'; read
 	lncli --rpcserver=localhost:10010 create && sleep 2
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt`; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
+	[ ! -f $(HOME)/.lnd/admin.macaroon ] && echo "No file $(HOME)/.lnd/admin.macaroon" && false
+	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 

@@ -2,4 +2,6 @@
 
 . $HOME/.bitcoin_envs
 
+# TODO upnpc ports settuping
 bitcoind -conf $HOME/.bitcoin/bitcoin-mainnet.conf -pid $HOME/.mainnet-bitcoind.pid && echo "OK - bitcoind (mainnet) started"
+

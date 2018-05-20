@@ -2,5 +2,6 @@
 
 . $HOME/.bitcoin_envs
 
+# TODO upnpc ports settuping
 bitcoin-cli -conf $HOME/.bitcoin/bitcoin-mainnet.conf stop
 
