@@ -2,6 +2,8 @@
 
 . $HOME/.bitcoin_envs
 
-# TODO upnpc ports settuping
-bitcoind -conf $HOME/.bitcoin/bitcoin-mainnet.conf -pid $HOME/.mainnet-bitcoind.pid && echo "OK - bitcoind (mainnet) started"
+if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
+    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e 'The bitcoind (mainnet)' -a $$BITCOIN_KIT_LOCAL_IP$$ 8333 8333 tcp || echo "ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ 8333 8333 tcp)"
+fi
 
+bitcoind -conf $HOME/.bitcoin/bitcoin-mainnet.conf -pid $HOME/.mainnet-bitcoind.pid && echo "OK - bitcoind (mainnet) started"

@@ -33,7 +33,7 @@ This makefile also additionally contains some targets but are yet not documented
 	    In many cases these ip addresses will be defined automatically.
 
     Stage 2 (It's very fast process but is interactive one):
-	make [ set-up-lightning-mainnet | set-up-lightning-testnet]
+	make [ set-up-lightning-mainnet | set-up-lightning-testnet ]
 	    This will configure lnd's wallet.
 	    You will need to come up with a password and to write 24 words of wallet.
 	    It's interactive stage so there will be better if you will run when you will be near from terminal.

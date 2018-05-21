@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. $HOME/.bitcoin_envs
+
+if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
+    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d 9736 tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d 9736 tcp)"
+fi
+
+kill `cat $HOME/.testnet-lnd.pid` && rm -f $HOME/.testnet-lnd.pid

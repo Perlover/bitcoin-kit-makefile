@@ -54,6 +54,21 @@ lnd_configs_bitcoind_bundle_install: |\
     $(HOME)/.lnd/lnd-mainnet.conf
 	@touch $@
 
+MAKE_DIRS += build/bin/lnd
+
+build/bin/lnd/mainnet-lnd-start: \
+    $(NETWORK_MK_FILE)\
+    configs/bin/lnd/mainnet-lnd-start\
+    |\
+    lnd_install\
+    lnd_configs_bitcoind_bundle_install\
+    build/bin/lnd
+	cp -f configs/bin/lnd/mainnet-lnd-start $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
+
 BITCOIN_NETWORK ?= mainnet
 
 $(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
@@ -79,4 +94,3 @@ $(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.co
 	if [ ! -f $(HOME)/.lnd/admin.macaroon ]; then echo "No file $(HOME)/.lnd/admin.macaroon"; false; fi
 	cp -f $(HOME)/.lnd/admin.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
-

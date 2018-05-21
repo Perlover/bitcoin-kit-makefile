@@ -18,6 +18,11 @@
 # --login is important here. It forces read ~/.bash_profile file before each execution of make command in rules
 SHELL := /bin/bash --login
 
+ALEX := test\\\#nbob
+
+alex:
+	echo '$(ALEX)'
+
 # The base directory of all packages. It's home directory now but in a future it can be used for common directory in OS, for example /opt/
 BASE_INSTALL_DIR := $(HOME)
 
@@ -33,7 +38,7 @@ ifneq ($(MAKECMDGOALS),help-more)
 ifneq ($(MAKECMDGOALS),)
 
 NETWORK_MK_FILE := network_$(HASH_NETWORK_CONFIG).mk
- 
+
 ifneq ($(wildcard $(NETWORK_MK_FILE)),$(NETWORK_MK_FILE))
 $(shell mkdir -p $(CREDENTIALS_DIR) && ./define_all_ipaddresses.sh $(NETWORK_MK_FILE) $(CREDENTIALS_DIR)/network-summary.txt)
 endif

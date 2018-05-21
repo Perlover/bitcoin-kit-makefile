@@ -1,5 +1,5 @@
-alias testnet-lncli="lncli --rpclisten=localhost:10010"
-alias mainnet-lncli="lncli --rpclisten=localhost:10009"
+alias testnet-lncli="lncli --rpcserver localhost:10010"
+alias mainnet-lncli="lncli --rpcserver localhost:10009"
 
 alias lnd-start="{ nohup lnd & } &>/dev/null; sleep 1; echo 'Please unlock daemon, enter password:'; lncli unlock"
 alias lnd-stop="lncli stop"

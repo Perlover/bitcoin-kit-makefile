@@ -49,7 +49,7 @@ build/bitcoind/bitcoin-testnet.conf :\
     $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt\
     |\
     build/bitcoind
-	cp -f $< $@ &&\
+	cp -f configs/bitcoind/bitcoin-testnet.conf $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-testnet-auth.txt` && sed -ri \
 	-e 's#\$$\$$BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET\$$\$$#$(BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET)#' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
@@ -62,7 +62,7 @@ build/bitcoind/bitcoin-mainnet.conf :\
     $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt\
     |\
     build/bitcoind
-	cp -f $< $@ &&\
+	cp -f configs/bitcoind/bitcoin-mainnet.conf $@ &&\
 	LND_RPC_PASS=`awk '/String to be appended to bitcoin.conf:/{getline; print}' $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt` && sed -ri \
 	-e 's#\$$\$$BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET\$$\$$#$(BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET)#' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
@@ -77,32 +77,56 @@ bitcoind_configs_install: |\
 MAKE_DIRS += build/bin/bitcoind
 
 build/bin/bitcoind/mainnet-bitcoind-start: \
+    $(NETWORK_MK_FILE)\
     configs/bin/bitcoind/mainnet-bitcoind-start\
     |\
     bitcoin-core_install\
+    bitcoind_configs_install\
     build/bin/bitcoind
-	cp -f $< $@ && chmod 755 $@
+	cp -f configs/bin/bitcoind/mainnet-bitcoind-start $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
 
 build/bin/bitcoind/testnet-bitcoind-start: \
+    $(NETWORK_MK_FILE)\
     configs/bin/bitcoind/testnet-bitcoind-start\
     |\
     bitcoin-core_install\
+    bitcoind_configs_install\
     build/bin/bitcoind
-	cp -f $< $@ && chmod 755 $@
+	cp -f configs/bin/bitcoind/testnet-bitcoind-start $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
 
 build/bin/bitcoind/mainnet-bitcoind-stop: \
+    $(NETWORK_MK_FILE)\
     configs/bin/bitcoind/mainnet-bitcoind-stop\
     |\
     bitcoin-core_install\
+    bitcoind_configs_install\
     build/bin/bitcoind
-	cp -f $< $@ && chmod 755 $@
+	cp -f configs/bin/bitcoind/mainnet-bitcoind-stop $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
 
 build/bin/bitcoind/testnet-bitcoind-stop: \
+    $(NETWORK_MK_FILE)\
     configs/bin/bitcoind/testnet-bitcoind-stop\
     |\
     bitcoin-core_install\
+    bitcoind_configs_install\
     build/bin/bitcoind
-	cp -f $< $@ && chmod 755 $@
+	cp -f configs/bin/bitcoind/testnet-bitcoind-stop $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
 
 $(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install
 
@@ -111,4 +135,3 @@ $(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | 
 $(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install
 
 $(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install
-

@@ -2,6 +2,9 @@
 
 . $HOME/.bitcoin_envs
 
-# TODO upnpc ports settuping
+if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
+    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d 18333 tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d 18333 tcp)"
+fi
+
 bitcoin-cli -conf $HOME/.bitcoin/bitcoin-testnet.conf stop
 

@@ -9,12 +9,12 @@ i-want-lightning: |\
 
 set-up-lightning: |\
     i-want-lightning\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoin-start\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoin-stop\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-stop\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-stop\
     $(HOME)/.bitcoin_aliases\
     $(HOME)/.lnd/data/chain/bitcoin/$(BITCOIN_NETWORK)/wallet.db\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start
 
 export BITCOIN_KIT_LOCAL_IP PUBLIC_IP_ADDRESS
 
