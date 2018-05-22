@@ -19,8 +19,8 @@ more information or see https://opensource.org/licenses/MIT.
 **`make set-up-lightning-testnet`** and you will be ready to run immediately the
 **lnd** and **bitcoind** daemons in testnet.
 
-You can use together mainnet & testnet services in single host.
-UPnP is supported auto by scripts from this repositary!
+**You can use together mainnet & testnet** services in single host.
+**UPnP is supported** auto by scripts from this repositary!
 
 ### More info:
 
