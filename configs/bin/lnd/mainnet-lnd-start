@@ -6,7 +6,7 @@ if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
     upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e 'The lnd (mainnet)' -a $$BITCOIN_KIT_LOCAL_IP$$ 9735 9735 tcp || echo "ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ 9735 9735 tcp)"
 fi
 
-{ nohup lnd --configfile=$HOME/.lnd/lnd-mainnet.conf &; echo $! > $HOME/.mainnet-lnd.pid; } &>/dev/null;
+{ nohup lnd --configfile=$HOME/.lnd/lnd-mainnet.conf &>>$HOME/.lnd/mainnet-lnd-run.log & echo $! > $HOME/.mainnet-lnd.pid; } &>/dev/null
 sleep 1;
 echo 'Please unlock lnd daemon (mainnet), enter password:';
 lncli --rpcserver localhost:10009 unlock

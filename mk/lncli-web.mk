@@ -73,10 +73,12 @@ build/bin/lncli-web/mainnet-lncli-web-start: \
 	LNCLI_WEB_MAINNET_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt|sed -e 's#Password: ##'` && \
 	LNCLI_WEB_MAINNET_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt|sed -e 's#Password: ##'` && \
 	sed -ri \
-	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
-	-e 's#\$$\$$LNCLI_WEB_MAINNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_ADMIN_PASS'#' \
-	-e 's#\$$\$$LNCLI_WEB_MAINNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_LIMIT_PASS'#' \
-	$@
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
+	-e 's#\$$\$$LNCLI_WEB_MAINNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_ADMIN_PASS'#g' \
+	-e 's#\$$\$$LNCLI_WEB_MAINNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_MAINNET_LIMIT_PASS'#g' \
+	$@ && \
+	chmod 755 $@
 
 build/bin/lncli-web/testnet-lncli-web-start: \
     $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt\
@@ -87,12 +89,39 @@ build/bin/lncli-web/testnet-lncli-web-start: \
 	LNCLI_WEB_TESTNET_ADMIN_PASS=`awk '/User: admin/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt|sed -e 's#Password: ##'` && \
 	LNCLI_WEB_TESTNET_LIMIT_PASS=`awk '/User: limit/{getline; print}' $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt|sed -e 's#Password: ##'` && \
 	sed -ri \
-	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#' \
-	-e 's#\$$\$$LNCLI_WEB_TESTNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_ADMIN_PASS'#' \
-	-e 's#\$$\$$LNCLI_WEB_TESTNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_LIMIT_PASS'#' \
-	$@
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
+	-e 's#\$$\$$LNCLI_WEB_TESTNET_ADMIN_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_ADMIN_PASS'#g' \
+	-e 's#\$$\$$LNCLI_WEB_TESTNET_LIMIT_PASS\$$\$$#'$$LNCLI_WEB_TESTNET_LIMIT_PASS'#g' \
+	$@ && \
+	chmod 755 $@
 
-$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start
+build/bin/lncli-web/mainnet-lncli-web-stop: \
+    configs/bin/lncli-web/mainnet-lncli-web-stop\
+    |\
+    build/bin/lncli-web
+	cp -f configs/bin/lncli-web/mainnet-lncli-web-stop $@ &&\
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
+	$@ && \
+	chmod 755 $@
 
-$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start
+build/bin/lncli-web/testnet-lncli-web-stop: \
+    configs/bin/lncli-web/testnet-lncli-web-stop\
+    |\
+    build/bin/lncli-web
+	cp -f configs/bin/lncli-web/testnet-lncli-web-stop $@ &&\
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
+	$@ && \
+	chmod 755 $@
 
+$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start | miniupnpc_install
+
+$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start | miniupnpc_install
+
+$(HOME)/bin/mainnet-lncli-web-stop: build/bin/lncli-web/mainnet-lncli-web-stop | miniupnpc_install
+
+$(HOME)/bin/testnet-lncli-web-stop: build/bin/lncli-web/testnet-lncli-web-stop | miniupnpc_install

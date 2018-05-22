@@ -11,10 +11,26 @@ set-up-lightning: |\
     i-want-lightning\
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-stop\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-stop\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-stop\
     $(HOME)/.bitcoin_aliases\
-    $(HOME)/.lnd/data/chain/bitcoin/$(BITCOIN_NETWORK)/wallet.db\
+    $(HOME)/.lnd/data/chain/bitcoin/$(BITCOIN_NETWORK)/wallet.db
+
+$(HOME)/bin/$(BITCOIN_NETWORK)-lightning-start: configs/bin/lightning/$(BITCOIN_NETWORK)-lightning-start | \
+    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start
+	cp -f $< $@ && chmod 755 $@
+
+$(HOME)/bin/$(BITCOIN_NETWORK)-lightning-stop: configs/bin/lightning/$(BITCOIN_NETWORK)-lightning-stop | \
+    $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-stop\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-stop
+	cp -f $< $@ && chmod 755 $@
 
 export BITCOIN_KIT_LOCAL_IP PUBLIC_IP_ADDRESS
 

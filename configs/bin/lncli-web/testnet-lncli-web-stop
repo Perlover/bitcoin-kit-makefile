@@ -3,8 +3,8 @@
 . $HOME/.bitcoin_envs
 
 bitcoin_network=testnet
-tcp_port=9736
-service_name=lnd
+tcp_port=8281
+service_name=lncli-web
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 
 if [ ! -f $pid_file ]; then

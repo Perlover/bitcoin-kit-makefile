@@ -10,4 +10,7 @@ if [ ! -f $pid_file ] || ! kill -0 `cat $pid_file` &>/dev/null; then
     echo $! >$pid_file
 else
     echo 'mainnet-lncli-web is already run (pid: '`cat $pid_file`')'
+fi &&
+if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
+    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e 'The lncli-web (mainnet)' -a $$BITCOIN_KIT_LOCAL_IP$$ 8280 8280 tcp || echo "ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ 8280 8280 tcp)"
 fi

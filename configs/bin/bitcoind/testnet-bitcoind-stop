@@ -2,9 +2,24 @@
 
 . $HOME/.bitcoin_envs
 
+service_name=bitcoind
+bitcoin_network=testnet
+pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
+tcp_port=18333
+
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
-    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d 18333 tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d 18333 tcp)"
+    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d ${tcp_port} tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d ${tcp_port} tcp)"
 fi
 
-bitcoin-cli -conf $HOME/.bitcoin/bitcoin-testnet.conf stop
+pid=`cat $pid_file`
 
+bitcoin-cli -conf=$HOME/.bitcoin/bitcoin-${bitcoin_network}.conf stop
+
+echo -n "The ${service_name} (${bitcoin_network}) terminating ..."
+for i in {1..20}; do
+    kill -0 $pid &>/dev/null || break
+    echo -n '.'
+    sleep 1
+done
+kill -0 $pid &>/dev/null && echo "I cannot terminate ${service_name} (${bitcoin_network})" && exit 2
+echo " OK"

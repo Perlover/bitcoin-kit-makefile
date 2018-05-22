@@ -1,0 +1,9 @@
+#!/bin/bash
+
+bitcoin_network=testnet
+
+${bitcoin_network}-lncli-web-stop &&
+${bitcoin_network}-lnd-stop &&
+${bitcoin_network}-bitcoind-stop &&
+
+echo "All services of bitcoin lightning (${bitcoin_network}) are stopped!"

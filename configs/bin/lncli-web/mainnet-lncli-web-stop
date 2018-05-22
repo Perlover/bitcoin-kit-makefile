@@ -2,24 +2,27 @@
 
 . $HOME/.bitcoin_envs
 
-service_name=bitcoind
 bitcoin_network=mainnet
+tcp_port=8280
+service_name=lncli-web
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
-tcp_port=8333
+
+if [ ! -f $pid_file ]; then
+    echo "ERROR: The ${service_name} (${bitcoin_network}) not run!"
+    exit 1
+fi
 
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
     upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d ${tcp_port} tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d ${tcp_port} tcp)"
 fi
 
-pid=`cat $pid_file`
-
-bitcoin-cli -conf=$HOME/.bitcoin/bitcoin-${bitcoin_network}.conf stop
-
 echo -n "The ${service_name} (${bitcoin_network}) terminating ..."
-for i in {1..20}; do
-    kill -0 $pid &>/dev/null || break
+kill `cat $pid_file` &>/dev/null
+for i in {1..5}; do
+    kill -0 `cat $pid_file` &>/dev/null || break
     echo -n '.'
     sleep 1
 done
-kill -0 $pid &>/dev/null && echo "I cannot terminate ${service_name} (${bitcoin_network})" && exit 2
+kill -0 `cat $pid_file` &>/dev/null && echo "I cannot terminate ${service_name} (${bitcoin_network})" && exit 2
 echo " OK"
+rm -f $pid_file
