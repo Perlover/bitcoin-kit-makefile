@@ -28,6 +28,7 @@ CREDENTIALS_DIR := $(HOME)/credentials
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
 ifneq ($(MAKECMDGOALS),rsync)
+ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
 ifneq ($(MAKECMDGOALS),)
@@ -41,6 +42,7 @@ endif
 
 include $(NETWORK_MK_FILE)
 
+endif
 endif
 endif
 endif

@@ -1,8 +1,9 @@
 MAKE_DIRS += $(HOME)/opt
 
+# Here is temporary my repository with patch...
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
-	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git
+	cd $(HOME)/opt && git clone -b perlover/macaroon-option https://github.com/Perlover/lncli-web.git
 
 lncli-web_install: |\
     nodejs_install\

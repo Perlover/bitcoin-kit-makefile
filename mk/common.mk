@@ -34,7 +34,7 @@ required_for_configure_install: |\
 	@touch $@
 
 clean:
-	rm -rf build
+	rm -rf build network_*
 
 
 GENERATE_PASSWORD = $(shell cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $(1) | head -n 1)

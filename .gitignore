@@ -27,4 +27,5 @@ Python-*
 /build
 /upnp
 /network_*.mk
+/network_*.sh
 /i-want-lightning

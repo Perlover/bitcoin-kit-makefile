@@ -32,7 +32,7 @@ build/lnd/bitcoind/lnd-testnet.conf :\
 	-e 's#\$$\$$HOME\$$\$$#$(HOME)#g' \
 	-e 's#\$$\$$BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET\$$\$$#$(BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET)#g' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
-	-e 's#\$$\$$RPC_PASS\$$\$$#g'$$RPC_PASS'#' \
+	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#g' \
 	$@
 
 build/lnd/bitcoind/lnd-mainnet.conf :\
@@ -46,7 +46,7 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
 	-e 's#\$$\$$HOME\$$\$$#$(HOME)#g' \
 	-e 's#\$$\$$BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET\$$\$$#$(BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET)#g' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' \
-	-e 's#\$$\$$RPC_PASS\$$\$$#g'$$RPC_PASS'#' \
+	-e 's#\$$\$$RPC_PASS\$$\$$#'$$RPC_PASS'#g' \
 	$@
 
 lnd_configs_bitcoind_bundle_install: |\
@@ -112,8 +112,8 @@ build/bin/lnd/testnet-lnd-stop: \
 
 BITCOIN_NETWORK ?= mainnet
 
-$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
-$(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.conf
+$(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
+$(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.conf
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo 'Please press ENTER to next step:'; read
@@ -124,8 +124,8 @@ $(HOME)/.lnd/data/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.co
 	cp -f $(HOME)/.lnd/admin-mainnet.macaroon $(HOME)/opt/lncli-web/
 	@touch $@
 
-$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
-$(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.conf
+$(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
+$(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.conf
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo '!!! THIS IS TESTNODE WALLET! Please press ENTER to next step:'; read
