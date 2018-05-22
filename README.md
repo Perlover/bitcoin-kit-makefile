@@ -111,11 +111,11 @@ installing. The *git sources* are secured by commit ID checkout.
 
 5.  You can start bitcoin & lnd daemons as:
 
-        `mainnet-lightning-start`
+        mainnet-lightning-start
 
     Stop daemon:
 
-        `mainnet-lightning-stop`
+        mainnet-lightning-stop
 
     You can work with node same way: https://your_listen_ip_address:[8280|8281]/
     The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
