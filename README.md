@@ -11,13 +11,16 @@ more information or see https://opensource.org/licenses/MIT.
 
 ### Brief:
 
-`make i-want-lightning` and you will have compiled bitcoind with lnd daemons with preconfigured files.
+**`make i-want-lightning`** and you will have compiled bitcoind with lnd daemons with preconfigured files.
 
-`make set-up-lightning-mainnet` and you will be ready to run immediately the
+**`make set-up-lightning-mainnet`** and you will be ready to run immediately the
 **lnd** and **bitcoind** daemons in mainnet.
 
-`make set-up-lightning-testnet` and you will be ready to run immediately the
+**`make set-up-lightning-testnet`** and you will be ready to run immediately the
 **lnd** and **bitcoind** daemons in testnet.
+
+You can use together mainnet & testnet services in single host.
+UPnP is supported auto by scripts from this repositary!
 
 ### More info:
 
@@ -99,31 +102,23 @@ installing. The *git sources* are secured by commit ID checkout.
 
 4.  To logout from terminal/shell and login again. After you will have all environment variables for normal work.
 
-    And you will have alias commands for start:
+    And you will have scripts in `$PATH` for starting/stopping:
 
-    * `bitcoind-start`
-    * `bitcoind-stop`
-    * `lnd-start`
-    * `lnd-stop`
-    * `lncli-web-start` (the https protocol)
-    * `lncli-web-stop`
+    * `[mainnet|testnet]-lightning-[start|stop]`
+    * `[mainnet|testnet]-bitcoind-[start|stop]`
+    * `[mainnet|testnet]-lnd-[start|stop]`
+    * `[mainnet|testnet]-lncli-web-[start|stop]`
 
 5.  You can start bitcoin & lnd daemons as:
 
-        bitcoind-start
-        lnd-start
+        `mainnet-lightning-start`
 
     Stop daemon:
 
-        bitcoind-stop
-        lnd-stop
+        `mainnet-lightning-stop`
 
-    And you can use browser to control and manage lightning node:
-
-        lncli-web-start
-
-    And after this you can to login to *https://your_listen_ip_address:8280/*
-    (the passwords can be found in ~/credentials directory).
+    You can work with node same way: https://your_listen_ip_address:[8280|8281]/
+    The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
 
 5.  **ATTENTION!** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
