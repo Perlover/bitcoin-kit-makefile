@@ -9,10 +9,11 @@ grpc_port=10010
 web_admin_pass=$$LNCLI_WEB_TESTNET_ADMIN_PASS$$
 web_limit_pass=$$LNCLI_WEB_TESTNET_LIMIT_PASS$$
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
+macaroon_path=$HOME/opt/lncli-web/admin-testnet.macaroon
 
 cd $HOME/opt/lncli-web &&
 if [ ! -f $pid_file ] || ! kill -0 `cat $pid_file` &>/dev/null; then
-    nohup node server --lndhost localhost:${grpc_port} --serverport ${tcp_port} --usetls ssl --user admin --pwd ${web_admin_pass} --limituser limit --limitpwd ${web_limit_pass} --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
+    nohup node server --macaroon-path ${macaroon_path} --lndhost localhost:${grpc_port} --serverport ${tcp_port} --usetls ssl --user admin --pwd ${web_admin_pass} --limituser limit --limitpwd ${web_limit_pass} --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
     echo $! >$pid_file
 else
     echo "${service_name} (${bitcoin_network}) is already run (pid: '`cat $pid_file`')"

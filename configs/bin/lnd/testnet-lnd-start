@@ -7,6 +7,7 @@ bitcoin_network=testnet
 tcp_port=9736
 grpc_port=10010
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
+macaroon_path=$HOME/.lnd/admin-${bitcoin_network}.macaroon
 
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
     echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
@@ -23,4 +24,4 @@ fi
 sleep 1;
 
 echo $'\n\n\n******************************************************************\n\nPlease unlock '"${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
-lncli --rpcserver localhost:${grpc_port} unlock
+lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} unlock
