@@ -14,7 +14,10 @@ more information or see https://opensource.org/licenses/MIT.
 `make i-want-lightning` and you will have compiled bitcoind with lnd daemons with preconfigured files.
 
 `make set-up-lightning-mainnet` and you will be ready to run immediately the
-**lnd** and **bitcoind** daemons.
+**lnd** and **bitcoind** daemons in mainnet.
+
+`make set-up-lightning-testnet` and you will be ready to run immediately the
+**lnd** and **bitcoind** daemons in testnet.
 
 ### More info:
 
@@ -62,29 +65,29 @@ installing. The *git sources* are secured by commit ID checkout.
 
 2.  To login under *bitcoin* user by following ways:
 
-        # screen -S bitcoin-core
+        # screen -S bitcoin-kit
         # su -l bitcoin
 
     OR
 
         ssh bitcoin@your-host.com
-        $ screen -S bitcoin-core
+        $ screen -S bitcoin-kit
 
     And to do the next:
 
-        $ git clone --branch upnp --recursive https://github.com/Perlover/bitcoin-core-makefile.git
-        $ cd bitcoin-core-makefile
+        $ git clone --recursive https://github.com/Perlover/bitcoin-kit-makefile.git
+        $ cd bitcoin-kit-makefile
         $ make i-want-lightning |& tee my_make_output.txt
 
     wait, wait, wait...
 
     You can logout from 'screen' by 'Ctrl-A' -> 'd' and login to again by:
 
-        # screen -r bitcoin-core
+        # screen -r bitcoin-kit
 
     OR (if you logged through ssh under 'bitcoin' user)
 
-        $ screen -r bitcoin-core
+        $ screen -r bitcoin-kit
 
 3.  After you need to create lnd's wallet:
 

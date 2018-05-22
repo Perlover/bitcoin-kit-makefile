@@ -2,7 +2,14 @@
 
 . $HOME/.bitcoin_envs
 
-bitcoind -conf=$HOME/.bitcoin/bitcoin-testnet.conf && echo "OK - bitcoind (testnet) started" &&
+service_name=bitcoind
+bitcoin_network=testnet
+tcp_port=18333
+
+bitcoind -conf=$HOME/.bitcoin/bitcoin-${bitcoin_network}.conf && echo "OK - ${service_name} (${bitcoin_network}) started" &&
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
-    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e 'The bitcoind (testnet)' -a $$BITCOIN_KIT_LOCAL_IP$$ 18333 18333 tcp || echo "ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ 18333 18333 tcp)"
+    echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
+    {
+	upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "The ${service_name} (${bitcoin_network})" -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp
+    } &> /dev/null && echo " OK" || echo " ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp)"
 fi

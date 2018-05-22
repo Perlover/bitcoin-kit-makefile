@@ -1,12 +1,12 @@
 # ~/.bash_profile of .profile patch...
 $(HOME)/.bitcoin_envs: bitcoin_envs.sh
 	cp -f $< $@
-	if [ 'x'`grep '$(HOME)/.bitcoin_envs' $(PROFILE_FILE)` = "x" ]; then echo $$'\n. $(HOME)/.bitcoin_envs' >> $(PROFILE_FILE); fi
+	if [ "x`grep '$(HOME)/.bitcoin_envs' $(PROFILE_FILE)`" = "x" ]; then echo $$'\n. $(HOME)/.bitcoin_envs' >> $(PROFILE_FILE); fi
 
 # ~/.bash_profile of .profile patch...
 $(HOME)/.bitcoin_aliases: configs/aliases.sh
 	cp -f $< $@
-	if [ 'x'`grep '$(HOME)/.bitcoin_aliases' $(BASHRC_FILE)` = "x" ]; then echo $$'\n. $(HOME)/.bitcoin_aliases' >> $(BASHRC_FILE); fi
+	if [ "x`grep '$(HOME)/.bitcoin_aliases' $(BASHRC_FILE)`" = "x" ]; then echo $$'\n. $(HOME)/.bitcoin_aliases' >> $(BASHRC_FILE); fi
 
 git_submodule_install: .gitmodules
 	git submodule update --init --recursive

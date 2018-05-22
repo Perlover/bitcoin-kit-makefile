@@ -65,6 +65,7 @@ $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt: |\
 MAKE_DIRS += build/bin/lncli-web
 
 build/bin/lncli-web/mainnet-lncli-web-start: \
+    $(NETWORK_MK_FILE)\
     $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt\
     configs/bin/lncli-web/mainnet-lncli-web-start\
     |\
@@ -81,6 +82,7 @@ build/bin/lncli-web/mainnet-lncli-web-start: \
 	chmod 755 $@
 
 build/bin/lncli-web/testnet-lncli-web-start: \
+    $(NETWORK_MK_FILE)\
     $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt\
     configs/bin/lncli-web/testnet-lncli-web-start\
     |\
@@ -97,6 +99,7 @@ build/bin/lncli-web/testnet-lncli-web-start: \
 	chmod 755 $@
 
 build/bin/lncli-web/mainnet-lncli-web-stop: \
+    $(NETWORK_MK_FILE)\
     configs/bin/lncli-web/mainnet-lncli-web-stop\
     |\
     build/bin/lncli-web
@@ -108,6 +111,7 @@ build/bin/lncli-web/mainnet-lncli-web-stop: \
 	chmod 755 $@
 
 build/bin/lncli-web/testnet-lncli-web-stop: \
+    $(NETWORK_MK_FILE)\
     configs/bin/lncli-web/testnet-lncli-web-stop\
     |\
     build/bin/lncli-web

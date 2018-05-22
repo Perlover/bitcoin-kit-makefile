@@ -2,15 +2,24 @@
 
 . $HOME/.bitcoin_envs
 
-pid_file=$HOME/.mainnet-lncli-web.pid
+service_name=lncli-web
+bitcoin_network=mainnet
+tcp_port=8280
+grpc_port=10009
+web_admin_pass=$$LNCLI_WEB_MAINNET_ADMIN_PASS$$
+web_limit_pass=$$LNCLI_WEB_MAINNET_LIMIT_PASS$$
+pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 
 cd $HOME/opt/lncli-web &&
 if [ ! -f $pid_file ] || ! kill -0 `cat $pid_file` &>/dev/null; then
-    nohup node server --lndhost localhost:10009 --serverport 8280--usetls ssl --user admin --pwd $$LNCLI_WEB_MAINNET_ADMIN_PASS$$ --limituser limit --limitpwd $$LNCLI_WEB_MAINNET_LIMIT_PASS$$ --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
+    nohup node server --lndhost localhost:${grpc_port} --serverport ${tcp_port} --usetls ssl --user admin --pwd ${web_admin_pass} --limituser limit --limitpwd ${web_limit_pass} --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
     echo $! >$pid_file
 else
-    echo 'mainnet-lncli-web is already run (pid: '`cat $pid_file`')'
+    echo "${service_name} (${bitcoin_network}) is already run (pid: '`cat $pid_file`')"
 fi &&
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
-    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e 'The lncli-web (mainnet)' -a $$BITCOIN_KIT_LOCAL_IP$$ 8280 8280 tcp || echo "ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ 8280 8280 tcp)"
+    echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
+    {
+	upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "The ${service_name} (${bitcoin_network})" -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp
+    } &> /dev/null && echo " OK" || echo " ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp)"
 fi

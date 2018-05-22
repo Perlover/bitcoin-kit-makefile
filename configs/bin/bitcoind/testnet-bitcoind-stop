@@ -8,7 +8,10 @@ pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 tcp_port=18333
 
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
-    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d ${tcp_port} tcp || echo "ERROR: i cannot delete port redirection [$?] (upnpc -d ${tcp_port} tcp)"
+    echo -n "UPnP Off (${service_name}/${bitcoin_network}) ..."
+    {
+	upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d ${tcp_port} tcp
+    } &> /dev/null && echo " OK" || echo " ERROR: i cannot delete port redirection [$?] (upnpc -d ${tcp_port} tcp)"
 fi
 
 pid=`cat $pid_file`

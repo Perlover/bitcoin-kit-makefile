@@ -40,13 +40,19 @@ This makefile also additionally contains some targets but are yet not documented
 
     Stage 3:
 	To logout from terminal/shell and login again. After you will have all environment variables for normal work.
-	And you will have alias commands for start:
-	    * bitcoind-start
-	    * bitcoind-stop
-	    * lnd-start
-	    * lnd-stop
-	    * lncli-web-start (the https protocol)
-	    * lncli-web-stop
-	You can work with node same way: https://your_listen_ip_address:8280/ (the passwords can be found in ~/credentials directory)
+	And you will have scripts in $PATH for starting/stopping:
+
+	    Start & stop bitcoind + lnd + lncli-web:
+
+	    [mainnet|testnet]-lightning-[start|stop]
+
+		OR
+
+	    [mainnet|testnet]-bitcoind-[start|stop]
+	    [mainnet|testnet]-lnd-[start|stop]
+	    [mainnet|testnet]-lncli-web-[start|stop]
+
+	You can work with node same way: https://your_listen_ip_address:[8280|8281]/
+	The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
 
     After installation to see ~/credentials/* files. After you can remove theirs.

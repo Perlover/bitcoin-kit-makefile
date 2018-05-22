@@ -1,5 +1,3 @@
-BUGS in Ubuntu, fix:
+* 24 words seed of lnd can be stored through GnuPG by using key of user under ~/credentials
 
 * All git repos under this Makefile can be described as git's submodules
-
-* Many makefile sections can be realised through define/endef directives and $(call) functions
