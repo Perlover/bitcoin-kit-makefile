@@ -137,10 +137,10 @@ BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET := externalip=$BITCOIN_KIT_REAL_P
 "
     elif [ $BITCOIN_KIT_POSSIBLE_INCOMING_CONNECTIONS == 'Maybe' ]; then
 	echo "\
-BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET := \\\\\\# You need configure router for port forwarding\\n\\\\\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9735\\n
-BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET := \\\\\\# You need configure router for port forwarding\\n\\\\\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9736\\n
-BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET := \\\\\\# You need configure router for port forwarding\\n\\\\\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n
-BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET := \\\\\\# You need configure router for port forwarding\\n\\\\\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\
+BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET := \\\\\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9735\\n
+BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET := \\\\\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9736\\n
+BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET := \\\\\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n
+BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET := \\\\\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\
 "
     else
 	echo "\
@@ -173,10 +173,10 @@ export BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET=\"externalip=$BITCOIN_KIT_
 "
     elif [ $BITCOIN_KIT_POSSIBLE_INCOMING_CONNECTIONS == 'Maybe' ]; then
 	echo "\
-export BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET=\"\\# You need configure router for port forwarding\\n\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9735\\n\"
-export BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET=\"\\# You need configure router for port forwarding\\n\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9736\\n\"
-export BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET=\"\\# You need configure router for port forwarding\\n\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\"
-export BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET=\"\\# You need configure router for port forwarding\\n\\# externalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\"\
+export BITCOIN_KIT_LND_CONFIG_EXTERNALIP_MAINNET=\"\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9735\\n\"
+export BITCOIN_KIT_LND_CONFIG_EXTERNALIP_TESTNET=\"\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP:9736\\n\"
+export BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_MAINNET=\"\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\"
+export BITCOIN_KIT_BITCOIND_CONFIG_EXTERNALIP_TESTNET=\"\\# You need configure router for port forwarding\\nexternalip=$BITCOIN_KIT_REAL_PUBLIC_IP\\n\"\
 "
     else
 	echo "\
