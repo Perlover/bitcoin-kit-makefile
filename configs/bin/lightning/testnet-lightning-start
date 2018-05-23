@@ -3,7 +3,7 @@
 bitcoin_network=testnet
 
 ${bitcoin_network}-bitcoind-start &&
-echo -n "wait 10 sec for normal starting the lnd after the bitcoind "; for i in {1..10}; do echo -n '.'; sleep 1; done; echo &&
+echo -n "wait 15 sec for normal starting the lnd after the bitcoind "; for i in {1..15}; do echo -n '.'; sleep 1; done; echo &&
 ${bitcoin_network}-lnd-start &&
 ${bitcoin_network}-lncli-web-start &&
 echo "All services of bitcoin lightning (${bitcoin_network}) are started!"
