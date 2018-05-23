@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . $HOME/.bitcoin_envs
+. $HOME/.golang_envs
 
 service_name=lnd
 bitcoin_network=mainnet

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . $HOME/.bitcoin_envs
+. $HOME/.golang_envs
 
 bitcoin_network=testnet
 tcp_port=9736
