@@ -1,3 +1,4 @@
+ifeq ($(GCC_MIN),FAIL)
 gcc_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
@@ -12,6 +13,16 @@ gcc_install: |\
 	} &> make_out.txt && tail make_out.txt
 	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
 	@touch $@
+else
+gcc_install: |\
+    $(HOME)/.bitcoin_envs\
+    autotools_install\
+    gmp_install\
+    mpfr_install\
+    mpc_install\
+    isl_install
+	@touch $@
+endif
 
 # gcc
 gcc-7.1.0.tar.gz:

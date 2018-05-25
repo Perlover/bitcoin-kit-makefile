@@ -1,4 +1,4 @@
-# autoconf...
+################### autoconf...
 autoconf-2.69.tar.gz: |\
     $(HOME)/.bitcoin_envs\
     m4_install
@@ -9,6 +9,7 @@ autoconf-2.69.tar.gz: |\
 			echo "Bad autoconf md5 sum"; false;\
 		}
 
+ifeq ($(AUTOCONF_MIN),FAIL)
 autoconf_install: |\
     $(HOME)/.bitcoin_envs\
     autoconf-2.69.tar.gz
@@ -17,12 +18,21 @@ autoconf_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Autoconf was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+autoconf_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
+
+#######################################
 
 autotools_install: |\
     autoconf_install\
     automake_install\
     libtool_install
 	@touch $@
+
+######################################
 
 # automake
 automake-1.15.tar.gz:
@@ -34,6 +44,7 @@ automake-1.15.tar.gz:
 		}
 
 
+ifeq ($(AUTOMAKE_MIN),FAIL)
 automake_install: |\
     $(HOME)/.bitcoin_envs\
     autoconf_install \
@@ -43,6 +54,14 @@ automake_install: |\
 		PERL=/usr/bin/perl ./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE) && $(MAKE) install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+automake_install: |\
+    $(HOME)/.bitcoin_envs\
+    autoconf_install
+	@touch $@
+endif
+
+#####################################
 
 # libtool
 libtool-2.4.6.tar.gz:
@@ -53,6 +72,7 @@ libtool-2.4.6.tar.gz:
 			echo "Bad libtool md5 sum"; false;\
 		}
 
+ifeq ($(LIBTOOL_MIN),FAIL)
 libtool_install: |\
     $(HOME)/.bitcoin_envs\
     libtool-2.4.6.tar.gz
@@ -61,7 +81,15 @@ libtool_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Libtool was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+libtool_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
 
+####################################
+
+ifeq ($(PKG_CONFIG_MIN),FAIL)
 pkg-config_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install
@@ -69,6 +97,14 @@ pkg-config_install: |\
 		./autogen.sh --with-internal-glib --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "pkg-config was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+pkg-config_install: |\
+    $(HOME)/.bitcoin_envs\
+    autotools_install
+	@touch $@
+endif
+
+###################################
 
 # m4
 m4-1.4.18.tar.gz:
@@ -80,6 +116,7 @@ m4-1.4.18.tar.gz:
 		}
 
 
+ifeq ($(M4_MIN),FAIL)
 m4_install: |\
     $(HOME)/.bitcoin_envs\
     m4-1.4.18.tar.gz
@@ -88,4 +125,8 @@ m4_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The m4 was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
-
+else
+m4_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
