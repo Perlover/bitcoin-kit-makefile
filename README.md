@@ -54,13 +54,17 @@ installing. The *git sources* are secured by commit ID checkout.
 
 1.  First, you need to do by hands the prepare process:
 
-    For CentOS 6.*
+    For CentOS 6.* (there are old autotoolsm, gcc and etc... So we will install only this minimal packages)
 
         $ sudo yum -y install git make coreutils screen
 
     For Ubuntu/Mint/Debian Linux:
 
-        $ sudo apt install build-essential screen
+        $ sudo apt install git build-essential screen
+
+    For Raspberry Pi (Raspbian OS):
+
+        $ sudo apt install build-essential screen git m4 automake autoconf libtool pkg-config binutils
 
     And then next (and for a rest OSes may be):
 
@@ -80,7 +84,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
         $ git clone --recursive https://github.com/Perlover/bitcoin-kit-makefile.git
         $ cd bitcoin-kit-makefile
-        $ make i-want-lightning |& tee my_make_output.txt
+        $ make i-want-lightning |& tee -a my_make_output.txt
 
     wait, wait, wait...
 

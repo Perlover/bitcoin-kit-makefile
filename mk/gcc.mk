@@ -42,6 +42,7 @@ gmp-6.1.2.tar.bz2:
 			echo "Bad gmp md5 sum"; false;\
 		}
 
+ifeq ($(GCC_MIN),FAIL)
 gmp_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
@@ -51,6 +52,11 @@ gmp_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmp was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+gmp_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
 
 # mpfr
 mpfr-4.0.1.tar.bz2:
@@ -61,6 +67,7 @@ mpfr-4.0.1.tar.bz2:
 			echo "Bad mpfr md5 sum"; false;\
 		}
 
+ifeq ($(GCC_MIN),FAIL)
 mpfr_install: |\
     $(HOME)/.bitcoin_envs\
     gmp_install\
@@ -71,6 +78,11 @@ mpfr_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+mpfr_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
 
 # mpc
 mpc-1.1.0.tar.gz:
@@ -81,6 +93,7 @@ mpc-1.1.0.tar.gz:
 			echo "Bad mpc md5 sum"; false;\
 		}
 
+ifeq ($(GCC_MIN),FAIL)
 mpc_install: |\
     $(HOME)/.bitcoin_envs\
     gmp_install\
@@ -92,6 +105,11 @@ mpc_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+mpc_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
 
 # mpc
 isl-0.18.tar.gz:
@@ -102,6 +120,7 @@ isl-0.18.tar.gz:
 			echo "Bad isl md5 sum"; false;\
 		}
 
+ifeq ($(GCC_MIN),FAIL)
 isl_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
@@ -111,3 +130,9 @@ isl_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The isl was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+else
+isl_install: |\
+    $(HOME)/.bitcoin_envs
+	@touch $@
+endif
+

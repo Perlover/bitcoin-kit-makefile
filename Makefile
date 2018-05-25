@@ -36,7 +36,7 @@ $(eval $(call COMPARE_VERSIONS,1,'m4 --version',1.4.17,M4_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'automake --version',1.15,AUTOMAKE_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'autoconf --version',2.69,AUTOCONF_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'libtoolize --version',2.4.6,LIBTOOL_MIN))
-$(eval $(call COMPARE_VERSIONS,1,'pkg-config --version',0.29.1,PKG_CONFIG_MIN))
+$(eval $(call COMPARE_VERSIONS,1,'pkg-config --version',0.29,PKG_CONFIG_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'ld --version',2.26,BINUTILS_MIN))
 $(eval $(call COMPARE_VERSIONS,2,'gcc -dumpversion',5.4.0,GCC_MIN))
 
