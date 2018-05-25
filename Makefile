@@ -32,6 +32,12 @@ HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet add
 # Example: $(eval $(call COMPARE_VERSIONS,gcc -dumpversion,5.0.0,GCC_5_0_0)) after will be 'OK' or 'FAIL'
 COMPARE_VERSIONS = $(3) = $$(shell if [ "$$$$(printf '%s\n' "$(2)" $$$$($(1) &>/dev/null || echo "0.0.0") | sort -V | head -n1)" = "$(2)" ]; then echo OK; else echo FAIL; fi)
 
+VERSION_MASK := sed -r -e 's#.* ([0-9]+\.[0-9a-z]+(\.[0-9a-z]+)?)$#\1#'
+$(eval $(call COMPARE_VERSIONS,m4 --version|head -1|$(VERSION_MASK),1.4.17,M4_MIN))
+$(eval $(call COMPARE_VERSIONS,automake --version|head -1|$(VERSION_MASK),1.15,AUTOMAKE_MIN))
+$(eval $(call COMPARE_VERSIONS,autoconf --version|head -1|$(VERSION_MASK),2.69,AUTOCONF_MIN))
+$(eval $(call COMPARE_VERSIONS,libtoolize --version|head -1|$(VERSION_MASK),2.4.6,LIBTOOL_MIN))
+$(eval $(call COMPARE_VERSIONS,pkg-config --version|head -1|$(VERSION_MASK),0.29.1,PKG_CONFIG_MIN))
 
 ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),clean)
@@ -97,7 +103,6 @@ bitcoind-restart:
 include mk/common.mk
 include mk/autotools.mk
 include mk/gcc.mk
-include mk/tools.mk
 include mk/libs.mk
 include mk/bitcoind.mk
 include mk/electrumx.mk
