@@ -64,7 +64,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
     For Raspberry Pi (Raspbian OS):
 
-        $ sudo apt install build-essential screen git m4 automake autoconf libtool pkg-config binutils
+        $ sudo apt install gcc build-essential screen git m4 automake autoconf libtool pkg-config binutils
 
     And then next (and for a rest OSes may be):
 
