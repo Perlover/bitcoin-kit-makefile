@@ -1,6 +1,5 @@
 MAKE_DIRS += $(HOME)/opt
 
-# Here is temporary my repository with patch...
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
 	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git
