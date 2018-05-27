@@ -62,9 +62,16 @@ installing. The *git sources* are secured by commit ID checkout.
 
         $ sudo apt install git build-essential screen
 
-    For Raspberry Pi (Raspbian OS):
+    For Raspberry Pi (Raspbian OS) you need to install some requires
+    (because a compiling from sources will take many more time and memory resources):
 
         $ sudo apt install gcc build-essential screen git m4 automake autoconf libtool pkg-config binutils
+	$ # And you need to increase a swap up to ~1Gb
+	$ # (else you will have 'no virtual memory' error) by following commands:
+	$ sudo dd if=/dev/zero of=/swapfile bs=1M count=1000
+	$ sudo mkswap /swapfile
+	$ sudo swapon /swapfile
+	$ # optional: to add line '/swapfile none swap sw 0 0' to /etc/fstab (sudo vi /etc/fstab)
 
     And then next (and for a rest OSes may be):
 

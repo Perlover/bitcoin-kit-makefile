@@ -7,7 +7,7 @@ golang_pre_install: |\
 
 golang_install: |\
     golang_pre_install
-	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go1.4 go1.10.2 && cd go1.10.2 && git checkout go1.10.2 && cd src && ulimit -u 4096 && ./all.bash
+	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go1.4 go1.10.2 && cd go1.10.2 && git checkout go1.10.2 && cd src && ulimit -u `ulimit -H -u` && ./all.bash
 	@touch $@
 
 $(BASE_INSTALL_DIR)/go:
