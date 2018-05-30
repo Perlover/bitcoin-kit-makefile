@@ -39,7 +39,7 @@ Please press ENTER when you will be ready! Waiting your answer..... '; read -s; 
 UPNPC_RUN=${UPNPC_RUN:-LD_LIBRARY_PATH=./upnp/lib ./upnp/bin/upnpc}
 
 # LOCAL LISTEN IP ADDRESS
-if [ `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]).*/\1/'|grep -vE '^127\.'|wc -l` -gt 1 ]; then /sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]).*/\1/'|grep -vE '^127\.'|awk 'BEGIN{a=1}{print a") "$1; a++}' > $$.tmp; echo $'\n\nYou have some network interfaces not one.\nPlease choose your local IP address of interface for future bitcoin services: \n\n'; cat $$.tmp; echo -n 'Your choose? [1, 2, ...] '; read number; listen_ip=`grep $number') ' $$.tmp|sed -e 's#'$number') ##'`; rm -f $$.tmp; else listen_ip=`/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]).*/\1/'|grep -vE '^127\.'`; fi
+if [ `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'|wc -l` -gt 1 ]; then /sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'|awk 'BEGIN{a=1}{print a") "$1; a++}' > $$.tmp; echo $'\n\nYou have some network interfaces not one.\nPlease choose your local IP address of interface for future bitcoin services: \n\n'; cat $$.tmp; echo -n 'Your choose? [1, 2, ...] '; read number; listen_ip=`grep $number') ' $$.tmp|sed -e 's#'$number') ##'`; rm -f $$.tmp; else listen_ip=`/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`; fi
 
 BITCOIN_KIT_LOCAL_IP=$listen_ip
 
