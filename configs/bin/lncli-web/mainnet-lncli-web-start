@@ -13,8 +13,10 @@ macaroon_path=$HOME/opt/lncli-web/admin-mainnet.macaroon
 
 cd $HOME/opt/lncli-web &&
 if [ ! -f $pid_file ] || ! kill -0 `cat $pid_file` &>/dev/null; then
+    echo -n "The ${service_name} (${bitcoin_network}) starting..."
     nohup node server --macaroon-path ${macaroon_path} --lndhost localhost:${grpc_port} --serverport ${tcp_port} --usetls ssl --user admin --pwd ${web_admin_pass} --limituser limit --limitpwd ${web_limit_pass} --serverhost $$BITCOIN_KIT_LOCAL_IP$$ &>/dev/null &
     echo $! >$pid_file
+    echo " OK"
 else
     echo "${service_name} (${bitcoin_network}) is already run (pid: '`cat $pid_file`')"
 fi &&
