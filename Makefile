@@ -28,7 +28,8 @@ CREDENTIALS_DIR := $(HOME)/credentials
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
 # commit/tag of LND for installation
-LND_ACTUAL_COMMIT := 5b58d24f78bf35f42502ef9c276279e885d99ac5
+# It's same as tag: v0.4.2-beta
+LND_ACTUAL_COMMIT := 7cf5ebe2650b6798182e10be198c7ffc1f1d6e19
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
