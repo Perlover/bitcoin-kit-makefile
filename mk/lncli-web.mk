@@ -21,12 +21,13 @@ lncli-web-install: lncli-web_install
 
 .PHONY: lncli-web-update
 
+# git remote set-url ... here is because my first installation was used my repo instead of author's (was fix patch) so it's fix
 lncli-web-update: lncli-web_install\
     $(HOME)/bin/mainnet-lncli-web-start\
     $(HOME)/bin/mainnet-lncli-web-stop\
     $(HOME)/bin/testnet-lncli-web-start\
     $(HOME)/bin/testnet-lncli-web-stop
-	cd $(HOME)/opt/lncli-web && git pull && { \
+	cd $(HOME)/opt/lncli-web && git remote set-url origin https://github.com/mably/lncli-web.git && git checkout master && git pull && { \
 		npm install && echo "lncli-web for lnd was updated - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@echo $$'*****************************************************\n\nThe lncli-web was updated to current commit\n\n' &&\
