@@ -2,8 +2,25 @@ lnd_install: |\
     golang_install
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
+	git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) && $(MAKE) install
 	@touch $@
+
+.PHONY: lnd-install
+
+lnd-install: lnd_install
+	@echo "LND was installed!"
+
+.PHONY: lnd-install
+
+lnd-update: |\
+    lnd_install
+	go get -d github.com/lightningnetwork/lnd &&\
+	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
+	git checkout $(LND_ACTUAL_COMMIT) &&\
+	$(MAKE) clean && $(MAKE) && $(MAKE) install
+	@echo "LND was updated to commit/tag: $(LND_ACTUAL_COMMIT)"
+	@echo "To run \`mainnet-lightning-stop && mainnet-lightning-start\` or \`testnet-lightning-stop && testnet-lightning-start\`"
 
 btcd_install: |\
     lnd_install

@@ -16,7 +16,11 @@ make btcd-install
 
 make lnd-install
     The lnd daemon install
-    Version: current
+    Version: $(LND_ACTUAL_COMMIT)
+
+make lnd-update
+    To update already installed LND
+    Version: $(LND_ACTUAL_COMMIT)
 
 make lnd-bitcoin-core-bundle-install
     The bundle of: lnd + bitcoin-core install
