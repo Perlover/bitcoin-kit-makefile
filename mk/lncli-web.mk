@@ -21,7 +21,11 @@ lncli-web-install: lncli-web_install
 
 .PHONY: lncli-web-update
 
-lncli-web-update: lncli-web_install
+lncli-web-update: lncli-web_install\
+    $(HOME)/bin/mainnet-lncli-web-start\
+    $(HOME)/bin/mainnet-lncli-web-stop\
+    $(HOME)/bin/testnet-lncli-web-start\
+    $(HOME)/bin/testnet-lncli-web-stop
 	cd $(HOME)/opt/lncli-web && git pull && { \
 		npm install && echo "lncli-web for lnd was updated - OK"; \
 	} &> make_out.txt && tail make_out.txt
