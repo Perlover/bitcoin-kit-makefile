@@ -17,7 +17,7 @@ lnd-update: |\
     lnd_install
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
-	git checkout $(LND_ACTUAL_COMMIT) &&\
+	git pull && git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) clean && $(MAKE) && $(MAKE) install
 	@echo $$'*****************************************************\n\nLND was updated to commit/tag: $(LND_ACTUAL_COMMIT)\n\n' &&\
 	echo "To run \`mainnet-lightning-stop && mainnet-lightning-start\` or \`testnet-lightning-stop && testnet-lightning-start\`" &&\
