@@ -23,7 +23,6 @@ lnd-update: |\
 	echo "To run \`mainnet-lightning-stop && mainnet-lightning-start\` or \`testnet-lightning-stop && testnet-lightning-start\`" &&\
 	echo $$'\n\n*****************************************************'
 
-
 btcd_install: |\
     lnd_install
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\

@@ -22,6 +22,14 @@ make lnd-update
     To update already installed LND
     Version: $(LND_ACTUAL_COMMIT)
 
+make lncli-web-install
+    The lncli-web install
+    Version: current master branch
+
+make lncli-web-update
+    The lncli-web update
+    Version: current master branch
+
 make lnd-bitcoin-core-bundle-install
     The bundle of: lnd + bitcoin-core install
     Same as: make bitcoin-core-install lnd-install
@@ -29,9 +37,6 @@ make lnd-bitcoin-core-bundle-install
 make lnd-btcd-bundle-install
     The bundle of: lnd + btcd install ()
     Same as: make lnd-install btcd-install
-
-make lnd-webclient-install
-    The lncli-web installation
 
 make bitcoin-core-update
     Update up to current bitcoin core version

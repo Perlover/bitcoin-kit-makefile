@@ -14,6 +14,21 @@ lncli-web_install: |\
 	@touch $@
 
 
+.PHONY: lncli-web-install
+
+lncli-web-install: lncli-web_install
+	@echo "The lncli-web was installed!"
+
+.PHONY: lncli-web-update
+
+lncli-web-update: lncli-web_install
+	cd $(HOME)/opt/lncli-web && git pull && { \
+		npm install && echo "lncli-web for lnd was updated - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@echo $$'*****************************************************\n\nThe lncli-web was updated to current commit\n\n' &&\
+	echo "To run \`mainnet-lncli-web-stop && mainnet-lncli-web-start\` or \`testnet-lncli-web-stop && testnet-lncli-web-start\`" &&\
+	echo $$'\n\n*****************************************************'
+
 MAKE_DIRS += build/lnd/lncli-web
 
 # Lnd uses the P-521 curve for its certificates but NodeJS gRPC module is only compatible with certificates using the P-256 curve
