@@ -1,7 +1,7 @@
 export PATH=$HOME/.npm-global/bin:$HOME/bin:$PATH
 
 # man ld.so(8) - run time execution (not link time)
-export LD_LIBRARY_PATH="$HOME/lib:$HOME/lib64:/lib64:/usr/lib64:/usr/local/lib64"
+export LD_LIBRARY_PATH="$HOME/lib:$HOME/lib64:/usr/local/lib64:/lib64:/usr/lib64"
 
 # ld uses it in link time
 export LD_RUN_PATH=$LD_LIBRARY_PATH
