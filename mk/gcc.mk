@@ -49,7 +49,7 @@ gmp_install: |\
     gmp-6.1.2.tar.bz2
 	bzip2 -cd gmp-6.1.2.tar.bz2|tar xvf -
 	cd gmp-6.1.2 && { \
-		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmp was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) check && $(MAKE) install && echo "The gmp was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 else
@@ -135,4 +135,3 @@ isl_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
-
