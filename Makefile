@@ -29,7 +29,7 @@ HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet add
 
 # commit/tag of LND for installation
 # It's same as tag: v0.4.2-beta
-LND_ACTUAL_COMMIT := 7cf5ebe2650b6798182e10be198c7ffc1f1d6e19
+LND_ACTUAL_COMMIT := d4b042dc1946ece8b60d538ade8e912f035612fe
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
