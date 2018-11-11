@@ -50,7 +50,7 @@ The **install process is maximally secure** for installation. Wherever possible
 **MD5/SHA256** checksums or **GPG signatures** are checked before compilation and
 installing. The *git sources* are secured by commit ID checkout.
 
-## How to install the Bitcoin Core v0.16.0 version from sources:
+## How to install the Bitcoin Core v0.17.0.1 + LND (actual version up to 2018-11-11) + lncli-web versions from sources:
 
 1.  First, you need to do by hands the prepare process:
 
