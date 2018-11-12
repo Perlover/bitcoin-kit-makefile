@@ -131,28 +131,38 @@ build/bin/lnd/testnet-lnd-stop: \
 BITCOIN_NETWORK ?= mainnet
 
 $(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_mainnet_lock
-$(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/lnd-mainnet.conf
+$(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/admin-mainnet.macaroon
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo 'Please press ENTER to next step:'; read
 	lncli --macaroonpath $(HOME)/.lnd/admin-mainnet.macaroon --rpcserver localhost:10009 create
-	for i in {1..5}; do [ -f $(HOME)/.lnd/admin-mainnet.macaroon ] && break; sleep 1; done
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
-	if [ ! -f $(HOME)/.lnd/admin-mainnet.macaroon ]; then echo "No file $(HOME)/.lnd/admin-mainnet.macaroon"; false; fi
-	cp -f $(HOME)/.lnd/admin-mainnet.macaroon $(HOME)/opt/lncli-web/
-	@touch $@
+
+$(HOME)/.lnd/admin-mainnet.macaroon: | $(HOME)/.lnd/lnd-mainnet.conf
+	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
+	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
+	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
+	[ -f $@ ]
+
+$(HOME)/opt/lncli-web/admin-mainnet.macaroon: $(HOME)/.lnd/admin-mainnet.macaroon
+	cp -f $< $@
 
 $(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
-$(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/lnd-testnet.conf
+$(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/admin-testnet.macaroon
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
 	echo $$'********************************************************************************\n\n\nNow the "lncli create" command will be run (creation of wallet). It'\'$$'s important! Please write passwords & seed of lnd!\n\n\n********************************************************************************\n\n'
 	echo '!!! THIS IS TESTNODE WALLET! Please press ENTER to next step:'; read
 	lncli --macaroonpath $(HOME)/.lnd/admin-testnet.macaroon --rpcserver localhost:10010 create
-	for i in {1..5}; do [ -f $(HOME)/.lnd/admin-testnet.macaroon ] && break; sleep 1; done
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
-	if [ ! -f $(HOME)/.lnd/admin-testnet.macaroon ]; then echo "No file $(HOME)/.lnd/admin-testnet.macaroon"; false; fi
-	cp -f $(HOME)/.lnd/admin-testnet.macaroon $(HOME)/opt/lncli-web/
-	@touch $@
+
+$(HOME)/.lnd/admin-testnet.macaroon: | $(HOME)/.lnd/lnd-testnet.conf
+	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
+	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
+	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
+	[ -f $@ ]
+
+$(HOME)/opt/lncli-web/admin-testnet.macaroon: $(HOME)/.lnd/admin-testnet.macaroon
+	cp -f $< $@
 
 $(HOME)/bin/mainnet-lnd-start: build/bin/lnd/mainnet-lnd-start | miniupnpc_install
 
