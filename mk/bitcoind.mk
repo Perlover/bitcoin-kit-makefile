@@ -1,5 +1,6 @@
 bitcoin-core_install: |\
     required_for_configure_install\
+    binutils_install\
     boost_install\
     openssl_install\
     libevent_install\
