@@ -138,10 +138,8 @@ $(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db: | $(HOME)/.lnd/admin-
 	lncli --macaroonpath $(HOME)/.lnd/admin-mainnet.macaroon --rpcserver localhost:10009 create
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 
-$(HOME)/.lnd/admin-mainnet.macaroon: | $(HOME)/.lnd/lnd-mainnet.conf
-	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-mainnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
+$(HOME)/.lnd/admin-mainnet.macaroon: | $(HOME)/.lnd/lnd-mainnet.conf $(HOME)/.lnd/data-mainnet/chain/bitcoin/mainnet/wallet.db
 	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
-	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 	[ -f $@ ]
 
 $(HOME)/opt/lncli-web/admin-mainnet.macaroon: $(HOME)/.lnd/admin-mainnet.macaroon
@@ -155,10 +153,8 @@ $(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db: | $(HOME)/.lnd/admin-
 	lncli --macaroonpath $(HOME)/.lnd/admin-testnet.macaroon --rpcserver localhost:10010 create
 	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 
-$(HOME)/.lnd/admin-testnet.macaroon: | $(HOME)/.lnd/lnd-testnet.conf
-	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
+$(HOME)/.lnd/admin-testnet.macaroon: | $(HOME)/.lnd/lnd-testnet.conf $(HOME)/.lnd/data-testnet/chain/bitcoin/testnet/wallet.db
 	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
-	-@kill `cat $(CREATE_WALLET_LOCK).pid.txt` &>/dev/null; rm -f $(CREATE_WALLET_LOCK).pid.txt $(CREATE_WALLET_LOCK).out.txt
 	[ -f $@ ]
 
 $(HOME)/opt/lncli-web/admin-testnet.macaroon: $(HOME)/.lnd/admin-testnet.macaroon
