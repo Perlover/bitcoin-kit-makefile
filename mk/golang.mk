@@ -7,7 +7,7 @@ golang_pre_install: |\
 
 golang_install: |\
     golang_pre_install
-	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go1.4 go1.10.2 && cd go1.10.2 && git checkout go1.10.2 && cd src && ulimit -u `ulimit -H -u` && ./all.bash
+	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go1.4 go1.10.2 && cd go1.10.2 && git checkout go1.10.2 && cd src && ulimit -u `ulimit -H -u` && ./make.bash
 	@touch $@
 
 $(BASE_INSTALL_DIR)/go:
@@ -17,4 +17,3 @@ $(BASE_INSTALL_DIR)/go:
 $(HOME)/.golang_envs: golang_envs.sh | $(BASE_INSTALL_DIR)/go
 	cp -f $< $@
 	echo $$'\n. $(HOME)/.golang_envs' >> $(PROFILE_FILE)
-
