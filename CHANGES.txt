@@ -1,3 +1,6 @@
+2018-11-15
+    * Update LND up to v0.5.1-beta-rc1 (commmit 3f57f65bf0cb710159b0182391d1d75e9e3005bc)
+
 2018-11-14
     * Some improvements in makefiles. This was tested in two CentOS 6 installations
 
