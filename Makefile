@@ -27,8 +27,8 @@ CREDENTIALS_DIR := $(HOME)/credentials
 # This hash will be used when defining the network configuration (as cache ID)
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
-# commit/tag of LND for installation
-LND_ACTUAL_COMMIT := d4b042dc1946ece8b60d538ade8e912f035612fe
+# commit/tag of LND for installation - v0.5.1-beta-rc1
+LND_ACTUAL_COMMIT := 3f57f65bf0cb710159b0182391d1d75e9e3005bc
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
