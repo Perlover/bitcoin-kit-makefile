@@ -21,6 +21,7 @@
 /*_install
 /*_download
 /*_update
+/*-update
 my_make_output.txt
 *.komodoproject
 Python-*

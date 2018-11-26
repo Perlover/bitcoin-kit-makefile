@@ -18,7 +18,8 @@ set-up-lightning: |\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-stop\
     $(HOME)/.bitcoin_aliases\
-    $(HOME)/.lnd/data-$(BITCOIN_NETWORK)/chain/bitcoin/$(BITCOIN_NETWORK)/wallet.db
+    $(HOME)/.lnd/data/chain/bitcoin/$(BITCOIN_NETWORK)/wallet.db\
+    $(HOME)/.lnd/data/chain/bitcoin/$(BITCOIN_NETWORK)/admin.macaroon
 
 $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-start: configs/bin/lightning/$(BITCOIN_NETWORK)-lightning-start | \
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\

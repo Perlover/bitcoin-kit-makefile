@@ -8,21 +8,34 @@ bitcoin_network=testnet
 tcp_port=9736
 grpc_port=10010
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
-macaroon_path=$HOME/.lnd/admin-${bitcoin_network}.macaroon
+macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 
-if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
-    echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
+strstr() {
+    [ "${1#*$2*}" = "$1" ] && return 1
+    return 0
+}
+
+if [[ -f $pid_file ]] && kill -0 `cat $pid_file` &>/dev/null; then
+    echo "The lnd is already running, pid="`cat $pid_file`
+    echo -n "Do you want to try unlock wallet? y/n [n]"
+    read answer; echo " $answer"
+    if strstr $"nN" "$answer" || [ "$answer" = "" ]; then
+	exit 2
+    fi
+else
+    if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
+	echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
+	{
+	    upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "The ${service_name} (${bitcoin_network})" -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp
+	} &> /dev/null && echo " OK" || echo " ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp)"
+    fi
+
     {
-	upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "The ${service_name} (${bitcoin_network})" -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp
-    } &> /dev/null && echo " OK" || echo " ERROR: i cannot add port redirection [$?] (upnpc -a $$BITCOIN_KIT_LOCAL_IP$$ ${tcp_port} ${tcp_port} tcp)"
+	nohup lnd --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
+	echo $! > $pid_file
+    } &>/dev/null
+    sleep 1
 fi
-
-{
-    nohup lnd --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
-    echo $! > $HOME/.${bitcoin_network}-${service_name}.pid
-} &>/dev/null
-
-sleep 1;
 
 echo $'\n\n\n******************************************************************\n\nPlease unlock '"${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
 lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} unlock
@@ -30,4 +43,4 @@ lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} unlock
 sleep 2
 
 # Now we check again lnd process (sometime it dies after this with "rewind block" reason)
-kill -0 `cat $HOME/.${bitcoin_network}-${service_name}.pid` || { echo "The lnd not started, please try run '${bitcoin_network}-lnd-start' again!"; exit 1; }
+kill -0 `cat $pid_file` &>/dev/null || { echo "The lnd not started, please try run '${bitcoin_network}-lnd-start' again!"; exit 1; }

@@ -22,9 +22,11 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
     $(CREDENTIALS_DIR)
 	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
-bitcoin-core_update:
+prepare-bitcoin-code-update: this_repo_update
 	-rm -f bitcoin-core_install
 	-cd external/bitcoin-core && $(MAKE) clean
+
+bitcoin-core-update:
 	$(MAKE) bitcoin-core_install
 
 bitcoin_iptables_install:

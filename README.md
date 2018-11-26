@@ -19,7 +19,7 @@ more information or see https://opensource.org/licenses/MIT.
 **`make set-up-lightning-testnet`** and you will be ready to run immediately the
 **lnd** and **bitcoind** daemons in testnet.
 
-**You can use together mainnet & testnet** services in single host.
+**You can use together mainnet &amp; testnet** services in single host.
 **UPnP is supported** auto by scripts from this repositary!
 
 ### More info:
@@ -49,6 +49,8 @@ user).
 The **install process is maximally secure** for installation. Wherever possible
 **MD5/SHA256** checksums or **GPG signatures** are checked before compilation and
 installing. The *git sources* are secured by commit ID checkout.
+
+If you have old this repositary installed in your system you can easy upgrade up to fresh Bitcoin Core &amp; LND. [Please to see below upgrade section](#upgrade-lnd-bitcoin-core)
 
 ## How to install the Bitcoin Core v0.17.0.1 + LND (actual version up to 2018-11-11) + lncli-web versions from sources:
 
@@ -120,7 +122,7 @@ installing. The *git sources* are secured by commit ID checkout.
     * `[mainnet|testnet]-lnd-[start|stop]`
     * `[mainnet|testnet]-lncli-web-[start|stop]`
 
-5.  You can start bitcoin & lnd daemons as:
+5.  You can start bitcoin &amp; lnd daemons as:
 
         mainnet-lightning-start
 
@@ -151,6 +153,50 @@ installing. The *git sources* are secured by commit ID checkout.
     Please ATTENTION! Both make targets requires some actions from root user:
     twice pressing of ENTER (to check internet activity after firewall
     applying and if it's not - an auto resetting to all)
+
+## Upgrade LND &amp; Bitcoin Core
+
+If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) this makefile gives easy targets to update. The LND update makes TAR archive before upgrading. For upgrade:
+
+1. `cd ~/bitcoin-kit-makefile`
+
+2. `git pull`
+
+3. To stop bitcoind and/or LND, for example for mainnet:
+
+        mainnet-lnd-stop
+        mainnet-bitcoind-stop
+
+4. Then, if you want to upgrade Bitcoin Core:
+
+        make prepare-bitcoin-code-update
+        make bitcoin-core-update
+
+    If upgrade LND:
+
+        make prepare-lnd-update
+        make lnd-update
+
+    Or to upgrade both:
+
+        make prepare-bitcoin-code-update prepare-lnd-update
+        make bitcoin-core-update lnd-update
+
+    In home directory you will see lnd tar archive before upgrade:
+
+        lnd-backup-UUUUUUU-YYYY-MM-DD.tgz
+
+    Where: UUUUUU - seconds from computer epoch (1970-01-01), YYYY - a year, MM - a month and DD - a day.
+
+    Upgrade corrects LND config files and move *macaroon* files to standard for v0.5.* lnd directories.
+
+5. After upgrade and before start please logout from terminal and login again. The upgrade process corrects `$PATH` after upgrade of *golang*
+
+6. After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
+
+        bitcoind  -conf=$HOME/.bitcoin/bitcoin-testnet.conf -reindex
+
+    When reindexing will be finished (you can check in logs by `tail -f ~/.bitcoin/testnet3/debug.log`) you can stop and start again the *bitcoind* (optionally)
 
 Have a nice day ;-)
 

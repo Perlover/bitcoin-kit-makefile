@@ -7,7 +7,7 @@ bitcoin_network=testnet
 tcp_port=9736
 service_name=lnd
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
-macaroon_path=$HOME/.lnd/admin-${bitcoin_network}.macaroon
+macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 grpc_port=10010
 
 if [ ! -f $pid_file ]; then

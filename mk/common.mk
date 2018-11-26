@@ -12,6 +12,10 @@ git_submodule_install: .gitmodules
 	git submodule update --init --recursive
 	@touch $@
 
+this_repo_update:
+	git pull
+	git submodule update --recursive
+
 # For copying of config files
 # $(call COPY_FILE,FROM_WHERE_DIR,TO_WHERE_DIR,UMASK)
 define COPY_FILE
