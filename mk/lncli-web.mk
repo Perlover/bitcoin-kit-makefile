@@ -36,31 +36,8 @@ lncli-web-update: lncli-web_install\
 
 MAKE_DIRS += build/lnd/lncli-web
 
-# Lnd uses the P-521 curve for its certificates but NodeJS gRPC module is only compatible with certificates using the P-256 curve
-# To make here these keys
-lncli-web_lnd_certs_install: \
-    $(HOME)/opt/lncli-web/lnd.cert\
-    $(HOME)/.lnd/tls.cert\
-    $(HOME)/.lnd/tls.key
-	@touch $@
-
-$(HOME)/opt/lncli-web/lnd.cert: build/lnd/lncli-web/tls.cert | $(HOME)/opt/lncli-web
-	cp -f $< $@
-
-$(HOME)/.lnd/tls.cert: build/lnd/lncli-web/tls.cert | $(HOME)/.lnd
-	cp -f $< $@
-
-$(HOME)/.lnd/tls.key: build/lnd/lncli-web/tls.key | $(HOME)/.lnd
-	cp -f $< $@
-
-build/lnd/lncli-web/tls.key: | build/lnd/lncli-web openssl_install
-	openssl ecparam -genkey -name prime256v1 -out $@
-
-build/lnd/lncli-web/csr.csr: build/lnd/lncli-web/tls.key | build/lnd/lncli-web openssl_install
-	openssl req -new -sha256 -key $< -out $@ -subj '/CN=localhost/O=lnd'
-
-build/lnd/lncli-web/tls.cert: build/lnd/lncli-web/tls.key build/lnd/lncli-web/csr.csr | build/lnd/lncli-web openssl_install
-	openssl req -x509 -sha256 -days 36500 -key build/lnd/lncli-web/tls.key -in build/lnd/lncli-web/csr.csr -out $@
+$(HOME)/opt/lncli-web/lnd.cert: $(HOME)/.lnd/tls.cert | $(HOME)/opt/lncli-web
+	ln -s $< $@
 
 MAKE_DIRS += build/lnd/lncli-web/ssl
 
@@ -77,11 +54,11 @@ $(HOME)/opt/lncli-web/ssl: |\
 	-out cert.pem \
 	-days 36500 \
 	-nodes \
-	-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" && \
+	-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=$(BITCOIN_KIT_REAL_PUBLIC_IP)" && \
 	mkdir -p $@ && mv -f * $@
 
 lncli-web_configs_install: |\
-    lncli-web_lnd_certs_install\
+    $(HOME)/opt/lncli-web/lnd.cert\
     $(HOME)/opt/lncli-web/ssl
 	@touch $@
 

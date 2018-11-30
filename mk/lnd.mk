@@ -31,10 +31,21 @@ lnd-update:\
 	    echo "You must to stop mainnet lnd before update!" &&\
 	    exit 2;\
 	fi
+	if [[ -f $(HOME)/.testnet-lncli-web.pid ]]; then\
+	    kill -0 `cat $(HOME)/.testnet-lncli-web.pid` &>/dev/null &&\
+	    echo "You must to stop testnet lncli-web before update!" &&\
+	    exit 1;\
+	fi
+	if [[ -f $(HOME)/.mainnet-lncli-web.pid ]]; then\
+	    kill -0 `cat $(HOME)/.mainnet-lncli-web.pid` &>/dev/null &&\
+	    echo "You must to stop mainnet lncli-web before update!" &&\
+	    exit 2;\
+	fi
 	umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'
 	./update_wallet_macaroon_files_to_standard_dir.sh
+	./update_lnd_cert_to_standard_cert.sh
 	@echo $$'*****************************************************\n\nLND was updated to commit/tag: $(LND_ACTUAL_COMMIT)\n\n' &&\
-	echo "To run \`mainnet-lightning-stop && mainnet-lightning-start\` or \`testnet-lightning-stop && testnet-lightning-start\`" &&\
+	echo "To run \`mainnet-lightning-start\` or \`testnet-lightning-start\`" &&\
 	echo $$'\n\n*****************************************************'
 	@touch $@
 
@@ -94,7 +105,6 @@ build/lnd/bitcoind/lnd-mainnet.conf :\
 
 lnd_configs_bitcoind_bundle_install: |\
     bitcoind_configs_install\
-    lncli-web_lnd_certs_install\
     $(HOME)/.lnd/lnd-testnet.conf\
     $(HOME)/.lnd/lnd-mainnet.conf
 	@touch $@
