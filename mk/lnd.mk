@@ -1,4 +1,5 @@
 lnd_install: |\
+    new_git_install\
     $(CURRENT_GOLANG_TARGET)
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
@@ -50,6 +51,7 @@ lnd-update:\
 	@touch $@
 
 lnd-bin-update: |\
+    new_git_install\
     lnd_install
 	rm -rf $$GOPATH/pkg/dep
 	go get -d github.com/lightningnetwork/lnd &&\

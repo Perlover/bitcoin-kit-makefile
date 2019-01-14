@@ -137,4 +137,5 @@ include mk/zeromq.mk
 include mk/miniupnp.mk
 include mk/i-want-lightning.mk
 include mk/rsync.mk
+include mk/git.mk
 include mk/finally.mk

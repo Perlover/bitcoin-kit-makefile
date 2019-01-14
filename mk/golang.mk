@@ -1,6 +1,7 @@
 golang_pre_install: |\
     required_for_configure_install\
     binutils_install\
+    new_git_install\
     $(HOME)/.golang_envs
 	cd $(BASE_INSTALL_DIR) && git clone -b release-branch.go1.4 'https://go.googlesource.com/go' go1.4 && cd go1.4/src && ./make.bash
 	@touch $@
