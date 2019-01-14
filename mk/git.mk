@@ -2,6 +2,7 @@ new_git_install: |\
     required_for_configure_install\
     new_curl_install\
     git-2.20.1.tar.gz
+	tar xvzf git-2.20.1.tar.gz
 	cd git-2.20.1 && $(MAKE) configure && ./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) all && $(MAKE) install
 	@touch $@
 
