@@ -3,9 +3,5 @@ new_git_download:
 	@touch $@
 
 new_git_install: | new_git_download
-	cd git
-	$(MAKE) configure
-	./configure --prefix=$(BASE_INSTALL_DIR)
-	$(MAKE_COMPILE) all
-	$(MAKE) install
+	cd git && $(MAKE) configure && ./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) all && $(MAKE) install
 	@touch $@
