@@ -23,7 +23,7 @@ define COPY_FILE
 MAKE_DIRS += $(1)
 
 $(1)/% : | $(1)
-	umask $(2) && cp -f $$< $$@
+	umask $(2) && cp -f $$| $$@
 
 endef
 
