@@ -52,7 +52,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
 If you have old this repositary installed in your system you can easy upgrade up to fresh Bitcoin Core &amp; LND. [Please to see below upgrade section](#upgrade-lnd-bitcoin-core)
 
-## How to install the Bitcoin Core v0.17.0.1 + LND (actual version up to 2018-11-11) + lncli-web versions from sources:
+## How to install the Bitcoin Core v0.17.0.1 + LND (fresh version) + lncli-web versions from sources:
 
 1.  First, you need to do by hands the prepare process:
 
@@ -124,14 +124,35 @@ If you have old this repositary installed in your system you can easy upgrade up
 
 5.  You can start bitcoin &amp; lnd daemons as:
 
-        mainnet-lightning-start
+    1. First time after installation:
 
-    Stop daemon:
+			mainnet-bitcoind-start
+			... wait some minutes ...
+			mainnet-lnd-start
 
-        mainnet-lightning-stop
+    2. Next time starting:
 
-    You can work with node same way: https://your_listen_ip_address:[8280|8281]/
-    The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
+			mainnet-bitcoind-start
+			... wait some seconds...
+			mainnet-lnd-start
+
+    3. Stopping:
+
+			mainnet-lnd-stop
+			mainnet-bitcoind-stop
+
+    4. If you want to use `lncli-web` you can start same way:
+
+        	mainnet-lightning-start
+
+	    Stop daemon:
+
+        	mainnet-lightning-stop
+		
+		But first time run after installation i recommend to run as described in #5.1
+
+    	You can work with node same way: https://your_listen_ip_address:[8280|8281]/
+    	The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
 
 5.  **ATTENTION!** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
