@@ -1,3 +1,6 @@
+2014-01-30
+    * The LND version is updated to v0.5.2-beta-rc3 (commit 5ec1df5c5f2e87d6880a748d5d5d1de6d3e148e7). Not tested but i hope it will work ;-)
+
 2014-01-26
     * fix in makefile. Tested
 
