@@ -1,8 +1,10 @@
 MAKE_DIRS += $(HOME)/opt
 
+LNCLI_WEB_COMMIT := fe7f8879ec48994367866c25daf8be39ca19ca50
+
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
-	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git
+	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git && cd $(HOME)/opt/lncli-web && git checkout $(LNCLI_WEB_COMMIT)
 
 lncli-web_install: |\
     nodejs_install\
@@ -27,7 +29,7 @@ lncli-web-update: lncli-web_install\
     $(HOME)/bin/mainnet-lncli-web-stop\
     $(HOME)/bin/testnet-lncli-web-start\
     $(HOME)/bin/testnet-lncli-web-stop
-	cd $(HOME)/opt/lncli-web && git remote set-url origin https://github.com/mably/lncli-web.git && git checkout master && git pull && { \
+	cd $(HOME)/opt/lncli-web && git remote set-url origin https://github.com/mably/lncli-web.git && git checkout $(LNCLI_WEB_COMMIT) && git pull && { \
 		npm install && echo "lncli-web for lnd was updated - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@echo $$'*****************************************************\n\nThe lncli-web was updated to current commit\n\n' &&\
