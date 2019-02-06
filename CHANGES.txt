@@ -1,7 +1,8 @@
 2019-02-06
-    * Update LND - v0.5.2-beta-rc7
-    * Update bitcoind - v0.17.1
-    * UPdate lncli-web up to fresh current commit
+    + Update LND - v0.5.2-beta-rc7
+    + Update bitcoind - v0.17.1
+    + UPdate lncli-web up to fresh current commit
+    * The fix autoconf - with new perl version the 1.15 version was not compiled
 
 2019-01-30
     * The LND version is updated to v0.5.2-beta-rc3 (commit 5ec1df5c5f2e87d6880a748d5d5d1de6d3e148e7). Not tested but i hope it will work ;-)

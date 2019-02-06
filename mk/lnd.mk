@@ -70,12 +70,13 @@ btcd_install: |\
 ####################### CONFIGS ###################################
 
 MAKE_DIRS +=  build/lnd/bitcoind
+MAKE_DIRS +=  $(HOME)/.lnd
 
-$(HOME)/.lnd/lnd-testnet.conf: build/lnd/bitcoind/lnd-testnet.conf
+$(HOME)/.lnd/lnd-testnet.conf: build/lnd/bitcoind/lnd-testnet.conf | $(HOME)/.lnd
+	umask 077 && cp -f $< $@
 
-$(HOME)/.lnd/lnd-mainnet.conf: build/lnd/bitcoind/lnd-mainnet.conf
-
-$(eval $(call COPY_FILE,$(HOME)/.lnd,077))
+$(HOME)/.lnd/lnd-mainnet.conf: build/lnd/bitcoind/lnd-mainnet.conf | $(HOME)/.lnd
+	umask 077 && cp -f $< $@
 
 build/lnd/bitcoind/lnd-testnet.conf :\
     $(NETWORK_MK_FILE)\
@@ -199,10 +200,14 @@ $(HOME)/.lnd/data/chain/bitcoin/testnet/admin.macaroon: | $(HOME)/.lnd/lnd-testn
 $(HOME)/opt/lncli-web/admin-testnet.macaroon: $(HOME)/.lnd/data/chain/bitcoin/testnet/admin.macaroon
 	cp -f $< $@
 
-$(HOME)/bin/mainnet-lnd-start: build/bin/lnd/mainnet-lnd-start | miniupnpc_install
+$(HOME)/bin/mainnet-lnd-start: build/bin/lnd/mainnet-lnd-start | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lnd-start: build/bin/lnd/testnet-lnd-start | miniupnpc_install
+$(HOME)/bin/testnet-lnd-start: build/bin/lnd/testnet-lnd-start | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/mainnet-lnd-stop: build/bin/lnd/mainnet-lnd-stop | miniupnpc_install
+$(HOME)/bin/mainnet-lnd-stop: build/bin/lnd/mainnet-lnd-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lnd-stop: build/bin/lnd/testnet-lnd-stop | miniupnpc_install
+$(HOME)/bin/testnet-lnd-stop: build/bin/lnd/testnet-lnd-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@

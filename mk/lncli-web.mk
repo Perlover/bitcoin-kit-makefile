@@ -132,10 +132,14 @@ build/bin/lncli-web/testnet-lncli-web-stop: \
 	$@ && \
 	chmod 755 $@
 
-$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start | miniupnpc_install $(HOME)/opt/lncli-web/admin-mainnet.macaroon
+$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start | $(HOME)/bin miniupnpc_install $(HOME)/opt/lncli-web/admin-mainnet.macaroon
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start | miniupnpc_install $(HOME)/opt/lncli-web/admin-testnet.macaroon
+$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start | $(HOME)/bin miniupnpc_install $(HOME)/opt/lncli-web/admin-testnet.macaroon
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/mainnet-lncli-web-stop: build/bin/lncli-web/mainnet-lncli-web-stop | miniupnpc_install
+$(HOME)/bin/mainnet-lncli-web-stop: build/bin/lncli-web/mainnet-lncli-web-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lncli-web-stop: build/bin/lncli-web/testnet-lncli-web-stop | miniupnpc_install
+$(HOME)/bin/testnet-lncli-web-stop: build/bin/lncli-web/testnet-lncli-web-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@

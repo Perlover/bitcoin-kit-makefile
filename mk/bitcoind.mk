@@ -39,12 +39,13 @@ bitcoin_iptables_install:
 ####################### CONFIGS ###################################
 
 MAKE_DIRS +=  build/bitcoind
+MAKE_DIRS += $(HOME)/.bitcoin
 
-$(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf
+$(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf | $(HOME)/.bitcoin
+	umask 077 && cp -f $< $@
 
-$(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf
-
-$(eval $(call COPY_FILE,$(HOME)/.bitcoin,077))
+$(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf | $(HOME)/.bitcoin
+	umask 077 && cp -f $< $@
 
 build/bitcoind/bitcoin-testnet.conf :\
     $(NETWORK_MK_FILE)\
@@ -136,10 +137,14 @@ build/bin/bitcoind/testnet-bitcoind-stop: \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
 	chmod 755 $@
 
-$(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install
+$(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | miniupnpc_install
+$(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install
+$(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install
+$(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@

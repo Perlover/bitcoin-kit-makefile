@@ -58,11 +58,11 @@ If you have old this repositary installed in your system you can easy upgrade up
 
     For CentOS 6.* (there are old autotoolsm, gcc and etc... So we will install only this minimal packages)
 
-        $ sudo yum -y install git make coreutils screen
+        $ sudo yum -y install git make coreutils screen gettext
 
     For Ubuntu/Mint/Debian Linux:
 
-        $ sudo apt install git build-essential screen
+        $ sudo apt install git build-essential screen gettext
 
     For Raspberry Pi (Raspbian OS) you need to install some requires
     (because a compiling from sources will take many more time and memory resources):
@@ -148,7 +148,7 @@ If you have old this repositary installed in your system you can easy upgrade up
 	    Stop daemon:
 
         	mainnet-lightning-stop
-		
+
 		But first time run after installation i recommend to run as described in #5.1
 
     	You can work with node same way: https://your_listen_ip_address:[8280|8281]/
