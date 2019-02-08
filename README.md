@@ -181,7 +181,10 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
 1. `cd ~/bitcoin-kit-makefile`
 
-2. `git pull`
+2.
+        git checkout master
+        git pull
+        git submodule update --recursive
 
 3. To stop bitcoind and/or LND, for example for mainnet:
 
