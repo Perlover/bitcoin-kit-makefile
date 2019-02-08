@@ -179,9 +179,9 @@ If you have old this repositary installed in your system you can easy upgrade up
 
 If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) this makefile gives easy targets to update. The LND update makes TAR archive before upgrading. For upgrade:
 
-1. `cd ~/bitcoin-kit-makefile`
+1. To checkout to master branch and to pull fresh repositary:
 
-2.
+        cd ~/bitcoin-kit-makefile
         git checkout master
         git pull
 
@@ -215,11 +215,16 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
 5. After upgrade and before start please logout from terminal and login again. The upgrade process corrects `$PATH` after upgrade of *golang*
 
-6. After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
+6. ONLY TESTNET! After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
 
         bitcoind  -conf=$HOME/.bitcoin/bitcoin-testnet.conf -reindex
 
     When reindexing will be finished (you can check in logs by `tail -f ~/.bitcoin/testnet3/debug.log`) you can stop and start again the *bitcoind* (optionally)
+
+7. To start bitcoind and/or LND again, for example for mainnet:
+
+        mainnet-bitcoind-start
+        mainnet-lnd-start
 
 Have a nice day ;-)
 
