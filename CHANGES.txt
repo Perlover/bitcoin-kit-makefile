@@ -1,3 +1,6 @@
+2019-02-13
+    * Now this is compiled on Ubuntu 18.04 and on CentOS 6.*
+
 2019-02-08
     + Update LND - v0.5.2-beta
     + Update bitcoind - v0.17.1
