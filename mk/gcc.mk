@@ -59,11 +59,11 @@ gmp_install: |\
 endif
 
 # mpfr
-mpfr-4.0.1.tar.bz2:
-	wget http://www.mpfr.org/mpfr-current/mpfr-4.0.1.tar.bz2
-	echo '8c21d8ac7460493b2b9f3ef3cc610454  mpfr-4.0.1.tar.bz2'|md5sum --check - || \
+mpfr-4.0.2.tar.bz2:
+	wget http://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.bz2
+	echo '6d8a8bb46fe09ff44e21cdbf84f5cdac  mpfr-4.0.2.tar.bz2'|md5sum --check - || \
 		{ \
-			mv mpfr-4.0.1.tar.bz2 mpfr-4.0.1.bad.tar.bz2 &&\
+			mv mpfr-4.0.2.tar.bz2 mpfr-4.0.2.bad.tar.bz2 &&\
 			echo "Bad mpfr md5 sum"; false;\
 		}
 
@@ -72,9 +72,9 @@ mpfr_install: |\
     $(HOME)/.bitcoin_envs\
     gmp_install\
     autotools_install\
-    mpfr-4.0.1.tar.bz2
-	bzip2 -cd mpfr-4.0.1.tar.bz2|tar xvf -
-	cd mpfr-4.0.1 && { \
+    mpfr-4.0.2.tar.bz2
+	bzip2 -cd mpfr-4.0.2.tar.bz2|tar xvf -
+	cd mpfr-4.0.2 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The mpfr was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
@@ -135,4 +135,3 @@ isl_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
-
