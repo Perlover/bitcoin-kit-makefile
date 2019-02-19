@@ -37,8 +37,8 @@ else
     sleep 1
 fi
 
-echo $'\n\n\n******************************************************************\n\nPlease unlock '"${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
-lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} unlock
+echo $'\n\n\n******************************************************************\n\nPlease '"${1:-unlock} ${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
+lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} ${1:-unlock}
 
 sleep 2
 

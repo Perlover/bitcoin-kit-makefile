@@ -226,6 +226,14 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
         mainnet-bitcoind-start
         mainnet-lnd-start
 
+8. If you want to change password of wallet you can do it by following commands:
+
+        mainnet-lnd-stop
+        mainnet-lnd-start changepassword
+
+    You must to enter the old password and the new one. The seed password is kept old (it cannot be changed).
+
+
 Have a nice day ;-)
 
 *Perlover*

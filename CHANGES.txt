@@ -1,3 +1,7 @@
+2019-02-19
+    * The command [mainnet|testnet]-lnd-start now have optional parameter - 'changepassword'. Now we can change the wallet password by command:
+      $ mainnet-lnd-start changepassword. To see README.txt details about it.
+
 2019-02-13
     * Now this is compiled on Ubuntu 18.04 and on CentOS 6.*
 
