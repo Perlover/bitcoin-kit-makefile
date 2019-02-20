@@ -68,12 +68,12 @@ If you have old this repositary installed in your system you can easy upgrade up
     (because a compiling from sources will take many more time and memory resources):
 
         $ sudo apt install gcc build-essential screen git m4 automake autoconf libtool pkg-config binutils
-	$ # And you need to increase a swap up to ~1Gb
-	$ # (else you will have 'no virtual memory' error) by following commands:
-	$ sudo dd if=/dev/zero of=/swapfile bs=1M count=1000
-	$ sudo mkswap /swapfile
-	$ sudo swapon /swapfile
-	$ # optional: to add line '/swapfile none swap sw 0 0' to /etc/fstab (sudo vi /etc/fstab)
+        $ # And you need to increase a swap up to ~1Gb
+        $ # (else you will have 'no virtual memory' error) by following commands:
+        $ sudo dd if=/dev/zero of=/swapfile bs=1M count=1000
+        $ sudo mkswap /swapfile
+        $ sudo swapon /swapfile
+        $ # optional: to add line '/swapfile none swap sw 0 0' to /etc/fstab (sudo vi /etc/fstab)
 
     And then next (and for a rest OSes may be):
 
@@ -126,35 +126,55 @@ If you have old this repositary installed in your system you can easy upgrade up
 
     1. First time after installation:
 
-			mainnet-bitcoind-start
-			... wait some minutes ...
-			mainnet-lnd-start
+                        mainnet-bitcoind-start
+                        ... wait some minutes ...
+                        mainnet-lnd-start
 
     2. Next time starting:
 
-			mainnet-bitcoind-start
-			... wait some seconds...
-			mainnet-lnd-start
+                        mainnet-bitcoind-start
+                        ... wait some seconds...
+                        mainnet-lnd-start
 
     3. Stopping:
 
-			mainnet-lnd-stop
-			mainnet-bitcoind-stop
+                        mainnet-lnd-stop
+                        mainnet-bitcoind-stop
 
     4. If you want to use `lncli-web` you can start same way:
 
-        	mainnet-lightning-start
+                mainnet-lightning-start
 
-	    Stop daemon:
+         Stop daemon:
 
-        	mainnet-lightning-stop
+                mainnet-lightning-stop
 
-		But first time run after installation i recommend to run as described in #5.1
+                But first time run after installation i recommend to run as described in #5.1
 
-    	You can work with node same way: https://your_listen_ip_address:[8280|8281]/
-    	The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
+        You can work with node same way: `https://your_listen_ip_address:[8280|8281]/`
+        The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
 
-5.  **ATTENTION!** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
+6. If you want to change password of wallet you can do it by following commands:
+
+        mainnet-lnd-stop
+        mainnet-lnd-start changepassword
+
+    You must to enter the old password and the new one. The seed password is kept old (it cannot be changed).
+
+7. After setup you have easy bash aliases and functions:
+
+    `l`   - the mainnet lncli command
+
+    `lt`  - the testnet lncli command
+
+    `loc` - connect &amp; open channel to mainnet node of format `pubkey@host:port` as:
+
+            loc <pubkey@host:port> <amount_satoshies>
+
+    `ltoc` - same as `loc` only for testnet network
+
+
+8.  **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
     This Makefile has helpers:
 
@@ -215,7 +235,7 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
 5. After upgrade and before start please logout from terminal and login again. The upgrade process corrects `$PATH` after upgrade of *golang*
 
-6. ONLY TESTNET! After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
+6. **ONLY TESTNET!** After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
 
         bitcoind  -conf=$HOME/.bitcoin/bitcoin-testnet.conf -reindex
 
@@ -225,14 +245,6 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
         mainnet-bitcoind-start
         mainnet-lnd-start
-
-8. If you want to change password of wallet you can do it by following commands:
-
-        mainnet-lnd-stop
-        mainnet-lnd-start changepassword
-
-    You must to enter the old password and the new one. The seed password is kept old (it cannot be changed).
-
 
 Have a nice day ;-)
 

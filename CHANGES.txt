@@ -1,3 +1,9 @@
+2019-02-20
+    * Added commands (bash functions): loc & ltoc - an openning channel with node of format pubkey@host:port
+      The format: loc <pubkey@host:port> <amount_satoshi>
+      This commands (loc - mainnet, ltoc - testnet) connect and open channel (because native lncli commands don't understand same format...)
+      Before an openning this command will check do we have already a channel with them or not. If yes the channel will not be opened.
+
 2019-02-19
     * The command [mainnet|testnet]-lnd-start now have optional parameter - 'changepassword'. Now we can change the wallet password by command:
       $ mainnet-lnd-start changepassword. To see README.txt details about it.
