@@ -161,7 +161,21 @@ If you have old this repositary installed in your system you can easy upgrade up
 
     You must to enter the old password and the new one. The seed password is kept old (it cannot be changed).
 
-7. After setup you have easy bash aliases and functions:
+7. For the `abandonchannel` command of lnd you need the debug lnd binary. You can start the LND in debug mode by same way:
+
+        mainnet-lnd-stop
+        mainnet-lnd-debug-start
+
+    Then you can run lncli with `abandonchannel` command:
+
+	l abandonchannel ...
+
+    When you finished we recommend to return to non-debug mode:
+
+        mainnet-lnd-stop
+        mainnet-lnd-start
+
+8. After setup you have easy bash aliases and functions:
 
     `l`   - the mainnet lncli command
 
@@ -174,7 +188,7 @@ If you have old this repositary installed in your system you can easy upgrade up
     `ltoc` - same as `loc` only for testnet network
 
 
-8.  **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
+9.  **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
     This Makefile has helpers:
 

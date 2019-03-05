@@ -12,6 +12,7 @@ set-up-lightning: |\
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-stop\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-stop\
@@ -29,6 +30,7 @@ $(HOME)/bin/$(BITCOIN_NETWORK)-lightning-start: configs/bin/lightning/$(BITCOIN_
     $(HOME)/bin\
     $(HOME)/bin/$(BITCOIN_NETWORK)-bitcoind-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lncli-web-start
 	cp -f $< $@ && chmod 755 $@
 

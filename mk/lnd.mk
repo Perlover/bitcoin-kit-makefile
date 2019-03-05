@@ -127,6 +127,19 @@ build/bin/lnd/mainnet-lnd-start: \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
 	chmod 755 $@
 
+build/bin/lnd/mainnet-lnd-debug-start: \
+    $(NETWORK_MK_FILE)\
+    configs/bin/lnd/mainnet-lnd-debug-start\
+    |\
+    lnd_install\
+    lnd_configs_bitcoind_bundle_install\
+    build/bin/lnd
+	cp -f configs/bin/lnd/mainnet-lnd-debug-start $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
+
 build/bin/lnd/testnet-lnd-start: \
     $(NETWORK_MK_FILE)\
     configs/bin/lnd/testnet-lnd-start\
@@ -135,6 +148,19 @@ build/bin/lnd/testnet-lnd-start: \
     lnd_configs_bitcoind_bundle_install\
     build/bin/lnd
 	cp -f configs/bin/lnd/testnet-lnd-start $@ && \
+	sed -ri \
+	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
+	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
+	chmod 755 $@
+
+build/bin/lnd/testnet-lnd-debug-start: \
+    $(NETWORK_MK_FILE)\
+    configs/bin/lnd/testnet-lnd-debug-start\
+    |\
+    lnd_install\
+    lnd_configs_bitcoind_bundle_install\
+    build/bin/lnd
+	cp -f configs/bin/lnd/testnet-lnd-debug-start $@ && \
 	sed -ri \
 	-e 's#\$$\$$BITCOIN_KIT_UPNP_SUPPORT\$$\$$#$(BITCOIN_KIT_UPNP_SUPPORT)#g' \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
@@ -203,7 +229,13 @@ $(HOME)/opt/lncli-web/admin-testnet.macaroon: $(HOME)/.lnd/data/chain/bitcoin/te
 $(HOME)/bin/mainnet-lnd-start: build/bin/lnd/mainnet-lnd-start | $(HOME)/bin miniupnpc_install
 	umask 077 && cp -f $< $@
 
+$(HOME)/bin/mainnet-lnd-debug-start: build/bin/lnd/mainnet-lnd-debug-start | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
+
 $(HOME)/bin/testnet-lnd-start: build/bin/lnd/testnet-lnd-start | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
+
+$(HOME)/bin/testnet-lnd-debug-start: build/bin/lnd/testnet-lnd-debug-start | $(HOME)/bin miniupnpc_install
 	umask 077 && cp -f $< $@
 
 $(HOME)/bin/mainnet-lnd-stop: build/bin/lnd/mainnet-lnd-stop | $(HOME)/bin miniupnpc_install
