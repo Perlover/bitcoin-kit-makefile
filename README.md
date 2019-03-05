@@ -168,7 +168,7 @@ If you have old this repositary installed in your system you can easy upgrade up
 
     Then you can run lncli with `abandonchannel` command:
 
-	l abandonchannel ...
+        l abandonchannel ...
 
     When you finished we recommend to return to non-debug mode:
 
