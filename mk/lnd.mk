@@ -3,7 +3,7 @@ lnd_install: |\
     $(CURRENT_GOLANG_TARGET)
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
-	git fetch --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
+	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) && $(MAKE) install
 	@touch $@
 
@@ -56,7 +56,7 @@ lnd-bin-update: |\
 	rm -rf $$GOPATH/pkg/dep
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
-	git fetch --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
+	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) clean && $(MAKE) && $(MAKE) install
 	@touch lnd_install
 	@touch $@
