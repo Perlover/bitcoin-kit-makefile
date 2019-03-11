@@ -1,3 +1,6 @@
+2019-03-11
+    * Update LND - current master branch
+
 2019-03-05
     + Added the mainnet-lnd-debug-start & testnet-lnd-debug-start commands.
     * Updated the README.md for a debug lnd mode
