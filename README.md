@@ -229,10 +229,15 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
         make prepare-bitcoin-code-update
         make bitcoin-core-update
 
-    If upgrade LND:
+    If upgrade LND for mainnet:
 
         make prepare-lnd-update
-        make lnd-update
+        make lnd-update-mainnet
+
+    Or upgrade LND for testnet:
+
+        make prepare-lnd-update
+        make lnd-update-testnet
 
     Or to upgrade both:
 

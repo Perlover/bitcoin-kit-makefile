@@ -17,11 +17,18 @@ lnd-install: lnd_install
 prepare-lnd-update: this_repo_update
 	-rm -f lnd-bin-update lnd-update
 
+lnd-update-testnet:
+	$(MAKE) lnd-update BITCOIN_NETWORK=testnet
+
+lnd-update-mainnet:
+	$(MAKE) lnd-update BITCOIN_NETWORK=mainnet
+
 lnd-update:\
     lnd-bin-update\
     $(HOME)/.bitcoin_aliases\
-    $(HOME)/bin/*-lnd-start\
-    $(HOME)/bin/*-lnd-stop
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop
 	if [[ -f $(HOME)/.testnet-lnd.pid ]]; then\
 	    kill -0 `cat $(HOME)/.testnet-lnd.pid` &>/dev/null &&\
 	    echo "You must to stop testnet lnd before update!" &&\
