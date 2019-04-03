@@ -1,3 +1,6 @@
+2019-04-03
+    * Update LND up to current master for SCB feature (static channel backups)
+
 2019-03-20
     * Update LND - current master branch
     * Now the mainnet-lnd-debug-start script to be installed when we do update
