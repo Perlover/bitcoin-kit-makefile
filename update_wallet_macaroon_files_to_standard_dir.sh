@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # The lnd v0.5.1 has other locations for wallet & macaroon files. Before it has these files not related with chain directory.
 # This update unifies locations because some third-party utilities (ln-rebalance for examnple and lnwallet use standard paths)
