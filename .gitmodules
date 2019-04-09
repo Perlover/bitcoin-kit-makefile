@@ -20,3 +20,6 @@
 [submodule "external/miniupnp"]
 	path = external/miniupnp
 	url = https://github.com/miniupnp/miniupnp.git
+[submodule "external/inotify-tools"]
+	path = external/inotify-tools
+	url = https://github.com/rvoicilas/inotify-tools.git
