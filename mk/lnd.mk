@@ -1,6 +1,7 @@
 lnd_install: |\
     new_git_install\
-    $(CURRENT_GOLANG_TARGET)
+    $(CURRENT_GOLANG_TARGET)\
+    inotify_install
 	go get -d github.com/lightningnetwork/lnd &&\
 	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\

@@ -1,3 +1,7 @@
+2019-04-09
+    * Now the inotify-tools are compiled from sources for LND (for Static Channel Backups). It installed for backup tools
+      For example for this script: https://gist.github.com/alexbosworth/2c5e185aedbdac45a03655b709e255a3
+
 2019-04-03
     * Update LND up to current master for SCB feature (static channel backups)
 

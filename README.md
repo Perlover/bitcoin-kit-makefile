@@ -217,7 +217,6 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
         cd ~/bitcoin-kit-makefile
         git checkout master
-        git pull
 
 3. To stop bitcoind and/or LND, for example for mainnet:
 
