@@ -14,7 +14,7 @@ git_submodule_install: .gitmodules
 
 this_repo_update:
 	git pull
-	git submodule update --recursive
+	git submodule update --init --recursive
 
 MAKE_DIRS += $(HOME)/bin
 
