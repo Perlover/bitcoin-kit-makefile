@@ -1,3 +1,6 @@
+2019-04-10
+    * Update LND - current master branch (0.6-rc4 + some new commits)
+
 2019-04-09
     * Now the inotify-tools are compiled from sources for LND (for Static Channel Backups). It installed for backup tools
       For example for this script: https://gist.github.com/alexbosworth/2c5e185aedbdac45a03655b709e255a3
