@@ -1,3 +1,6 @@
+2019-05-06
+    * Update LND - current master branch (0.6.1-beta release)
+
 2019-04-10
     * Update LND - current master branch (0.6-rc4 + some new commits)
 
