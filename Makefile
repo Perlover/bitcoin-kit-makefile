@@ -30,8 +30,11 @@ HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet add
 # commit/tag of LND for installation - master branch from 2019-06-21 (v0.7.0-beta-rc2 as minimum)
 LND_ACTUAL_COMMIT := 0e28ecd6164e77e86f38bc3ea692a4a60896acdf
 
-# Go now is v1.11.2 (to see file mk/golang.mk)
-CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go1.11.2
+# Should be updated in PATH of golang_envs.sh too!
+GOLANG_VER := 1.12.6
+
+# Go now is $(GOLANG_VER) (to see file mk/golang.mk)
+CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
