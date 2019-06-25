@@ -1,3 +1,7 @@
+2019-06-24
+    * Update golang up to 1.12.6
+    * Update LND up to v0.7.0-beta-rc2
+
 2019-05-07
     * Update LND - current master branch (0.6.1-beta-rc2)
 
