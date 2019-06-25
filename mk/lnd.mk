@@ -81,10 +81,22 @@ MAKE_DIRS +=  build/lnd/bitcoind
 MAKE_DIRS +=  $(HOME)/.lnd
 
 $(HOME)/.lnd/lnd-testnet.conf: build/lnd/bitcoind/lnd-testnet.conf | $(HOME)/.lnd
-	umask 077 && cp -f $< $@
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
 $(HOME)/.lnd/lnd-mainnet.conf: build/lnd/bitcoind/lnd-mainnet.conf | $(HOME)/.lnd
-	umask 077 && cp -f $< $@
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
 build/lnd/bitcoind/lnd-testnet.conf :\
     $(NETWORK_MK_FILE)\

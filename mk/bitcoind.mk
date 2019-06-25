@@ -42,10 +42,22 @@ MAKE_DIRS +=  build/bitcoind
 MAKE_DIRS += $(HOME)/.bitcoin
 
 $(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf | $(HOME)/.bitcoin
-	umask 077 && cp -f $< $@
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
 $(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf | $(HOME)/.bitcoin
-	umask 077 && cp -f $< $@
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
 build/bitcoind/bitcoin-testnet.conf :\
     $(NETWORK_MK_FILE)\
