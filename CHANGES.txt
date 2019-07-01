@@ -1,3 +1,6 @@
+2019-07-01
+    * Update LND up to v0.7.0-beta-rc3
+
 2019-06-24
     * Update golang up to 1.12.6
     * Update LND up to v0.7.0-beta-rc2
