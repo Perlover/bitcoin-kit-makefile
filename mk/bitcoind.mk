@@ -23,7 +23,7 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
 	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
 prepare-bitcoin-code-update: this_repo_update
-	-rm -f bitcoin-core_install
+	-rm -f bitcoin-core_install zeromq_install openssl_install libevent_install
 	-cd external/bitcoin-core && $(MAKE) clean
 
 bitcoin-core-update:
