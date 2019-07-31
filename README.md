@@ -52,7 +52,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
 If you have old this repositary installed in your system you can easy upgrade up to fresh Bitcoin Core &amp; LND. [Please to see below upgrade section](#upgrade-lnd-bitcoin-core)
 
-## How to install the Bitcoin Core v0.17.0.1 + LND (fresh version) + lncli-web versions from sources:
+## How to install the Bitcoin Core v0.18.0 + LND (0.7.1-beta) + lncli-web versions from sources:
 
 1.  First, you need to do by hands the prepare process:
 
