@@ -1,3 +1,13 @@
+2019-07-31
+    * Big update:
+      - Bitcoin Core 0.18.0 (commit 2472733a24a9364e4c6233ccd04166a26a68cc65)
+      - LND 0.7.1-beta (commit add905d17f7bbb11d0df2761cdf8accf2fef2b00)
+      - OpenSSL library OpenSSL_1_1_1-stable master branch (2019-07-31)
+      - libzmq v4.3.2
+      - libevent master branch (2019-07-31)
+
+      For update commands to see here: https://github.com/Perlover/bitcoin-kit-makefile#upgrade-lnd--bitcoin-core
+
 2019-07-01
     * Update LND up to v0.7.0-beta-rc3
 
