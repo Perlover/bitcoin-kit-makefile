@@ -2,7 +2,7 @@
 openssl_install: |\
     required_for_configure_install
 	cd external/openssl && { \
-		make clean; ./config --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "OpenSSL was installed - OK"; \
+		$(MAKE) clean; ./config --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "OpenSSL was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -28,7 +28,7 @@ boost_install: |\
 libevent_install: |\
     required_for_configure_install
 	cd external/libevent && { \
-		make clean; ./autogen.sh && ./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Libevent was installed - OK"; \
+		$(MAKE) clean; ./autogen.sh && ./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "Libevent was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
