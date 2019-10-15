@@ -1,3 +1,6 @@
+2019-10-15
+    * Update LND - v0.8.0-beta from 2019-10-15
+
 2019-07-31
     * Big update:
       - Bitcoin Core 0.18.0 (commit 2472733a24a9364e4c6233ccd04166a26a68cc65)
