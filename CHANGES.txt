@@ -1,3 +1,7 @@
+2019-10-22
+    * Fix of previous upgrade of LND v0.8.0-beta. For LND 0.8.0-beta the Golang 1.13.1 as minimum to be needed
+      Now there is upgrade to Golang 1.13.3 before upgrading/installing of LND
+
 2019-10-15
     * Update LND - v0.8.0-beta from 2019-10-15
 

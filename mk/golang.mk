@@ -9,12 +9,20 @@ golang_pre_install: |\
 $(BASE_INSTALL_DIR)/go:
 	mkdir -p $(BASE_INSTALL_DIR)/go
 
-# ~/.bash_profile patch...
-$(HOME)/.golang_envs: golang_envs.sh | $(BASE_INSTALL_DIR)/go
-	cp -f $< $@
-	echo $$'\n. $(HOME)/.golang_envs' >> $(PROFILE_FILE)
+golang_envs-$(GOLANG_VER).sh: golang_envs.sh
+	cp -f $< $@ &&\
+	sed -ri \
+	-e 's#\$$\$$GOLANG_VER\$$\$$#$(GOLANG_VER)#g' $@
 
-$(BASE_INSTALL_DIR)/go$(GOLANG_VER): | golang_pre_install
+# ~/.bash_profile patch...
+$(HOME)/.golang_envs: golang_envs-$(GOLANG_VER).sh | $(BASE_INSTALL_DIR)/go
+	cp -f $< $@
+	# This is a fix for multiple duplication of rows from previous updates
+	grep -v '. $(HOME)/.golang_envs' $(PROFILE_FILE) >$(PROFILE_FILE).$$$$.~ &&\
+	echo $$'\n. $(HOME)/.golang_envs' >> $(PROFILE_FILE).$$$$.~ &&\
+	cat $(PROFILE_FILE).$$$$.~ >$(PROFILE_FILE) && rm -f $(PROFILE_FILE).$$$$.~
+
+$(CURRENT_GOLANG_TARGET): | golang_pre_install
 	cd $(BASE_INSTALL_DIR)/go1.4 && git fetch origin
 	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go1.4 go$(GOLANG_VER) && cd go$(GOLANG_VER) && git checkout go$(GOLANG_VER) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
 
