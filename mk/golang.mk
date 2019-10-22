@@ -6,16 +6,15 @@ golang_pre_install: |\
 	cd $(BASE_INSTALL_DIR) && git clone -b release-branch.go1.4 'https://go.googlesource.com/go' go1.4 && cd go1.4/src && ./make.bash
 	@touch $@
 
-$(BASE_INSTALL_DIR)/go:
-	mkdir -p $(BASE_INSTALL_DIR)/go
-
 golang_envs-$(GOLANG_VER).sh: golang_envs.sh
 	cp -f $< $@ &&\
 	sed -ri \
 	-e 's#\$$\$$GOLANG_VER\$$\$$#$(GOLANG_VER)#g' $@
+	[ -d $(BASE_INSTALL_DIR)/go ] && mv $(BASE_INSTALL_DIR)/go $(BASE_INSTALL_DIR)/go.old-$$(date +%Y-%m-%d-%H:%M)
+	mkdir -p $(BASE_INSTALL_DIR)/go
 
 # ~/.bash_profile patch...
-$(HOME)/.golang_envs: golang_envs-$(GOLANG_VER).sh | $(BASE_INSTALL_DIR)/go
+$(HOME)/.golang_envs: golang_envs-$(GOLANG_VER).sh
 	cp -f $< $@
 	# This is a fix for multiple duplication of rows from previous updates
 	grep -v '. $(HOME)/.golang_envs' $(PROFILE_FILE) >$(PROFILE_FILE).$$$$.~ &&\
