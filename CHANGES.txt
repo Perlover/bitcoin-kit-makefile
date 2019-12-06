@@ -1,3 +1,6 @@
+2019-12-06
+    * Update LND to v0.8.2-beta-rc1 (+ all sub-servers are included)
+
 2019-11-18
     * Update up to 0.8.1-beta + added build tags for sub-servers API
 
