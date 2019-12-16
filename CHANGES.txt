@@ -1,3 +1,6 @@
+2019-12-16
+    * Update LND to v0.8.2-beta (+ all sub-servers are included)
+
 2019-12-09
     * Update LND to v0.8.2-beta-rc2 (+ all sub-servers are included)
 
