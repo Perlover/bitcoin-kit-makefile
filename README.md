@@ -233,9 +233,9 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
         make prepare-lnd-update
         # without a LND backup
-	make lnd-update-mainnet
-	# OR for backup of LND before:
-	LND_BACKUP=1 make lnd-update-mainnet
+        make lnd-update-mainnet
+        # OR for backup of LND before:
+        LND_BACKUP=1 make lnd-update-mainnet
 
     Or upgrade LND for testnet:
 
