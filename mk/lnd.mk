@@ -50,7 +50,7 @@ lnd-update:\
 	    echo "You must to stop mainnet lncli-web before update!" &&\
 	    exit 2;\
 	fi
-	umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'
+	if [ "x${LND_BACKUP}" != "x" ]; then umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'; fi
 	./update_wallet_macaroon_files_to_standard_dir.sh
 	./update_lnd_cert_to_standard_cert.sh
 	@echo $$'*****************************************************\n\nLND was updated to commit/tag: $(LND_ACTUAL_COMMIT)\n\n' &&\

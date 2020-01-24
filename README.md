@@ -52,7 +52,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
 If you have old this repositary installed in your system you can easy upgrade up to fresh Bitcoin Core &amp; LND. [Please to see below upgrade section](#upgrade-lnd-bitcoin-core)
 
-## How to install the Bitcoin Core v0.18.0 + LND (0.7.1-beta) + lncli-web versions from sources:
+## How to install the Bitcoin Core v0.18.0 + LND (fresh version) + lncli-web versions from sources (old version):
 
 1.  First, you need to do by hands the prepare process:
 
@@ -232,7 +232,10 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
     If upgrade LND for mainnet:
 
         make prepare-lnd-update
-        make lnd-update-mainnet
+        # without a LND backup
+	make lnd-update-mainnet
+	# OR for backup of LND before:
+	LND_BACKUP=1 make lnd-update-mainnet
 
     Or upgrade LND for testnet:
 
@@ -242,9 +245,9 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
     Or to upgrade both:
 
         make prepare-bitcoin-code-update prepare-lnd-update
-        make bitcoin-core-update lnd-update-mainnet
+        LND_BACKUP=1 make bitcoin-core-update lnd-update-mainnet
 
-    In home directory you will see lnd tar archive before upgrade:
+    In home directory you will see lnd tar archive before upgrade (if you used `LND_BACKUP` as above):
 
         lnd-backup-UUUUUUU-YYYY-MM-DD.tgz
 
