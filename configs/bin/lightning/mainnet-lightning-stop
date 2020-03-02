@@ -2,7 +2,6 @@
 
 bitcoin_network=mainnet
 
-${bitcoin_network}-lncli-web-stop &&
 ${bitcoin_network}-lnd-stop &&
 ${bitcoin_network}-bitcoind-stop &&
 

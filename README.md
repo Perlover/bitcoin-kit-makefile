@@ -226,7 +226,7 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
 4. Then, if you want to upgrade Bitcoin Core:
 
-        make prepare-bitcoin-code-update
+        make prepare-bitcoin-core-update
         make bitcoin-core-update
 
     If upgrade LND for mainnet:
@@ -244,7 +244,7 @@ If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) th
 
     Or to upgrade both:
 
-        make prepare-bitcoin-code-update prepare-lnd-update
+        make prepare-bitcoin-core-update prepare-lnd-update
         LND_BACKUP=1 make bitcoin-core-update lnd-update-mainnet
 
     In home directory you will see lnd tar archive before upgrade (if you used `LND_BACKUP` as above):
