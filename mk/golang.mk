@@ -10,7 +10,7 @@ golang_envs-$(GOLANG_VER).sh: golang_envs.sh
 	cp -f $< $@ &&\
 	sed -ri \
 	-e 's#\$$\$$GOLANG_VER\$$\$$#$(GOLANG_VER)#g' $@
-	[ -d $(BASE_INSTALL_DIR)/go ] && mv $(BASE_INSTALL_DIR)/go $(BASE_INSTALL_DIR)/go.old-$$(date +%Y-%m-%d-%H:%M)
+	if [ -d $(BASE_INSTALL_DIR)/go ]; then mv $(BASE_INSTALL_DIR)/go $(BASE_INSTALL_DIR)/go.old-$$(date +%Y-%m-%d-%H:%M); fi
 	mkdir -p $(BASE_INSTALL_DIR)/go
 
 # ~/.bash_profile patch...
