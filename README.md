@@ -82,7 +82,7 @@ If you have old this repositary installed in your system you can easy upgrade up
 2.  To login under *bitcoin* user by following ways:
 
         # screen -S bitcoin-kit
-        # su -l bitcoin
+        # sudo su -l bitcoin
 
     OR
 
