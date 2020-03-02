@@ -4,6 +4,7 @@
     * Openssl was updated to fresh branch OpenSSL_1_1_1-stable (will be affected in new installations)
     * miniupnp utility was updated to fresh master branch (will be affected in new installations)
     * The lncli-web utility was deleted from mainnet-lightning-[start|stop] scripts because i don't want to support it here.
+    * golang was updated to v0.14
 
 2020-02-26
     * LND master branch - v0.9.1-beta.rc1 as minumum (+ all sub-servers are included)
