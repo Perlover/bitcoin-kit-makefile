@@ -2,7 +2,7 @@ i-want-lightning: |\
     bitcoin-core_install\
     lnd_install\
     bitcoind_configs_install\
-    lnd_configs_bitcoind_bundle_install\
+    lnd_configs_bitcoind_bundle_install
 	@touch $@
 
 set-up-lightning: |\
