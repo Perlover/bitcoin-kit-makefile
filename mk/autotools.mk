@@ -35,11 +35,11 @@ autotools_install: |\
 ######################################
 
 # automake
-automake-1.15.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz'
-	echo '716946a105ca228ab545fc37a70df3a3  automake-1.15.tar.gz'|md5sum --check - || \
+automake-1.16.1.tar.gz:
+	wget 'http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz'
+	echo '83cc2463a4080efd46a72ba2c9f6b8f5  automake-1.16.1.tar.gz'|md5sum --check - || \
 		{ \
-			mv automake-1.15.tar.gz automake-1.15.bad.tar.gz &&\
+			mv automake-1.16.1.tar.gz automake-1.16.1.bad.tar.gz &&\
 			echo "Bad automake md5 sum"; false;\
 		}
 
@@ -48,9 +48,9 @@ ifeq ($(AUTOMAKE_MIN),FAIL)
 automake_install: |\
     $(HOME)/.bitcoin_envs\
     autoconf_install \
-    automake-1.15.tar.gz
-	tar xzf automake-1.15.tar.gz
-	cd automake-1.15 && { \
+    automake-1.16.1.tar.gz
+	tar xzf automake-1.16.1.tar.gz
+	cd automake-1.16.1 && { \
 		PERL=/usr/bin/perl ./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE) && $(MAKE) install && echo "The automake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@

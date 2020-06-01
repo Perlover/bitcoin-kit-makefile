@@ -1,5 +1,6 @@
 bitcoin-core_install: |\
     required_for_configure_install\
+    binutils_install\
     boost_install\
     openssl_install\
     libevent_install\
@@ -9,7 +10,7 @@ bitcoin-core_install: |\
     miniupnpc_install
 	cd external/bitcoin-core && { \
 		./autogen.sh && \
-		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE_COMPILE) && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE) -j4 && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
@@ -21,9 +22,11 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
     $(CREDENTIALS_DIR)
 	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
-bitcoin-core_update:
-	-rm -f bitcoin-core_install
+prepare-bitcoin-code-update: this_repo_update
+	-rm -f bitcoin-core_install zeromq_install openssl_install libevent_install
 	-cd external/bitcoin-core && $(MAKE) clean
+
+bitcoin-core-update:
 	$(MAKE) bitcoin-core_install
 
 bitcoin_iptables_install:
@@ -36,12 +39,25 @@ bitcoin_iptables_install:
 ####################### CONFIGS ###################################
 
 MAKE_DIRS +=  build/bitcoind
+MAKE_DIRS += $(HOME)/.bitcoin
 
-$(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf
+$(HOME)/.bitcoin/bitcoin-testnet.conf: build/bitcoind/bitcoin-testnet.conf | $(HOME)/.bitcoin
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
-$(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf
-
-$(eval $(call COPY_FILE,$(HOME)/.bitcoin,077))
+$(HOME)/.bitcoin/bitcoin-mainnet.conf: build/bitcoind/bitcoin-mainnet.conf | $(HOME)/.bitcoin
+	umask 077 && \
+	if [ -f $@ ]; then \
+	    cp -f $< $@.new.conf && \
+	    touch $@; \
+	else \
+	    cp -f $< $@; \
+	fi
 
 build/bitcoind/bitcoin-testnet.conf :\
     $(NETWORK_MK_FILE)\
@@ -133,10 +149,14 @@ build/bin/bitcoind/testnet-bitcoind-stop: \
 	-e 's#\$$\$$BITCOIN_KIT_LOCAL_IP\$$\$$#$(BITCOIN_KIT_LOCAL_IP)#g' $@ && \
 	chmod 755 $@
 
-$(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install
+$(HOME)/bin/mainnet-bitcoind-start: build/bin/bitcoind/mainnet-bitcoind-start | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | miniupnpc_install
+$(HOME)/bin/testnet-bitcoind-start: build/bin/bitcoind/testnet-bitcoind-start | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install
+$(HOME)/bin/mainnet-bitcoind-stop: build/bin/bitcoind/mainnet-bitcoind-stop | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install
+$(HOME)/bin/testnet-bitcoind-stop: build/bin/bitcoind/testnet-bitcoind-stop | miniupnpc_install $(HOME)/bin
+	umask 077 && cp -f $< $@

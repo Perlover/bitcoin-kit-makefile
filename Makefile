@@ -27,9 +27,14 @@ CREDENTIALS_DIR := $(HOME)/credentials
 # This hash will be used when defining the network configuration (as cache ID)
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
-# commit/tag of LND for installation
-# It's same as tag: v0.4.2-beta
-LND_ACTUAL_COMMIT := 7cf5ebe2650b6798182e10be198c7ffc1f1d6e19
+# commit/tag of LND for installation - master branch, v0.10.0-beta  as minimum
+LND_ACTUAL_COMMIT := 1a3194d302f33bb52823297d9d7f75cd37516053
+
+# Should be updated in PATH of golang_envs.sh too!
+GOLANG_VER := 1.14
+
+# Go now is $(GOLANG_VER) (to see file mk/golang.mk)
+CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
@@ -135,4 +140,6 @@ include mk/zeromq.mk
 include mk/miniupnp.mk
 include mk/i-want-lightning.mk
 include mk/rsync.mk
+include mk/git.mk
+include mk/inotify.mk
 include mk/finally.mk

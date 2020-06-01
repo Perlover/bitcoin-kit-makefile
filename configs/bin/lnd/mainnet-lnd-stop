@@ -7,7 +7,7 @@ bitcoin_network=mainnet
 tcp_port=9735
 service_name=lnd
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
-macaroon_path=$HOME/.lnd/admin-${bitcoin_network}.macaroon
+macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 grpc_port=10009
 
 if [ ! -f $pid_file ]; then
@@ -28,7 +28,7 @@ echo -n "The ${service_name} (${bitcoin_network}) terminating ..."
 lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} stop &
 lncli_pid=$!
 
-for i in {1..5}; do
+for i in {1..60}; do
     kill -0 `cat $pid_file` &>/dev/null || break
     echo -n '.'
     sleep 1

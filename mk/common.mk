@@ -12,18 +12,11 @@ git_submodule_install: .gitmodules
 	git submodule update --init --recursive
 	@touch $@
 
-# For copying of config files
-# $(call COPY_FILE,FROM_WHERE_DIR,TO_WHERE_DIR,UMASK)
-define COPY_FILE
+this_repo_update:
+	git pull
+	git submodule update --init --recursive
 
-MAKE_DIRS += $(1)
-
-$(1)/% : | $(1)
-	umask $(2) && cp -f $$< $$@
-
-endef
-
-$(eval $(call COPY_FILE,$(HOME)/bin,077))
+MAKE_DIRS += $(HOME)/bin
 
 required_for_configure_install: |\
     $(HOME)/.bitcoin_envs\

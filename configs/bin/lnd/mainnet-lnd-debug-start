@@ -4,9 +4,9 @@
 . $HOME/.golang_envs
 
 service_name=lnd
-bitcoin_network=testnet
-tcp_port=9736
-grpc_port=10010
+bitcoin_network=mainnet
+tcp_port=9735
+grpc_port=10009
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 
@@ -31,7 +31,7 @@ else
     fi
 
     {
-	nohup lnd --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
+	nohup $GOPATH/src/github.com/lightningnetwork/lnd/lnd-debug --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
 	echo $! > $pid_file
     } &>/dev/null
     sleep 1

@@ -1,8 +1,10 @@
 MAKE_DIRS += $(HOME)/opt
 
+LNCLI_WEB_COMMIT := fe7f8879ec48994367866c25daf8be39ca19ca50
+
 $(HOME)/opt/lncli-web: |\
     $(HOME)/opt
-	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git
+	cd $(HOME)/opt && git clone https://github.com/mably/lncli-web.git && cd $(HOME)/opt/lncli-web && git checkout $(LNCLI_WEB_COMMIT)
 
 lncli-web_install: |\
     nodejs_install\
@@ -27,7 +29,7 @@ lncli-web-update: lncli-web_install\
     $(HOME)/bin/mainnet-lncli-web-stop\
     $(HOME)/bin/testnet-lncli-web-start\
     $(HOME)/bin/testnet-lncli-web-stop
-	cd $(HOME)/opt/lncli-web && git remote set-url origin https://github.com/mably/lncli-web.git && git checkout master && git pull && { \
+	cd $(HOME)/opt/lncli-web && git remote set-url origin https://github.com/mably/lncli-web.git && git checkout $(LNCLI_WEB_COMMIT) && git pull && { \
 		npm install && echo "lncli-web for lnd was updated - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@echo $$'*****************************************************\n\nThe lncli-web was updated to current commit\n\n' &&\
@@ -36,20 +38,8 @@ lncli-web-update: lncli-web_install\
 
 MAKE_DIRS += build/lnd/lncli-web
 
-# Lnd uses the P-521 curve for its certificates but NodeJS gRPC module is only compatible with certificates using the P-256 curve
-# To make here these keys
-lncli-web_lnd_certs_install: |\
-    openssl_install\
-    build/lnd/lncli-web\
-    $(HOME)/opt/lncli-web\
-    $(HOME)/.lnd
-	cd build/lnd/lncli-web && \
-	openssl ecparam -genkey -name prime256v1 -out tls.key && \
-	openssl req -new -sha256 -key tls.key -out csr.csr -subj '/CN=localhost/O=lnd' && \
-	openssl req -x509 -sha256 -days 36500 -key tls.key -in csr.csr -out tls.cert && \
-	rm csr.csr && \
-	cp -f * $(HOME)/.lnd && cp -f tls.cert $(HOME)/opt/lncli-web/lnd.cert
-	@touch $@
+$(HOME)/opt/lncli-web/lnd.cert: $(HOME)/.lnd/tls.cert | $(HOME)/opt/lncli-web
+	ln -s $< $@
 
 MAKE_DIRS += build/lnd/lncli-web/ssl
 
@@ -66,11 +56,11 @@ $(HOME)/opt/lncli-web/ssl: |\
 	-out cert.pem \
 	-days 36500 \
 	-nodes \
-	-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" && \
+	-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=$(BITCOIN_KIT_REAL_PUBLIC_IP)" && \
 	mkdir -p $@ && mv -f * $@
 
 lncli-web_configs_install: |\
-    lncli-web_lnd_certs_install\
+    $(HOME)/opt/lncli-web/lnd.cert\
     $(HOME)/opt/lncli-web/ssl
 	@touch $@
 
@@ -142,10 +132,14 @@ build/bin/lncli-web/testnet-lncli-web-stop: \
 	$@ && \
 	chmod 755 $@
 
-$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start | miniupnpc_install
+$(HOME)/bin/mainnet-lncli-web-start: build/bin/lncli-web/mainnet-lncli-web-start | $(HOME)/bin miniupnpc_install $(HOME)/opt/lncli-web/admin-mainnet.macaroon
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start | miniupnpc_install
+$(HOME)/bin/testnet-lncli-web-start: build/bin/lncli-web/testnet-lncli-web-start | $(HOME)/bin miniupnpc_install $(HOME)/opt/lncli-web/admin-testnet.macaroon
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/mainnet-lncli-web-stop: build/bin/lncli-web/mainnet-lncli-web-stop | miniupnpc_install
+$(HOME)/bin/mainnet-lncli-web-stop: build/bin/lncli-web/mainnet-lncli-web-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@
 
-$(HOME)/bin/testnet-lncli-web-stop: build/bin/lncli-web/testnet-lncli-web-stop | miniupnpc_install
+$(HOME)/bin/testnet-lncli-web-stop: build/bin/lncli-web/testnet-lncli-web-stop | $(HOME)/bin miniupnpc_install
+	umask 077 && cp -f $< $@

@@ -1,9 +1,140 @@
-PRESENT TIME
+2020-03-02 (the "mainnet-lightning-start" branch now - it to be testing by me now)
+    * LND was updated to 0.9.1-beta
+    * Bitcoin Core was updated to 0.19.0.1 (For upgrade to see https://github.com/Perlover/bitcoin-kit-makefile#upgrade-lnd--bitcoin-core)
+    * Openssl was updated to fresh branch OpenSSL_1_1_1-stable (will be affected in new installations)
+    * miniupnp utility was updated to fresh master branch (will be affected in new installations)
+    * The lncli-web utility was deleted from mainnet-lightning-[start|stop] scripts because i don't want to support it here.
+    * golang was updated to v0.14
+    * update boost library (for bitcoin core)
+
+2020-02-26
+    * LND master branch - v0.9.1-beta.rc1 as minumum (+ all sub-servers are included)
+
+2020-01-24
+    * LND master branch - v0.9.0-beta as minumum (+ all sub-servers are included)
+    * Now a backup of files to be run only if LND_BACKUP shell's variable is set.
+
+2020-01-17
+    * LND v0.9.0-beta-rc2 (+ all sub-servers are included)
+
+2020-01-10
+    * LND v0.9.0-beta-rc1 (+ all sub-servers are included)
+
+2019-12-16
+    * Update LND to v0.8.2-beta (+ all sub-servers are included)
+
+2019-12-09
+    * Update LND to v0.8.2-beta-rc2 (+ all sub-servers are included)
+
+2019-12-06
+    * Update LND to v0.8.2-beta-rc1 (+ all sub-servers are included)
+
+2019-11-18
+    * Update up to 0.8.1-beta + added build tags for sub-servers API
+
+2019-10-22
+    * Fix of previous upgrade of LND v0.8.0-beta. For LND 0.8.0-beta the Golang 1.13.1 as minimum to be needed
+      Now there is upgrade to Golang 1.13.3 before upgrading/installing of LND
+
+2019-10-15
+    * Update LND - v0.8.0-beta from 2019-10-15
+
+2019-07-31
+    * Big update:
+      - Bitcoin Core 0.18.0 (commit 2472733a24a9364e4c6233ccd04166a26a68cc65)
+      - LND 0.7.1-beta (commit add905d17f7bbb11d0df2761cdf8accf2fef2b00)
+      - OpenSSL library OpenSSL_1_1_1-stable master branch (2019-07-31)
+      - libzmq v4.3.2
+      - libevent master branch (2019-07-31)
+
+      For update commands to see here: https://github.com/Perlover/bitcoin-kit-makefile#upgrade-lnd--bitcoin-core
+
+2019-07-01
+    * Update LND up to v0.7.0-beta-rc3
+
+2019-06-24
+    * Update golang up to 1.12.6
+    * Update LND up to v0.7.0-beta-rc2
+
+2019-05-07
+    * Update LND - current master branch (0.6.1-beta-rc2)
+
+2019-05-06
+    * Update LND - current master branch (0.6.1-beta release)
+
+2019-04-10
+    * Update LND - current master branch (0.6-rc4 + some new commits)
+
+2019-04-09
+    * Now the inotify-tools are compiled from sources for LND (for Static Channel Backups). It installed for backup tools
+      For example for this script: https://gist.github.com/alexbosworth/2c5e185aedbdac45a03655b709e255a3
+
+2019-04-03
+    * Update LND up to current master for SCB feature (static channel backups)
+
+2019-03-20
+    * Update LND - current master branch
+    * Now the mainnet-lnd-debug-start script to be installed when we do update
+    * Increased timeout delay (from 5 to 20 seconds) when lnd to be stopped before killing
+
+2019-03-11
+    * Update LND - current master branch
+
+2019-03-05
+    + Added the mainnet-lnd-debug-start & testnet-lnd-debug-start commands.
+    * Updated the README.md for a debug lnd mode
+
+2019-02-20
+    * Added commands (bash functions): loc & ltoc - an openning channel with node of format pubkey@host:port
+      The format: loc <pubkey@host:port> <amount_satoshi>
+      This commands (loc - mainnet, ltoc - testnet) connect and open channel (because native lncli commands don't understand same format...)
+      Before an openning this command will check do we have already a channel with them or not. If yes the channel will not be opened.
+
+2019-02-19
+    * The command [mainnet|testnet]-lnd-start now have optional parameter - 'changepassword'. Now we can change the wallet password by command:
+      $ mainnet-lnd-start changepassword. To see README.txt details about it.
+
+2019-02-13
+    * Now this is compiled on Ubuntu 18.04 and on CentOS 6.*
+
+2019-02-08
+    + Update LND - v0.5.2-beta
+    + Update bitcoind - v0.17.1
+    + UPdate lncli-web up to fresh current commit
+    * The fix autoconf - with new perl version the 1.15 version was not compiled
+    * Fix README.md
+    * Fix LND repositary problem: i think after the beta realese (tag v0.5.2-beta) the team of LND rebased commits so i need to make git fetch --tags origin before update
+
+2019-01-30
+    * The LND version is updated to v0.5.2-beta-rc3 (commit 5ec1df5c5f2e87d6880a748d5d5d1de6d3e148e7). Not tested but i hope it will work ;-)
+
+2019-01-26
+    * fix in makefile. Tested
+
+2019-01-14
+    * Update LND up to fresh LND (2019-01-14)
+    * Now macaroons files are located in standard for v0.5.1 directories
+    * For upgrade LND you must to do:
+      $ mainnet-lnd-stop && make prepare-lnd-update && make lnd-update
+      To see README -> Upgrade LND & Bitcoin Core section
+
+2018-11-15
+    * Update LND up to v0.5.1-beta-rc1 (commmit 3f57f65bf0cb710159b0182391d1d75e9e3005bc)
+
+2018-11-14
+    * Some improvements in makefiles. This was tested in two CentOS 6 installations
+
+2018-11-11
+    * update to Bitcoin Core v0.17.0.1
+    * The openssl version is now 1.1.1
+    * update LND up to fresh version (commit is d4b042dc1946ece8b60d538ade8e912f035612fe - the current master branch)
+
+2017-06-11
     * Actual bitcoind's version is v0.16.0
     + Added installation of electrumx server
     + Some makefile pieces are splitted by *.mk files
 
-17.07.2017
+2017-07-17
     + Now actual version of UASF is v0.14.2-uasfsegwit1.0 (this is the tag of original git repo)
     + Added the new make target: bitcoin-uasf_update
       You can easy to upgrade by: "make bitcoin-uasf_update restart" or by commands in README.txt
