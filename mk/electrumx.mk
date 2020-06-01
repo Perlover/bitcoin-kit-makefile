@@ -6,12 +6,14 @@ MAKE_DIRS += $(HOME)/.electrumx
 
 electrumx_install: | electrumx_related_pips_install $(HOME)/.electrumx
 	git clone 'https://github.com/kyuupichan/electrumx.git'
-	cd electrumx && git checkout 1.4.3 && { \
+	cd electrumx && git checkout 1.15.0 && { \
 		python3 setup.py install && echo "ElectrumX was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
+MAKE_DIRS += build/electrumx
 MAKE_DIRS += build/electrumx/ssl
+MAKE_DIRS += $(HOME)/.electrumx/ssl
 
 electrumx_certs_install: |\
     openssl_install\
@@ -24,8 +26,6 @@ electrumx_certs_install: |\
 	rm csr.csr && \
 	cp -f * $(HOME)/.electrumx/ssl
 	@touch $@
-
-MAKE_DIRS += build/electrumx
 
 build/electrumx/env.sh: \
     $(NETWORK_MK_FILE)\
