@@ -52,7 +52,7 @@ installing. The *git sources* are secured by commit ID checkout.
 
 If you have old this repositary installed in your system you can easy upgrade up to fresh Bitcoin Core &amp; LND. [Please to see below upgrade section](#upgrade-lnd-bitcoin-core)
 
-## How to install the Bitcoin Core v0.19.0.1 + LND (0.9.1-beta):
+## How to install the Bitcoin Core v0.19.1 + LND (v0.10.1-beta.rc3):
 
 1.  First, you need to do by hands the prepare process:
 
@@ -211,7 +211,7 @@ If you have old this repositary installed in your system you can easy upgrade up
 
 ## Upgrade LND &amp; Bitcoin Core
 
-If you have installed LND (&lt; 0.5.1-rc4) and/or Bitcoin Core (&lt;0.17.0.1) this makefile gives easy targets to update. The LND update makes TAR archive before upgrading. For upgrade:
+If you have installed old LND and/or Bitcoin Core by this repository this makefile gives easy targets to update. The LND update makes TAR archive before upgrading by request (to see `LND_BACKUP` below). For upgrade:
 
 1. To checkout to master branch and to pull fresh repositary:
 
