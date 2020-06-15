@@ -25,7 +25,7 @@ BASE_INSTALL_DIR := $(HOME)
 CREDENTIALS_DIR := $(HOME)/credentials
 
 # This hash will be used when defining the network configuration (as cache ID)
-HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | awk '/inet addr/{print substr($$2,6)}'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
+HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
 # commit/tag of LND for installation - master branch, v0.10.1-beta.rc3 as minimum
 LND_ACTUAL_COMMIT := 4f2221d56c8212ddc4f48a4e6a6ee57255e61195
