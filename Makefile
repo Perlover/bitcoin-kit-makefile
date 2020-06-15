@@ -142,4 +142,6 @@ include mk/i-want-lightning.mk
 include mk/rsync.mk
 include mk/git.mk
 include mk/inotify.mk
+include mk/cmake.mk
+include mk/rust.mk
 include mk/finally.mk

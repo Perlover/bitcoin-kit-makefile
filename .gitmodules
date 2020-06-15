@@ -23,3 +23,6 @@
 [submodule "external/inotify-tools"]
 	path = external/inotify-tools
 	url = https://github.com/rvoicilas/inotify-tools.git
+[submodule "external/rust"]
+	path = external/rust
+	url = https://github.com/rust-lang/rust.git
