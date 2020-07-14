@@ -1,3 +1,6 @@
+2020-07-14
+    * LND v0.10.3-beta as minimum + wumbo channel commits
+
 2020-03-02 (the "mainnet-lightning-start" branch now - it to be testing by me now)
     * LND was updated to 0.9.1-beta
     * Bitcoin Core was updated to 0.19.0.1 (For upgrade to see https://github.com/Perlover/bitcoin-kit-makefile#upgrade-lnd--bitcoin-core)
