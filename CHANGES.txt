@@ -1,3 +1,6 @@
+2020-08-14
+    * LND v0.11.0-beta.rc4
+
 2020-07-14
     * LND v0.10.3-beta as minimum + wumbo channel commits
 
