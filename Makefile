@@ -28,7 +28,7 @@ CREDENTIALS_DIR := $(HOME)/credentials
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
 # commit/tag of LND for installation - the current master branch
-LND_ACTUAL_COMMIT := cc0321d1881ed23c9608cf898af2e2a7b347304a
+LND_ACTUAL_COMMIT := d176d2d65fc06e6631c4dc9478592be8545a21de
 
 # Should be updated in PATH of golang_envs.sh too!
 GOLANG_VER := 1.14

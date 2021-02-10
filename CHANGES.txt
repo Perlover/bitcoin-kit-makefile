@@ -1,3 +1,7 @@
+2021-02-10
+    * The LND update up to v0.12.0-beta
+    * small fix with new installations (there was no tag `routerrpc` before)
+
 2020-12-18
     * The update to the LND current master branch
 
