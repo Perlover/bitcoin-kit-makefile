@@ -58,7 +58,7 @@ glibc_install: |\
     glibc-2.34.tar.gz
 	tar xzf glibc-2.34.tar.gz
 	cd glibc-2.34 && { \
-		mkdir build && cd build && \
+		rm -rf build; mkdir build && cd build && \
 		../configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The glib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
