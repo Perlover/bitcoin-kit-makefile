@@ -6,9 +6,9 @@ gcc_install: |\
     mpfr_install\
     mpc_install\
     isl_install\
-    gcc-7.1.0.tar.gz
-	tar xvzf gcc-7.1.0.tar.gz
-	cd gcc-7.1.0 && { \
+    gcc-11.2.0.tar.gz
+	tar xvzf gcc-11.2.0.tar.gz
+	cd gcc-11.2.0 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --disable-multilib && $(MAKE_COMPILE) && $(MAKE) install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
@@ -25,11 +25,11 @@ gcc_install: |\
 endif
 
 # gcc
-gcc-7.1.0.tar.gz:
-	wget ftp://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.gz
-	echo 'b3d733ad75fdaf88009b52c0cce0ad4c  gcc-7.1.0.tar.gz'|md5sum --check - || \
+gcc-11.2.0.tar.gz:
+	wget http://ftp.gnu.org/gnu/gcc/gcc-11.2.0/$@
+	echo 'dc6886bd44bb49e2d3d662aed9729278  $@'|md5sum --check - || \
 		{ \
-			mv gcc-7.1.0.tar.gz gcc-7.1.0.bad.tar.gz &&\
+			mv $@ $@.bad.tar.gz &&\
 			echo "Bad gcc md5 sum"; false;\
 		}
 

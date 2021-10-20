@@ -22,8 +22,7 @@ required_for_configure_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     autoconf_install\
-    pkg-config_install\
-    glibc_install
+    pkg-config_install
 	@touch $@
 
 clean:

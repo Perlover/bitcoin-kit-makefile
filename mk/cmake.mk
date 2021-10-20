@@ -26,6 +26,6 @@ gmake_install: |\
     make-4.3.tar.gz
 	tar xzf make-4.3.tar.gz
 	cd make-4.3 && { \
-		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmake was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmake was installed - OK" && ln -s $(BASE_INSTALL_DIR)/bin/make $(BASE_INSTALL_DIR)/bin/gmake; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
