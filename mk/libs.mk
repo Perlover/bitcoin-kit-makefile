@@ -49,7 +49,7 @@ zlib_install: |\
 	@touch $@
 
 glibc-2.34.tar.gz:
-	wget 'https://ftp.gnu.org/gnu/glibc/$@' &&\
+	wget --no-check-certificate 'https://ftp.gnu.org/gnu/glibc/$@' &&\
 	echo '255b7632746b5fdd478cb7b36bebd1ec1f92c2b552ee364c940f48eb38d07f62  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 glibc_install: |\
