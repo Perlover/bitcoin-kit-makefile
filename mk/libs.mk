@@ -73,6 +73,6 @@ bison_install: |\
     bison-3.8.tar.gz
 	tar xzf bison-3.8.tar.gz
 	cd bison-3.8 && { \
-		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The bison was installed - OK"; \
+		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The bison was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
