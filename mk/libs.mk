@@ -47,3 +47,17 @@ zlib_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The zlib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+glibc-2.34.tar.gz:
+	wget 'https://ftp.gnu.org/gnu/glibc/$@' &&\
+	echo '255b7632746b5fdd478cb7b36bebd1ec1f92c2b552ee364c940f48eb38d07f62  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+
+glibc_install: |\
+    required_for_configure_install\
+    glibc-2.34.tar.gz
+	tar xzf glibc-2.34.tar.gz
+	cd glibc-2.34 && { \
+		mkdir build && cd build && \
+		../configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The glib was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
