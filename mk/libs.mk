@@ -55,6 +55,7 @@ glibc-2.34.tar.gz:
 glibc_install: |\
     required_for_configure_install\
     bison_install\
+    gmake_install\
     glibc-2.34.tar.gz
 	tar xzf glibc-2.34.tar.gz
 	cd glibc-2.34 && { \

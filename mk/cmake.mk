@@ -15,3 +15,17 @@ cmake_install: |\
 		./bootstrap --parallel=4 --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The cmake was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+make-4.3.tar.gz:
+	wget 'http://ftp.gnu.org/gnu/make/$@' &&\
+	echo 'e05fdde47c5f7ca45cb697e973894ff4f5d79e13b750ed57d7b66d8defc78e19  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+
+
+gmake_install: |\
+    required_for_configure_install\
+    make-4.3.tar.gz
+	tar xzf make-4.3.tar.gz
+	cd make-4.3 && { \
+		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The gmake was installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
