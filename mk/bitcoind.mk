@@ -25,7 +25,8 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
 
 prepare-bitcoin-core-update: this_repo_update
 	-rm -f bitcoin-core_install zeromq_install openssl_install libevent_install
-	-cd external/bitcoin-core && $(MAKE) clean
+	-cd external/bitcoin-core
+	-$(MAKE) clean
 
 bitcoin-core-update:
 	$(MAKE) bitcoin-core_install
