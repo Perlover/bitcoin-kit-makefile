@@ -11,6 +11,7 @@ gcc_install: |\
 	cd gcc-11.2.0 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --disable-multilib && $(MAKE_COMPILE) && $(MAKE) install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
+	-rm -f $(BASE_INSTALL_DIR)/bin/cc
 	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
 	@touch $@
 else
@@ -26,7 +27,7 @@ endif
 
 # gcc
 gcc-11.2.0.tar.gz:
-	wget http://ftp.gnu.org/gnu/gcc/gcc-11.2.0/$@
+	$(WGET) http://ftp.gnu.org/gnu/gcc/gcc-11.2.0/$@
 	echo 'dc6886bd44bb49e2d3d662aed9729278  $@'|md5sum --check - || \
 		{ \
 			mv $@ $@.bad.tar.gz &&\
@@ -35,7 +36,7 @@ gcc-11.2.0.tar.gz:
 
 # gmp
 gmp-6.1.2.tar.bz2:
-	wget 'https://gmplib.org/download/gmp/gmp-6.1.2.tar.bz2'
+	$(WGET) 'https://gmplib.org/download/gmp/gmp-6.1.2.tar.bz2'
 	echo '8ddbb26dc3bd4e2302984debba1406a5  gmp-6.1.2.tar.bz2'|md5sum --check - || \
 		{ \
 			mv gmp-6.1.2.tar.bz2 gmp-6.1.2.bad.tar.bz2 &&\
@@ -60,7 +61,7 @@ endif
 
 # mpfr
 mpfr-4.1.0.tar.gz:
-	wget http://www.mpfr.org/mpfr-current/$@
+	$(WGET) http://www.mpfr.org/mpfr-current/$@
 	echo '81a97a9ba03590f83a30d26d4400ce39  $@'|md5sum --check - || \
 		{ \
 			mv $@ $@.bad.tar.gz &&\
@@ -86,7 +87,7 @@ endif
 
 # mpc
 mpc-1.1.0.tar.gz:
-	wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+	$(WGET) ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
 	echo '4125404e41e482ec68282a2e687f6c73  mpc-1.1.0.tar.gz'|md5sum --check - || \
 		{ \
 			mv mpc-1.1.0.tar.gz mpc-1.1.0.bad.tar.gz &&\
@@ -113,7 +114,7 @@ endif
 
 # mpc
 isl-0.18.tar.gz:
-	wget http://isl.gforge.inria.fr/isl-0.18.tar.gz
+	$(WGET) http://isl.gforge.inria.fr/isl-0.18.tar.gz
 	echo '076c69f81067f2f5b908c099f445a338  isl-0.18.tar.gz'|md5sum --check - || \
 		{ \
 			mv isl-0.18.tar.gz isl-0.18.bad.tar.gz &&\

@@ -1,6 +1,6 @@
 binutils-2.30.tar.gz:
 	gpg --keyserver keyserver.ubuntu.com --recv-key DD9E3C4F
-	wget 'https://ftp.gnu.org/gnu/binutils/$@' && wget 'https://ftp.gnu.org/gnu/binutils/$@.sig' &&\
+	$(WGET) 'https://ftp.gnu.org/gnu/binutils/$@' && $(WGET) 'https://ftp.gnu.org/gnu/binutils/$@.sig' &&\
 	gpg $@.sig || { echo "Bad sign of $@"; false; }
 
 ifeq ($(BINUTILS_MIN),FAIL)

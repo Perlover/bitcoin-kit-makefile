@@ -1,5 +1,5 @@
 cmake-3.17.3.tar.gz:
-	wget 'https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz'
+	$(WGET) 'https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz'
 	echo 'd47f23a9781b68014e77717f8e291bb7  cmake-3.17.3.tar.gz'|md5sum --check - || \
 		{ \
 			mv cmake-3.17.3.tar.gz cmake-3.17.3.bad.tar.gz &&\
@@ -17,7 +17,7 @@ cmake_install: |\
 	@touch $@
 
 make-4.3.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/make/$@' &&\
+	$(WGET) 'http://ftp.gnu.org/gnu/make/$@' &&\
 	echo 'e05fdde47c5f7ca45cb697e973894ff4f5d79e13b750ed57d7b66d8defc78e19  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 

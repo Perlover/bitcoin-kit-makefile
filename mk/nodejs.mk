@@ -1,6 +1,6 @@
 node-v10.1.0.tar.gz:
 	gpg --keyserver pool.sks-keyservers.net --recv-keys DD8F2338BAE7501E3DD5AC78C273792F7D83545D
-	wget 'https://nodejs.org/dist/v10.1.0/$@' && wget -O $@-SHASUMS256.txt.asc 'https://nodejs.org/dist/v10.1.0/SHASUMS256.txt.asc' &&\
+	$(WGET) 'https://nodejs.org/dist/v10.1.0/$@' && $(WGET) -O $@-SHASUMS256.txt.asc 'https://nodejs.org/dist/v10.1.0/SHASUMS256.txt.asc' &&\
 	grep $@ $@-SHASUMS256.txt.asc | sha256sum -c - || { echo "Bad sign of $@"; false; }
 
 # LANG=C ./configure... for correct version of assembler

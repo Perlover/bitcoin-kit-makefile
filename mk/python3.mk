@@ -1,5 +1,5 @@
 Python-3.8.3.tgz:
-	wget 'https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz'
+	$(WGET) 'https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz'
 	echo 'a7c10a2ac9d62de75a0ca5204e2e7d07  Python-3.8.3.tgz'|md5sum --check - || \
 		{ \
 			mv Python-3.8.3.tgz Python-3.8.3.bad.tgz &&\

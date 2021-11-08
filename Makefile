@@ -18,6 +18,10 @@
 # --login is important here. It forces read ~/.bash_profile file before each execution of make command in rules
 SHELL := /bin/bash --login
 
+# The option --no-check-certificate needs because old systems doesn't check correct some certificates (Let's Encrypt for example)
+# In anyway we check md5 / sha256 sums
+WGET := wget --no-check-certificate
+
 # The base directory of all packages. It's home directory now but in a future it can be used for common directory in OS, for example /opt/
 BASE_INSTALL_DIR := $(HOME)
 
@@ -31,7 +35,7 @@ HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|s
 LND_ACTUAL_COMMIT := 4f567577db9d85b6f392f960b3aabddcad3cd02c
 
 # Should be updated in PATH of golang_envs.sh too!
-GOLANG_VER := 1.14
+GOLANG_VER := 1.17.3
 
 # Go now is $(GOLANG_VER) (to see file mk/golang.mk)
 CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
@@ -124,6 +128,7 @@ include mk/common.mk
 include mk/autotools.mk
 include mk/gcc.mk
 include mk/libs.mk
+include mk/tor.mk
 include mk/bitcoind.mk
 include mk/electrumx.mk
 include mk/python3.mk

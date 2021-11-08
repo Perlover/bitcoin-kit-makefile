@@ -1,5 +1,5 @@
 Python-2.7.15.tgz:
-	wget 'https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tgz'
+	$(WGET) 'https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tgz'
 	echo '045fb3440219a1f6923fefdabde63342  Python-2.7.15.tgz'|md5sum --check - || \
 		{ \
 			mv Python-2.7.15.tgz Python-2.7.15.bad.tgz &&\

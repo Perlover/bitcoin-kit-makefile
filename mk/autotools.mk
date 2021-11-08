@@ -2,7 +2,7 @@
 autoconf-2.69.tar.gz: |\
     $(HOME)/.bitcoin_envs\
     m4_install
-	wget 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz'
+	$(WGET) 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz'
 	echo '82d05e03b93e45f5a39b828dc9c6c29b  autoconf-2.69.tar.gz'|md5sum --check - || \
 		{ \
 			mv autoconf-2.69.tar.gz autoconf-2.69.bad.tar.gz &&\
@@ -36,7 +36,7 @@ autotools_install: |\
 
 # automake
 automake-1.16.1.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz'
+	$(WGET) 'http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz'
 	echo '83cc2463a4080efd46a72ba2c9f6b8f5  automake-1.16.1.tar.gz'|md5sum --check - || \
 		{ \
 			mv automake-1.16.1.tar.gz automake-1.16.1.bad.tar.gz &&\
@@ -65,7 +65,7 @@ endif
 
 # libtool
 libtool-2.4.6.tar.gz:
-	wget 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz'
+	$(WGET) 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz'
 	echo 'addf44b646ddb4e3919805aa88fa7c5e  libtool-2.4.6.tar.gz'|md5sum --check - || \
 		{ \
 			mv libtool-2.4.6.tar.gz libtool-2.4.6.bad.tar.gz &&\
@@ -108,7 +108,7 @@ endif
 
 # m4
 m4-1.4.18.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz'
+	$(WGET) 'http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz'
 	echo 'a077779db287adf4e12a035029002d28  m4-1.4.18.tar.gz'|md5sum --check - || \
 		{ \
 			mv m4-1.4.18.tar.gz m4-1.4.18.bad.tar.gz &&\

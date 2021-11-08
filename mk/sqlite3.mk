@@ -1,5 +1,5 @@
 sqlite-autoconf-3230100.tar.gz:
-	wget 'https://www.sqlite.org/2018/$@' &&\
+	$(WGET) 'https://www.sqlite.org/2018/$@' &&\
 	echo '0edbfd75ececb95e8e6448d6ff33df82774c9646  $@'|sha1sum --check - || { echo "Bad checksum"; false; }
 
 sqlite3_install: |\

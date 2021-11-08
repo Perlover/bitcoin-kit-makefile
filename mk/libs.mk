@@ -11,7 +11,7 @@ openssl_install: |\
 
 # boost
 boost_$(BOOST_VER).tar.gz:
-	wget 'https://dl.bintray.com/boostorg/release/$(subst _,.,$(BOOST_VER))/source/boost_$(BOOST_VER).tar.gz'
+	$(WGET) 'https://dl.bintray.com/boostorg/release/$(subst _,.,$(BOOST_VER))/source/boost_$(BOOST_VER).tar.gz'
 	echo '$(BOOST_SHA256)  $@'|sha256sum --check - || \
 		{ \
 			mv boost_$(BOOST_VER).tar.gz boost_$(BOOST_VER).bad.tar.gz &&\
@@ -36,7 +36,7 @@ libevent_install: |\
 	@touch $@
 
 zlib-1.2.11.tar.gz:
-	wget 'https://zlib.net/$@' &&\
+	$(WGET) 'https://zlib.net/$@' &&\
 	echo 'c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 zlib_install: |\
@@ -49,7 +49,7 @@ zlib_install: |\
 	@touch $@
 
 glibc-2.34.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/glibc/$@' &&\
+	$(WGET) 'http://ftp.gnu.org/gnu/glibc/$@' &&\
 	echo '255b7632746b5fdd478cb7b36bebd1ec1f92c2b552ee364c940f48eb38d07f62  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 glibc_install: |\
@@ -66,7 +66,7 @@ glibc_install: |\
 
 
 bison-3.8.tar.gz:
-	wget 'http://ftp.gnu.org/gnu/bison/$@' &&\
+	$(WGET) 'http://ftp.gnu.org/gnu/bison/$@' &&\
 	echo 'd5d184d421aee15603939973a6b0f372f908edfb24c5bc740697497021ad9458  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 bison_install: |\
