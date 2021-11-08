@@ -2,8 +2,10 @@ lnd_install: |\
     new_git_install\
     $(CURRENT_GOLANG_TARGET)\
     inotify_install
-	go get -d github.com/lightningnetwork/lnd &&\
-	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
+	-mkdir -p $$GOPATH/src/github.com/lightningnetwork
+	cd $$GOPATH/src/github.com/lightningnetwork &&\
+	git clone https://github.com/lightningnetwork/lnd &&\
+	cd lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc"
 	@touch $@
@@ -62,8 +64,10 @@ lnd-bin-update: |\
     new_git_install\
     lnd_install
 	rm -rf $$GOPATH/pkg/dep
-	go get -d github.com/lightningnetwork/lnd &&\
-	cd $$GOPATH/src/github.com/lightningnetwork/lnd &&\
+	-mkdir -p $$GOPATH/src/github.com/lightningnetwork
+	cd $$GOPATH/src/github.com/lightningnetwork &&\
+	git clone https://github.com/lightningnetwork/lnd &&\
+	cd lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
 	$(MAKE) clean && $(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc"
 	@touch lnd_install
