@@ -1,5 +1,5 @@
-BOOST_VER := 1_72_0
-BOOST_SHA256 := c66e88d5786f2ca4dbebb14e06b566fb642a1a6947ad8cc9091f9f445134143f
+BOOST_VER := 1_77_0
+BOOST_SHA256 := 5347464af5b14ac54bb945dc68f1dd7c56f0dad7262816b956138fc53bcc0131
 
 # $(MAKE) test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here $(MAKE) test
 openssl_install: |\
