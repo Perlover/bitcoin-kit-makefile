@@ -8,7 +8,7 @@ $(TOR_BASE_NAME).tar.gz:
 tor_install: |\
     $(TOR_BASE_NAME).tar.gz\
     required_for_configure_install\
-    gcc_install\
+    gcc_install_8_0_0_min\
     binutils_install\
     openssl_install\
     libevent_install\

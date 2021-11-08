@@ -1,6 +1,6 @@
 bitcoin-core_install: |\
     required_for_configure_install\
-    gcc_install\
+    gcc_install_8_0_0_min\
     binutils_install\
     boost_install\
     openssl_install\

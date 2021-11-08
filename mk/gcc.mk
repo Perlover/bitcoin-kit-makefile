@@ -1,6 +1,3 @@
-gcc_install: | gcc_install_8_0_0_min
-	@touch $@
-
 ifeq ($(GCC_MIN),FAIL)
 gcc_install_8_0_0_min: |\
     $(HOME)/.bitcoin_envs\
