@@ -31,8 +31,8 @@ CREDENTIALS_DIR := $(HOME)/credentials
 # This hash will be used when defining the network configuration (as cache ID)
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
-# commit/tag of LND for installation - the current master branch (lnd v0.13.3-beta)
-LND_ACTUAL_COMMIT := 4f567577db9d85b6f392f960b3aabddcad3cd02c
+# commit/tag of LND for installation - the current master branch (lnd v0.14.0-beta.rc2)
+LND_ACTUAL_COMMIT := b7b332643348fa79a8355b48eee7c06bd859fed1
 
 # Should be updated in PATH of golang_envs.sh too!
 GOLANG_VER := 1.17.3
