@@ -1,6 +1,3 @@
-BOOST_VER := 1_77_0
-BOOST_SHA256 := 5347464af5b14ac54bb945dc68f1dd7c56f0dad7262816b956138fc53bcc0131
-
 # $(MAKE) test was failed - test/recipes/90-test_shlibload.t It's test for perl shared loading - i skip here $(MAKE) test
 openssl_install: |\
     required_for_configure_install
@@ -9,20 +6,9 @@ openssl_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-# boost
-boost_$(BOOST_VER).tar.gz:
-	$(WGET) 'https://dl.bintray.com/boostorg/release/$(subst _,.,$(BOOST_VER))/source/boost_$(BOOST_VER).tar.gz'
-	echo '$(BOOST_SHA256)  $@'|sha256sum --check - || \
-		{ \
-			mv boost_$(BOOST_VER).tar.gz boost_$(BOOST_VER).bad.tar.gz &&\
-			echo "Bad boost md5 sum"; false;\
-		}
-
 boost_install: |\
     required_for_configure_install\
-    boost_$(BOOST_VER).tar.gz
-	tar xvzf boost_$(BOOST_VER).tar.gz
-	cd boost_$(BOOST_VER) && { \
+	cd external/boost && { \
 		./bootstrap.sh --prefix=$(BASE_INSTALL_DIR) && ./b2 install; \
 		if [ -d $(BASE_INSTALL_DIR)/include/boost -a `ls -1 $(BASE_INSTALL_DIR)/lib/libboost_*|wc -l` -gt 0 ]; then echo "Boost was installed - OK"; else false; fi \
 	} &> make_out.txt && tail make_out.txt
