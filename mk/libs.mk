@@ -77,3 +77,17 @@ bison_install: |\
 		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The bison was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+basez_1.6.2.orig.tar.gz:
+	$(WGET) 'http://deb.debian.org/debian/pool/main/b/basez/$@' &&\
+	echo '2a9f821488791c2763ef0120c75c43dc83dd16567b7c416f30331889fd598937  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+
+# To be needed for base64pem utility for example (tor service configuring)
+basez_install: |\
+    required_for_configure_install\
+    basez_1.6.2.orig.tar.gz
+	tar xzf basez_1.6.2.orig.tar.gz
+	cd basez-1.6.2 && { \
+		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) install && echo "The basez utils were installed - OK"; \
+	} &> make_out.txt && tail make_out.txt
+	@touch $@
