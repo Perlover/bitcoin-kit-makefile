@@ -7,7 +7,7 @@ openssl_install: |\
 	@touch $@
 
 boost_install: |\
-    required_for_configure_install\
+    required_for_configure_install
 	cd external/boost && { \
 		./bootstrap.sh --prefix=$(BASE_INSTALL_DIR) && ./b2 install; \
 		if [ -d $(BASE_INSTALL_DIR)/include/boost -a `ls -1 $(BASE_INSTALL_DIR)/lib/libboost_*|wc -l` -gt 0 ]; then echo "Boost was installed - OK"; else false; fi \
