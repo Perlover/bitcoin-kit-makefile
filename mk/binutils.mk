@@ -7,8 +7,8 @@ ifeq ($(BINUTILS_MIN),FAIL)
 binutils_install: |\
     required_for_configure_install\
     binutils-2.37.tar.gz
-	tar xzf binutils-2.30.tar.gz
-	cd binutils-2.30 && { \
+	tar xzf binutils-2.37.tar.gz
+	cd binutils-2.37 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The bintuils was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
