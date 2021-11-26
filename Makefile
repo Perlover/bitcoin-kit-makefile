@@ -90,7 +90,7 @@ MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -
 
 # For configure script: make variables for implicit rules
 CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
-CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-I%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
+CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
 
 .PHONY: help help-more
 
