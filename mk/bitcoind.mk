@@ -10,6 +10,8 @@ bitcoin-core_install: |\
     python3_install\
     miniupnpc_install
 	cd external/bitcoin-core && { \
+		git checkout -f && \
+		cat ../../patches/bitcoind/*.patch | patch -p1 && \
 		./autogen.sh && \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE) -j4 && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt

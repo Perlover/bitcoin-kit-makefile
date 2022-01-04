@@ -1,0 +1,66 @@
+From c62d763fc313585d79ad833c9d729f6acf2652aa Mon Sep 17 00:00:00 2001
+From: Perlover <perlover@perlover.com>
+Date: Tue, 7 Dec 2021 17:02:04 +0100
+Subject: [PATCH 2/2] Necessary improvements to make configure work without
+ libevent installed
+
+---
+ configure.ac       | 28 +++++++++++++++++++---------
+ src/httpserver.cpp |  2 +-
+ 2 files changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 4f05046b6..441e7791e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1510,15 +1510,25 @@ if test x$build_bitcoin_cli$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench
+   fi
+ fi
+ 
+-AC_MSG_CHECKING([if evhttp_connection_get_peer expects const char**])
+-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+-    #include <cstdint>
+-    #include <event2/http.h>
+-  ]],
+-  [[ evhttp_connection_get_peer((evhttp_connection*) nullptr,(const char**) nullptr,(uint16_t*) nullptr); ]])],
+-  [ AC_MSG_RESULT([yes]); AC_DEFINE([HAVE_EVHTTP_CONNECTION_GET_PEER_CONST_CHAR], [1], [Define this symbol if evhttp_connection_get_peer expects const char**]) ],
+-  [ AC_MSG_RESULT([no]); AC_DEFINE([HAVE_EVHTTP_CONNECTION_GET_PEER_CONST_CHAR], [0], [Define this symbol if evhttp_connection_get_peer expects const char**]) ]
+-)
++if test x$use_libevent = xyes; then
++  TEMP_CXXFLAGS="$CXXFLAGS"
++  CXXFLAGS="$CXXFLAGS $EVENT_CFLAGS"
++  AC_MSG_CHECKING([if evhttp_connection_get_peer expects const char**])
++  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
++      #include <cstdint>
++      #include <event2/http.h>
++    ]], [[
++      evhttp_connection *conn = (evhttp_connection *)1;
++      const char *host;
++      uint16_t port;
++
++      evhttp_connection_get_peer(conn, &host, &port);
++    ]])],
++    [ AC_MSG_RESULT([yes]); AC_DEFINE([HAVE_EVHTTP_CONNECTION_GET_PEER_CONST_CHAR], [1], [Define this symbol if evhttp_connection_get_peer expects const char**]) ],
++    [ AC_MSG_RESULT([no]) ]
++  )
++  CXXFLAGS="$TEMP_CXXFLAGS"
++fi
+ 
+ dnl QR Code encoding library check
+ 
+diff --git a/src/httpserver.cpp b/src/httpserver.cpp
+index 59569b20a..e18828e31 100644
+--- a/src/httpserver.cpp
++++ b/src/httpserver.cpp
+@@ -602,7 +602,7 @@ CService HTTPRequest::GetPeer() const
+         const char* address = "";
+         uint16_t port = 0;
+ 
+-#if HAVE_EVHTTP_CONNECTION_GET_PEER_CONST_CHAR
++#ifdef HAVE_EVHTTP_CONNECTION_GET_PEER_CONST_CHAR
+         evhttp_connection_get_peer(con, &address, &port);
+ #else
+         evhttp_connection_get_peer(con, (char**)&address, &port);
+-- 
+2.25.1
+
