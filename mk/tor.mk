@@ -15,7 +15,7 @@ tor_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     miniupnpc_install
-	$(TOR_BASE_NAME).tar.gz
+	tar xvzf $(TOR_BASE_NAME).tar.gz
 	cd $(TOR_BASE_NAME) && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) && $(MAKE_COMPILE) && $(MAKE) install && echo "The tor was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
