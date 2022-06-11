@@ -114,7 +114,7 @@ endif
 
 # mpc
 isl-0.18.tar.gz:
-	$(WGET) http://isl.gforge.inria.fr/isl-0.18.tar.gz
+	$(WGET) https://versaweb.dl.sourceforge.net/project/libisl/isl-0.18.tar.gz
 	echo '076c69f81067f2f5b908c099f445a338  isl-0.18.tar.gz'|md5sum --check - || \
 		{ \
 			mv isl-0.18.tar.gz isl-0.18.bad.tar.gz &&\
