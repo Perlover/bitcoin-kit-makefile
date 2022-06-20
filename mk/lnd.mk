@@ -3,6 +3,7 @@ lnd_install: |\
     $(CURRENT_GOLANG_TARGET)\
     inotify_install
 	-mkdir -p $$GOPATH/src/github.com/lightningnetwork
+	-rm -rf $$GOPATH/src/github.com/lightningnetwork/lnd
 	cd $$GOPATH/src/github.com/lightningnetwork &&\
 	git clone https://github.com/lightningnetwork/lnd &&\
 	cd lnd &&\
@@ -65,6 +66,7 @@ lnd-bin-update: |\
     lnd_install
 	rm -rf $$GOPATH/pkg/dep
 	-mkdir -p $$GOPATH/src/github.com/lightningnetwork
+	-rm -rf $$GOPATH/src/github.com/lightningnetwork/lnd
 	cd $$GOPATH/src/github.com/lightningnetwork &&\
 	git clone https://github.com/lightningnetwork/lnd &&\
 	cd lnd &&\
