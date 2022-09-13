@@ -1,4 +1,7 @@
-2021-06-20
+2022-09-13
+    * The LND update up to v0.15.1-beta
+
+2022-06-20
     * The LND update up to v0.15.0-beta.rc6
     * bitcoind update up to v23.0
 
