@@ -1,4 +1,7 @@
-2022-10-10-
+2022-11-01
+    * The LND update up to lnd v0.15.4-beta
+
+2022-10-10
     * The LND update up to v0.15.2-beta
 
 2022-09-13
