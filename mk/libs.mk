@@ -21,15 +21,15 @@ libevent_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-zlib-1.2.11.tar.gz:
-	$(WGET) 'https://zlib.net/$@' &&\
-	echo 'c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+zlib-1.2.13.tar.gz:
+	$(WGET) 'https://github.com/madler/zlib/releases/download/v1.2.13/$@' &&\
+	echo 'b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 zlib_install: |\
     required_for_configure_install\
-    zlib-1.2.11.tar.gz
-	tar xzf zlib-1.2.11.tar.gz
-	cd zlib-1.2.11 && { \
+    zlib-1.2.13.tar.gz
+	tar xzf zlib-1.2.13.tar.gz
+	cd zlib-1.2.13 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) && $(MAKE_COMPILE) && $(MAKE) test && $(MAKE) install && echo "The zlib was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
