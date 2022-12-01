@@ -1,3 +1,7 @@
+2022-12-01
+    * LND: added compile tags: monitoring peersrpc
+    * Update to v0.15.5-beta.rc2
+
 2022-11-01
     * The LND update up to lnd v0.15.4-beta
 

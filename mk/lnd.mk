@@ -8,7 +8,7 @@ lnd_install: |\
 	git clone https://github.com/lightningnetwork/lnd &&\
 	cd lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
-	$(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc"
+	$(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc monitoring peersrpc"
 	@touch $@
 
 .PHONY: lnd-install
