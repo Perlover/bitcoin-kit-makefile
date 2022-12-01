@@ -71,7 +71,7 @@ lnd-bin-update: |\
 	git clone https://github.com/lightningnetwork/lnd &&\
 	cd lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
-	$(MAKE) clean && $(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc"
+	$(MAKE) clean && $(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc monitoring peersrpc"
 	@touch lnd_install
 	@touch $@
 
