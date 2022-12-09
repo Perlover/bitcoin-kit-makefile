@@ -1,5 +1,6 @@
 2022-12-09
     * Update to v0.15.5-beta
+    * Updated to fresh versions (as submodules): openssl (v1.1.1), boost library, libevent
 
 2022-12-01
     * LND: added compile tags: monitoring peersrpc
