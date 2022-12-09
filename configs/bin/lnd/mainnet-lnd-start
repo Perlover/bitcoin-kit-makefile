@@ -31,6 +31,7 @@ else
     fi
 
     {
+  ulimit -n 4096
 	nohup lnd --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
 	echo $! > $pid_file
     } &>/dev/null
