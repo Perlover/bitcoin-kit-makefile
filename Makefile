@@ -11,8 +11,8 @@
 #   - openssl
 #   - automake
 #   - m4
-#   - gcc 7.1
-#   - bitcoin core node v0.14.1 with UASF/SegWit patch
+#   - gcc
+#   - bitcoin core
 # To run from /home/bitcoin/bitcoin-core-makefile for example
 
 # --login is important here. It forces read ~/.bash_profile file before each execution of make command in rules

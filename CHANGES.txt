@@ -1,3 +1,9 @@
+2023-02-10
+  * Update Bitcoin Core from v23.0 to v23.1 (as submodule from source repo)
+
+2023-01-18
+  * Update LND 0.15.5-beta + Fixes potential channel announcements missing
+
 2022-12-09
     * Update to v0.15.5-beta
     * Updated to fresh versions (as submodules): openssl (v1.1.1), boost library, libevent
