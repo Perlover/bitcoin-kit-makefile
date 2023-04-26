@@ -1,3 +1,7 @@
+2023-04-26
+  * Update go to golang 1.20.3
+  * Update LND to v0.16.1-beta
+
 2023-02-10
   * Update Bitcoin Core from v23.0 to v23.1 (as submodule from source repo)
 
