@@ -19,12 +19,12 @@ golang_pre_install_$(GOLANG_VER_STAGE_1): |\
 $(GOLANG_TARGET_STAGE_2): | golang_pre_install_$(GOLANG_VER_STAGE_1)
 	cd $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) && git fetch origin
 	-rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_2)
-	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER_STAGE_2) && cd go$(GOLANG_VER_STAGE_2) && git checkout go$(GOLANG_VER_STAGE_2) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
+	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER_STAGE_2) && cd go$(GOLANG_VER_STAGE_2) && git checkout go$(GOLANG_VER_STAGE_2) && cd src && ulimit -u `ulimit -H -u` && GOROOT_BOOTSTRAP=$(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) ./make.bash
 
 $(CURRENT_GOLANG_TARGET): | $(GOLANG_TARGET_STAGE_2)
 	cd $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) && git fetch origin
 	-rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
-	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER) && cd go$(GOLANG_VER) && git checkout go$(GOLANG_VER) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
+	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER) && cd go$(GOLANG_VER) && git checkout go$(GOLANG_VER) && cd src && ulimit -u `ulimit -H -u` && GOROOT_BOOTSTRAP=$(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_2) ./make.bash
 
 golang_envs-$(GOLANG_VER).sh: golang_envs.sh
 	cp -f $< $@
