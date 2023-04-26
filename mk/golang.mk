@@ -12,22 +12,24 @@ golang_pre_install_$(GOLANG_VER_STAGE_1): |\
     binutils_install\
     new_git_install\
     $(HOME)/.golang_envs
-	rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1)
+	-rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1)
 	cd $(BASE_INSTALL_DIR) && git clone -b release-branch.go$(GOLANG_VER_STAGE_1) 'https://go.googlesource.com/go' go$(GOLANG_VER_STAGE_1) && cd go$(GOLANG_VER_STAGE_1)/src && ./make.bash
 	@touch $@
 
 $(GOLANG_TARGET_STAGE_2): | golang_pre_install_$(GOLANG_VER_STAGE_1)
 	cd $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) && git fetch origin
-	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER_STAGE_2) && cd go$(GOLANG_VER_STAGE_2) && git checkout go$(GOLANG_VER_STAGE_2) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
+	-rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_2)
+	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER_STAGE_2) && cd go$(GOLANG_VER_STAGE_2) && git checkout go$(GOLANG_VER_STAGE_2) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
 
 $(CURRENT_GOLANG_TARGET): | $(GOLANG_TARGET_STAGE_2)
 	cd $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) && git fetch origin
-	cd $(BASE_INSTALL_DIR) && git clone $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER) && cd go$(GOLANG_VER) && git checkout go$(GOLANG_VER) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
+	-rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
+	cd $(BASE_INSTALL_DIR) && git clone --local $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1) go$(GOLANG_VER) && cd go$(GOLANG_VER) && git checkout go$(GOLANG_VER) && cd src && ulimit -u `ulimit -H -u` && ./make.bash
 
 golang_envs-$(GOLANG_VER).sh: golang_envs.sh
 	cp -f $< $@
 	sed -ri -e 's#\$$\$$GOLANG_VER\$$\$$#$(GOLANG_VER)#g' $@
-	sed -ri -e 's#\$$\$$GOLANG_STAGE_2\$$\$$#$(GOLANG_STAGE_2)#g' $@
+	sed -ri -e 's#\$$\$$GOLANG_VER_STAGE_2\$$\$$#$(GOLANG_VER_STAGE_2)#g' $@
 	mkdir -p $(BASE_INSTALL_DIR)/go
 
 # ~/.bash_profile patch...
