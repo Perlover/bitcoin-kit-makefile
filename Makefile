@@ -38,7 +38,7 @@ LND_ACTUAL_COMMIT := fb765fdb1daf1c1db08ab9b6aa0c442af431bc82
 GOLANG_VER := 1.20.3
 
 # Go now is $(GOLANG_VER) (to see file mk/golang.mk)
-CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)
+CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)/bin/go
 
 # This is macro for version compareof software (for example gnu, python, pkg-config)
 # $(eval $(call COMPARE_VERSIONS,command_for_version,required_version,result_variable_name))
