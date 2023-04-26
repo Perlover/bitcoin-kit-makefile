@@ -12,6 +12,7 @@ golang_pre_install_$(GOLANG_VER_STAGE_1): |\
     binutils_install\
     new_git_install\
     $(HOME)/.golang_envs
+	rm -rf $(BASE_INSTALL_DIR)/go$(GOLANG_VER_STAGE_1)
 	cd $(BASE_INSTALL_DIR) && git clone -b release-branch.go$(GOLANG_VER_STAGE_1) 'https://go.googlesource.com/go' go$(GOLANG_VER_STAGE_1) && cd go$(GOLANG_VER_STAGE_1)/src && ./make.bash
 	@touch $@
 
