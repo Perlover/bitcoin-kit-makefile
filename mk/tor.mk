@@ -1,9 +1,9 @@
-TOR_VERSION   := 0.4.6.10
+TOR_VERSION   := 0.4.8.5
 TOR_BASE_NAME := tor-$(TOR_VERSION)
 
 $(TOR_BASE_NAME).tar.gz:
 	$(WGET) 'https://dist.torproject.org/$@' &&\
-	echo '94ccd60e04e558f33be73032bc84ea241660f92f58cfb88789bda6893739e31c  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
+	echo '6957cfd14a29eee7555c52f8387a46f2ce2f5fe7dadf93547f1bc74b1657e119  $@'|sha256sum --check - || { echo "Bad checksum"; false; }
 
 tor_install: |\
     $(TOR_BASE_NAME).tar.gz\
