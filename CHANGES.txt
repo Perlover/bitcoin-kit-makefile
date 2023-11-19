@@ -1,3 +1,6 @@
+2023-11-19
+  * LND update v0.17.2-beta.rc1
+
 2023-11-16
   * LND update v0.17.1-beta
 
