@@ -1,4 +1,7 @@
 2023-11-22
+  * LND update v0.17.3-beta
+
+2023-11-22
   * Update of Bitcoin Core to v25.1
 
 2023-11-21
