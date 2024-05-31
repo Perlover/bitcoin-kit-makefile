@@ -1,5 +1,6 @@
 2024-05-31
   * LND update v0.18.0-beta
+  * Improved the README.md file
 
 2024-02-20
   * LND update v0.17.4-beta
