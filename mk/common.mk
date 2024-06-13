@@ -16,6 +16,8 @@ this_repo_update:
 	git pull
 	git submodule update --init --recursive
 
+.PHONY: this_repo_update
+
 MAKE_DIRS += $(HOME)/bin
 
 required_for_configure_install: |\
