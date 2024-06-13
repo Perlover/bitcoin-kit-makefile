@@ -51,7 +51,7 @@ $(eval $(call COMPARE_VERSIONS,1,'autoconf --version',2.69,AUTOCONF_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'libtoolize --version',2.4.6,LIBTOOL_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'pkg-config --version',0.29,PKG_CONFIG_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'ld --version',2.37,BINUTILS_MIN))
-$(eval $(call COMPARE_VERSIONS,2,'gcc -dumpversion',8.0.0,GCC_MIN))
+$(eval $(call COMPARE_VERSIONS,2,'gcc -dumpversion',11.2.0,GCC_MIN))
 
 ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),clean)

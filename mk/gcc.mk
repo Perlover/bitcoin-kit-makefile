@@ -1,5 +1,5 @@
 ifeq ($(GCC_MIN),FAIL)
-gcc_install_8_0_0_min: |\
+gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_install\
@@ -15,7 +15,7 @@ gcc_install_8_0_0_min: |\
 	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
 	@touch $@
 else
-gcc_install_8_0_0_min: |\
+gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_install\
