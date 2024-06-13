@@ -3,9 +3,9 @@ gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_6_1_2_install\
-    mpfr_install\
-    mpc_install\
-    isl_install\
+    mpfr_4_1_0_install\
+    mpc_1_1_0_install\
+    isl_0_18_install\
     gcc-11.2.0.tar.gz
 	tar xvzf gcc-11.2.0.tar.gz
 	cd gcc-11.2.0 && { \
@@ -19,9 +19,9 @@ gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_6_1_2_install\
-    mpfr_install\
-    mpc_install\
-    isl_install
+    mpfr_4_1_0_install\
+    mpc_1_1_0_install\
+    isl_0_18_install
 	@touch $@
 endif
 
@@ -69,7 +69,7 @@ mpfr-4.1.0.tar.gz:
 		}
 
 ifeq ($(GCC_MIN),FAIL)
-mpfr_install: |\
+mpfr_4_1_0_install: |\
     $(HOME)/.bitcoin_envs\
     gmp_6_1_2_install\
     autotools_install\
@@ -80,7 +80,7 @@ mpfr_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 else
-mpfr_install: |\
+mpfr_4_1_0_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
@@ -95,10 +95,10 @@ mpc-1.1.0.tar.gz:
 		}
 
 ifeq ($(GCC_MIN),FAIL)
-mpc_install: |\
+mpc_1_1_0_install: |\
     $(HOME)/.bitcoin_envs\
     gmp_6_1_2_install\
-    mpfr_install\
+    mpfr_4_1_0_install\
     autotools_install\
     mpc-1.1.0.tar.gz
 	tar xzf mpc-1.1.0.tar.gz
@@ -107,7 +107,7 @@ mpc_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 else
-mpc_install: |\
+mpc_1_1_0_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
@@ -122,7 +122,7 @@ isl-0.18.tar.gz:
 		}
 
 ifeq ($(GCC_MIN),FAIL)
-isl_install: |\
+isl_0_18_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     isl-0.18.tar.gz
@@ -132,7 +132,7 @@ isl_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 else
-isl_install: |\
+isl_0_18_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
