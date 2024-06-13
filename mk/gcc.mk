@@ -61,7 +61,7 @@ endif
 
 # mpfr
 mpfr-4.1.0.tar.gz:
-	$(WGET) http://www.mpfr.org/mpfr-current/$@
+	$(WGET) https://www.mpfr.org/mpfr-4.1.0/$@
 	echo '81a97a9ba03590f83a30d26d4400ce39  $@'|md5sum --check - || \
 		{ \
 			mv $@ $@.bad.tar.gz &&\
