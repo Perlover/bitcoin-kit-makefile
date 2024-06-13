@@ -2,7 +2,7 @@ ifeq ($(GCC_MIN),FAIL)
 gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
-    gmp_install\
+    gmp_6_1_2_install\
     mpfr_install\
     mpc_install\
     isl_install\
@@ -18,7 +18,7 @@ else
 gcc_install_11_2_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
-    gmp_install\
+    gmp_6_1_2_install\
     mpfr_install\
     mpc_install\
     isl_install
@@ -44,7 +44,7 @@ gmp-6.1.2.tar.bz2:
 		}
 
 ifeq ($(GCC_MIN),FAIL)
-gmp_install: |\
+gmp_6_1_2_install: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp-6.1.2.tar.bz2
@@ -54,7 +54,7 @@ gmp_install: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 else
-gmp_install: |\
+gmp_6_1_2_install: |\
     $(HOME)/.bitcoin_envs
 	@touch $@
 endif
@@ -71,7 +71,7 @@ mpfr-4.1.0.tar.gz:
 ifeq ($(GCC_MIN),FAIL)
 mpfr_install: |\
     $(HOME)/.bitcoin_envs\
-    gmp_install\
+    gmp_6_1_2_install\
     autotools_install\
     mpfr-4.1.0.tar.gz
 	tar xvzf mpfr-4.1.0.tar.gz
@@ -97,7 +97,7 @@ mpc-1.1.0.tar.gz:
 ifeq ($(GCC_MIN),FAIL)
 mpc_install: |\
     $(HOME)/.bitcoin_envs\
-    gmp_install\
+    gmp_6_1_2_install\
     mpfr_install\
     autotools_install\
     mpc-1.1.0.tar.gz
