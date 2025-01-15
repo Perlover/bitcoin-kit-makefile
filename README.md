@@ -37,7 +37,6 @@ python 3.x, nodeJS, Golang and etc etc etc...). But you can use this makefile
 packet for any *nix i think.
 
 [bitcoin-core]: https://github.com/bitcoin/bitcoin "Bitcoin Core full-node"
-[c-lightning]:  https://github.com/ElementsProject/lightning "Lightning node from BlockStream"
 [lnd]:          https://github.com/lightningnetwork/lnd "Lightning node from Lightning Labs"
 [electrumx]:    https://github.com/kyuupichan/electrumx "Alternative Electrum server"
 [lncli-web]:    https://github.com/mably/lncli-web

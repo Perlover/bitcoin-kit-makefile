@@ -7,7 +7,7 @@ bitcoin-core_install: |\
     libevent_install\
     zlib_install\
     zeromq_install\
-    python3_install\
+    python39_install\
     miniupnpc_install
 	cd external/bitcoin-core && git checkout -f && git clean -fx && { \
 		./autogen.sh && \

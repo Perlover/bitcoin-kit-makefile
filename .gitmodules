@@ -1,7 +1,3 @@
-[submodule "external/c-lightning"]
-	path = external/c-lightning
-	url = https://github.com/Perlover/lightning.git
-	branch = master
 [submodule "external/libzmq"]
 	path = external/libzmq
 	url = https://github.com/zeromq/libzmq.git

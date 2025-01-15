@@ -2,7 +2,7 @@ rust_install: |\
     required_for_configure_install\
     binutils_install\
     cmake_install\
-    python3_install\
+    python39_install\
     new_git_install\
     new_curl_install\
     openssl_install

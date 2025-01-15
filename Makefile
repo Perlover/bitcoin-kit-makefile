@@ -31,8 +31,8 @@ CREDENTIALS_DIR := $(HOME)/credentials
 # This hash will be used when defining the network configuration (as cache ID)
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
-# commit/tag of LND for installation - the current master branch (the lnd v0.18.3-beta)
-LND_ACTUAL_COMMIT := d72a3aaf261e278fa4aad5be4453df2f74ab50ee
+# commit/tag of LND for installation - the current master branch (the lnd v0.18.4-beta)
+LND_ACTUAL_COMMIT := ddeb8351684a611f6c27f16f09be75d5c039f08c
 
 # Should be updated in PATH of golang_envs.sh too!
 GOLANG_VER := 1.22.3
@@ -135,7 +135,6 @@ include mk/python3.mk
 include mk/python2.mk
 include mk/sqlite3.mk
 include mk/binutils.mk
-include mk/c-lightning.mk
 include mk/nodejs.mk
 include mk/golang.mk
 include mk/lnd.mk

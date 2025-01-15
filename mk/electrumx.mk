@@ -1,7 +1,7 @@
 # The ElectrumX now uses the BitcoinSV as main blockchain (v0.15.0) but the Bitcoin was moved to "altcoin" branch (It's about killing a project in one day.)
 # So i decided to stopped to support it and will add other Electrum server to this repo
 # P.S. I added this server some years ago before Segwit fork...
-electrumx_related_pips_install: | python3_install
+electrumx_related_pips_install: | python39_install
 	pip3 install aiohttp cchardet aiodns pylru plyvel x11_hash
 	@touch $@
 
