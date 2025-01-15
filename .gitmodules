@@ -12,7 +12,7 @@
 	url = https://github.com/libevent/libevent.git
 [submodule "external/pkg-config"]
 	path = external/pkg-config
-	url = git://anongit.freedesktop.org/pkg-config
+	url = https://gitlab.freedesktop.org/pkg-config/pkg-config.git
 [submodule "external/miniupnp"]
 	path = external/miniupnp
 	url = https://github.com/miniupnp/miniupnp.git
