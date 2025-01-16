@@ -35,7 +35,7 @@ HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|s
 LND_ACTUAL_COMMIT := ddeb8351684a611f6c27f16f09be75d5c039f08c
 
 # Should be updated in PATH of golang_envs.sh too!
-GOLANG_VER := 1.22.3
+GOLANG_VER := 1.22.6
 
 # Go now is $(GOLANG_VER) (to see file mk/golang.mk)
 CURRENT_GOLANG_TARGET := $(BASE_INSTALL_DIR)/go$(GOLANG_VER)/bin/go
