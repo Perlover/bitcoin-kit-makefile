@@ -1,9 +1,10 @@
-2025-01-15
+2025-01-17
   * LND update v0.18.4-beta
   * bitcoind update up to v28.1
   * Updated: openssl, boost, libevent, libzmq, miniupnp pkg-config, rust libraries
   * Updated python from 3.8.* to 3.9.*
   * c-lightning was removed because it's not updated by me many many years...
+  * Improved the script mainnet-lnd-start
 
 2024-09-13
   * LND update v0.18.3-beta

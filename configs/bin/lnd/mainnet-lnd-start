@@ -10,6 +10,45 @@ grpc_port=10009
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 
+# Function to wait for a specific string in a file
+wait_for_string() {
+    local file_to_watch="$1"      # File to monitor
+    local search_string="$2"     # String to wait for
+    local timeout_seconds="$3"   # Timeout in seconds
+
+    # Function to display progress dots
+    show_progress() {
+        while true; do
+            echo -n "."
+            sleep 1
+        done
+    }
+
+    # Start displaying progress dots in the background
+    show_progress &
+    local progress_pid=$!
+
+    # Use timeout to limit the waiting time and suppress grep output
+    timeout "$timeout_seconds" tail -f "$file_to_watch" | grep --line-buffered -m 1 "$search_string" >/dev/null 2>&1
+    local pipe_status=("${PIPESTATUS[@]}")  # Capture exit codes of commands in the pipeline
+
+    # Stop the background process for progress dots
+    kill "$progress_pid" 2>/dev/null
+    wait "$progress_pid" 2>/dev/null
+
+    # Add a newline after progress dots
+    echo ""
+
+    # Check the exit code of timeout and grep
+    if [ "${pipe_status[0]}" -eq 124 ]; then
+        return 1  # Timeout expired
+    elif [ "${pipe_status[1]}" -eq 0 ]; then
+        return 0  # String found
+    else
+        return 2  # An error occurred
+    fi
+}
+
 strstr() {
     [ "${1#*$2*}" = "$1" ] && return 1
     return 0
@@ -31,12 +70,16 @@ else
     fi
 
     {
-  ulimit -n 4096
+	ulimit -n 4096
 	nohup lnd --configfile=$HOME/.lnd/${service_name}-${bitcoin_network}.conf &>>$HOME/.lnd/${bitcoin_network}-${service_name}-run.log &
 	echo $! > $pid_file
     } &>/dev/null
     sleep 1
 fi
+
+echo -n "Waiting for LND to request the wallet unlock password (up to 15 minutes) "
+
+wait_for_string "$HOME/.lnd/${bitcoin_network}-${service_name}-run.log" "Waiting for wallet encryption password." 900
 
 echo $'\n\n\n******************************************************************\n\nPlease '"${1:-unlock} ${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
 lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} ${1:-unlock}
