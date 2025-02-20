@@ -1,3 +1,6 @@
+2025-02-19
+  * LND update v0.18.5-beta
+
 2025-01-17
   * LND update v0.18.4-beta
   * bitcoind update up to v28.1

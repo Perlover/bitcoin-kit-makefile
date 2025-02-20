@@ -9,11 +9,13 @@ $(HOME)/.bitcoin_aliases: configs/aliases.sh
 	if [ "x`grep '$(HOME)/.bitcoin_aliases' $(BASHRC_FILE)`" = "x" ]; then echo $$'\n. $(HOME)/.bitcoin_aliases' >> $(BASHRC_FILE); fi
 
 git_submodule_install: .gitmodules
+	git submodule deinit -f --all
 	git submodule update --init --recursive
 	@touch $@
 
 this_repo_update:
 	git pull
+	git submodule deinit -f --all
 	git submodule update --init --recursive
 
 .PHONY: this_repo_update
