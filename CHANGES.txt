@@ -1,3 +1,7 @@
+2025-02-28
+  * Added LIBS=... to bitcoind (v28.1) options for CentOS 6.* compiling
+  * some improvements
+
 2025-02-19
   * LND update v0.18.5-beta
 
