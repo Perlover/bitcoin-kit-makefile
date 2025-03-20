@@ -16,7 +16,10 @@ git_submodule_install: .gitmodules
 this_repo_update:
 	git pull
 	git submodule deinit -f --all
-	git submodule update --init --recursive
+	git submodule foreach --recursive 'git reset --hard HEAD && git clean -fdx'
+	git submodule sync --recursive
+	git submodule update --init --recursive --force
+	git clean -fd && git clean -fd
 
 .PHONY: this_repo_update
 

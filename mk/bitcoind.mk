@@ -25,10 +25,6 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
 
 prepare-bitcoin-core-update: this_repo_update
 	-rm -f bitcoin-core_install zeromq_install openssl_install libevent_install binutils_install boost_install
-	git submodule foreach --recursive 'git reset --hard HEAD && git clean -fdx'
-	git submodule sync --recursive
-	git submodule update --init --recursive --force
-	git clean -fd && git clean -fd
 
 bitcoin-core-update:
 	$(MAKE) bitcoin-core_install
