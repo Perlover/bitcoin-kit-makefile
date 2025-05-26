@@ -1,3 +1,6 @@
+CMAKE_CONFIGURE_VARS += -DAPPEND_LDFLAGS:STRING="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
+CMAKE_CONFIGURE_VARS += -DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
+
 bitcoin-core_install: |\
     required_for_configure_install\
     cmake_install\
@@ -11,8 +14,12 @@ bitcoin-core_install: |\
     python39_install\
     miniupnpc_install
 	cd external/bitcoin-core && git checkout -f && git clean -fdx && { \
-		cmake -j4 -B build -DAPPEND_LDFLAGS:STRING=-lrt $(CMAKE_CONFIGURE_VARS) -DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) -DENABLE_WALLET:BOOL=OFF -DWITH_ZMQ:BOOL=ON -DBUILD_GUI:BOOL=OFF && \
-                cmake -j4 --install build && \
+		cmake -B build && \
+		cmake --build build \
+		-DAPPEND_LDFLAGS:STRING="-lrt $(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))" \
+		-DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))" \
+		-DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) -DENABLE_WALLET:BOOL=OFF -DWITH_ZMQ:BOOL=ON -DBUILD_GUI:BOOL=OFF -j 4 && \
+                cmake --install build -j 4 && \
 		echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
