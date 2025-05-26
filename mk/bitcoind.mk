@@ -18,7 +18,13 @@ bitcoin-core_install: |\
 		cmake --build build \
 		-DAPPEND_LDFLAGS:STRING="-lrt $(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))" \
 		-DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))" \
-		-DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) -DENABLE_WALLET:BOOL=OFF -DWITH_ZMQ:BOOL=ON -DBUILD_GUI:BOOL=OFF -j 4 && \
+		-DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) \
+		-DENABLE_WALLET:BOOL=OFF \
+		-DWITH_ZMQ:BOOL=ON \
+		-DBUILD_GUI:BOOL=OFF \
+		-DWARN_INCOMPATIBLE_BDB=OFF \
+		-DWITH_SQLITE=OFF \
+		-j 4 && \
                 cmake --install build -j 4 && \
 		echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
