@@ -28,7 +28,7 @@ This makefile also additionally contains some targets but are yet not documented
 
     Stage 1 (The process takes about 1-2 hours, better to use 'screen'):
 	make i-want-lightning
-	    My recommended installation: bitcoin core v0.16.0 + lnd + lncli-web
+	    My recommended installation: bitcoin core + lnd
 	    At the beginning you will be asked about surrent network IP addresses (listen and public).
 	    In many cases these ip addresses will be defined automatically.
 

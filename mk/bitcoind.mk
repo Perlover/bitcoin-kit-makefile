@@ -1,5 +1,6 @@
 bitcoin-core_install: |\
     required_for_configure_install\
+    cmake_install\
     gcc_install_11_2_0_min\
     binutils_install\
     boost_install\
@@ -10,10 +11,13 @@ bitcoin-core_install: |\
     python39_install\
     miniupnpc_install
 	cd external/bitcoin-core && git checkout -f && git clean -fdx && { \
-		./autogen.sh && \
-		./configure LIBS=-lrt --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --with-incompatible-bdb --disable-wallet --without-gui --with-boost=$(BASE_INSTALL_DIR) --with-boost-libdir=$(BASE_INSTALL_DIR)/lib && $(MAKE) -j4 && $(MAKE) install && echo "The bitcoin-core was installed - OK"; \
+		cmake -j4 -B build -DAPPEND_LDFLAGS:STRING=-lrt $(CMAKE_CONFIGURE_VARS) -DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) -DENABLE_WALLET:BOOL=OFF -DWITH_ZMQ:BOOL=ON -DBUILD_GUI:BOOL=OFF && \
+                cmake -j4 --install build && \
+		echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
+
+#-DBoost_INCLUDE_DIR:PATH=$(BASE_INSTALL_DIR)
 
 MAKE_DIRS +=  $(CREDENTIALS_DIR)
 

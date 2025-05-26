@@ -64,7 +64,7 @@ If you have old this repositary installed in your system you can easy upgrade up
     For Ubuntu/Mint/Debian Linux:
 
     ```
-    sudo apt install git build-essential screen gettext
+    sudo apt install git build-essential screen gettext pkg-config
     
     ```
 

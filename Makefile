@@ -92,6 +92,9 @@ MAKE_COMPILE := $(MAKE) $(shell nproc=$$((`cat /proc/cpuinfo|grep processor|wc -
 CONFIGURE_VARS += LDFLAGS="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
 CONFIGURE_VARS += CPPFLAGS="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
 
+CMAKE_CONFIGURE_VARS += -DAPPEND_LDFLAGS:STRING="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
+CMAKE_CONFIGURE_VARS += -DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
+
 .PHONY: help help-more
 
 help:
