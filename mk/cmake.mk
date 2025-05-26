@@ -1,6 +1,6 @@
 cmake-3.31.6.tar.gz:
 	$(WGET) 'https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6.tar.gz'
-	echo 'a9f42404b21654a29553a61078accd20  cmake-3.17.3.tar.gz'|md5sum --check - || \
+	echo 'a9f42404b21654a29553a61078accd20  cmake-3.31.6.tar.gz'|md5sum --check - || \
 		{ \
 			mv cmake-3.31.6.tar.gz cmake-3.31.6.bad.tar.gz &&\
 			echo "Bad cmake md5 sum"; false;\
