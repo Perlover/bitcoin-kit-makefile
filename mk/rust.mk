@@ -1,7 +1,7 @@
 rust_install: |\
     required_for_configure_install\
     binutils_install\
-    cmake_install\
+    cmake_3_31_install\
     python39_install\
     new_git_install\
     new_curl_install\

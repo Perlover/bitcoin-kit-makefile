@@ -3,7 +3,7 @@ CMAKE_CONFIGURE_VARS += -DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subs
 
 bitcoin-core_install: |\
     required_for_configure_install\
-    cmake_install\
+    cmake_3_31_install\
     gcc_install_11_2_0_min\
     binutils_install\
     boost_install\
