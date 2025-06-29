@@ -30,3 +30,6 @@ Python-*
 /network_*.mk
 /network_*.sh
 /i-want-lightning
+/gcc_install_*
+/golang_envs-*.sh
+/golang_pre_install_*
