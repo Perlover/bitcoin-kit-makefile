@@ -33,24 +33,20 @@ lnd-update:\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
     $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop
-	if [[ -f $(HOME)/.testnet-lnd.pid ]]; then\
-	    kill -0 `cat $(HOME)/.testnet-lnd.pid` &>/dev/null &&\
-	    echo "You must to stop testnet lnd before update!" &&\
+	if [[ -f $(HOME)/.testnet-lnd.pid ]] && kill -0 `cat $(HOME)/.testnet-lnd.pid` &>/dev/null; then\
+	    echo "You must to stop testnet lnd before update!";\
 	    exit 1;\
 	fi
-	if [[ -f $(HOME)/.mainnet-lnd.pid ]]; then\
-	    kill -0 `cat $(HOME)/.mainnet-lnd.pid` &>/dev/null &&\
-	    echo "You must to stop mainnet lnd before update!" &&\
+	if [[ -f $(HOME)/.mainnet-lnd.pid ]] && kill -0 `cat $(HOME)/.mainnet-lnd.pid` &>/dev/null; then\
+	    echo "You must to stop mainnet lnd before update!";\
 	    exit 2;\
 	fi
-	if [[ -f $(HOME)/.testnet-lncli-web.pid ]]; then\
-	    kill -0 `cat $(HOME)/.testnet-lncli-web.pid` &>/dev/null &&\
-	    echo "You must to stop testnet lncli-web before update!" &&\
+	if [[ -f $(HOME)/.testnet-lncli-web.pid ]] && kill -0 `cat $(HOME)/.testnet-lncli-web.pid` &>/dev/null; then\
+	    echo "You must to stop testnet lncli-web before update!";\
 	    exit 1;\
 	fi
-	if [[ -f $(HOME)/.mainnet-lncli-web.pid ]]; then\
-	    kill -0 `cat $(HOME)/.mainnet-lncli-web.pid` &>/dev/null &&\
-	    echo "You must to stop mainnet lncli-web before update!" &&\
+	if [[ -f $(HOME)/.mainnet-lncli-web.pid ]] && kill -0 `cat $(HOME)/.mainnet-lncli-web.pid` &>/dev/null; then\
+	    echo "You must to stop mainnet lncli-web before update!";\
 	    exit 2;\
 	fi
 	if [ "x${LND_BACKUP}" != "x" ]; then umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'; fi
