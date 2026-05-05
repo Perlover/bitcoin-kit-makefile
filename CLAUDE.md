@@ -32,6 +32,14 @@ make lnd-install
 # One-shot cleanup of a previous lncli-web install (deprecated, removed from the project)
 make purge-lncli-web
 
+# Per-user systemd auto-start (no-op on hosts without systemd)
+make systemd-install
+make enable-linger                      # may need sudo on stricter setups
+make systemd-enable-mainnet             # enable+start bitcoind@mainnet, lnd@mainnet
+make systemd-enable-testnet             # same for testnet
+make systemd-status                     # show installed/active/enabled
+make systemd-uninstall
+
 # Optional firewall helpers (run as root)
 sudo make iptables_install              # installs iptables.template
 sudo make bitcoin_iptables_install      # adds dport 8333 ACCEPT rule
@@ -58,7 +66,7 @@ Bitcoin Core, OpenSSL, Boost, libevent, libzmq, miniupnp, pkg-config, inotify-to
 
 ### Module layout
 
-`Makefile` (top-level) defines toolchain-comparison macros, network-config caching, and shell/profile detection, then `include`s every `mk/*.mk` module. Each module owns one component and stays self-contained — `bitcoind.mk`, `lnd.mk`, `gcc.mk`, `binutils.mk`, `autotools.mk`, `golang.mk`, `python2.mk`, `python3.mk`, `nodejs.mk`, `rust.mk`, `cmake.mk`, `git.mk`, `libs.mk`, `tor.mk`, `electrumx.mk`, `zeromq.mk`, `miniupnp.mk`, `inotify.mk`, `iptables.mk`, `sqlite3.mk`, `rsync.mk`. Two glue modules orchestrate the rest: `i-want-lightning.mk` is the top-level "do everything" target; `common.mk` owns the shell-profile patching (`~/.bitcoin_envs`, `~/.bitcoin_aliases`), submodule init, `clean`, and the `purge-lncli-web` one-shot cleanup of legacy installs. `finally.mk` is included last so it can hook end-of-build steps.
+`Makefile` (top-level) defines toolchain-comparison macros, network-config caching, and shell/profile detection, then `include`s every `mk/*.mk` module. Each module owns one component and stays self-contained — `bitcoind.mk`, `lnd.mk`, `gcc.mk`, `binutils.mk`, `autotools.mk`, `golang.mk`, `python2.mk`, `python3.mk`, `nodejs.mk`, `rust.mk`, `cmake.mk`, `git.mk`, `libs.mk`, `tor.mk`, `electrumx.mk`, `zeromq.mk`, `miniupnp.mk`, `inotify.mk`, `iptables.mk`, `sqlite3.mk`, `rsync.mk`, `systemd.mk`. Two glue modules orchestrate the rest: `i-want-lightning.mk` is the top-level "do everything" target; `common.mk` owns the shell-profile patching (`~/.bitcoin_envs`, `~/.bitcoin_aliases`), submodule init, `clean`, and the `purge-lncli-web` one-shot cleanup of legacy installs. `finally.mk` is included last so it can hook end-of-build steps.
 
 ### Network config caching (subtle)
 
@@ -96,6 +104,12 @@ After `make set-up-lightning-{mainnet,testnet}`, the user has in `$PATH`:
 - `{mainnet,testnet}-bitcoind-{start,stop}` — bitcoind on default ports (mainnet 8333, testnet 18333)
 - `{mainnet,testnet}-lnd-{start,debug-start,stop}` — lnd on TCP 9735, gRPC 10009 (mainnet) / 10010 (testnet)
 - `{mainnet,testnet}-lightning-{start,stop}` — bundle that calls bitcoind + lnd in sequence
+
+`{mainnet,testnet}-lnd-start` is dual-purpose: it both launches lnd and walks the user through `lncli unlock`. When run a second time (or against a systemd-managed lnd), it detects the already-running daemon — first via `~/.<network>-lnd.pid`, then via `pgrep -f 'lnd --configfile=.*lnd-<network>\.conf'` — and skips straight to the unlock step. The wallet-unlock prompt is detected by tailing `~/.lnd/logs/bitcoin/<network>/lnd.log` (lnd's own log, written regardless of who launched the daemon) for the line `Waiting for wallet encryption password.`.
+
+### systemd integration (optional)
+
+`mk/systemd.mk` installs per-user unit templates `bitcoind@.service` and `lnd@.service` into `~/.config/systemd/user/`, sed-substituting the same `$$BITCOIN_KIT_*$$` placeholders the wrapper scripts use. `make systemd-install` is a no-op on hosts without `systemctl`. `make systemd-enable-{mainnet,testnet}` only enables a unit if `~/bin/<net>-<svc>-start` exists, so a host with only one of bitcoind/lnd does not get a stale unit. `lnd@.service` writes `~/.<net>-lnd.pid` via `ExecStartPost=` so the terminal `<net>-lnd-start` wrapper can find the systemd-managed lnd and proceed straight to wallet unlock. `make enable-linger` runs `loginctl enable-linger` for the current user — works without root on modern systemd via polkit, otherwise needs `sudo make enable-linger LINGER_USER=<user>`.
 
 PID files live at `~/.<network>-<service>.pid`. Wrapper scripts call `upnpc` to add port-forwarding when `BITCOIN_KIT_UPNP_SUPPORT=Yes`. Wallet creation runs lnd in a temporary nohup'd process during `set-up-lightning-*` (see the `wallet.db` rule in `mk/lnd.mk`).
 

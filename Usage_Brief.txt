@@ -51,4 +51,14 @@ This makefile also additionally contains some targets but are yet not documented
 	    [mainnet|testnet]-bitcoind-[start|stop]
 	    [mainnet|testnet]-lnd-[start|stop]
 
+    Stage 4 (optional - auto-start at boot via systemd):
+	make systemd-install
+	make enable-linger
+	make [ systemd-enable-mainnet | systemd-enable-testnet ]
+	    Installs per-user systemd unit files and enables them so bitcoind
+	    and lnd come up automatically after a reboot. After enabling, lnd
+	    waits for the wallet unlock password - just run
+	    [mainnet|testnet]-lnd-start in a terminal to enter it.
+	    See 'make help-more' for the full set of systemd-* targets.
+
     After installation to see ~/credentials/* files. After you can remove theirs.

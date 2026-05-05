@@ -58,6 +58,13 @@ ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
 ifneq ($(MAKECMDGOALS),purge-lncli-web)
+ifneq ($(MAKECMDGOALS),systemd-uninstall)
+ifneq ($(MAKECMDGOALS),systemd-status)
+ifneq ($(MAKECMDGOALS),systemd-enable-mainnet)
+ifneq ($(MAKECMDGOALS),systemd-enable-testnet)
+ifneq ($(MAKECMDGOALS),systemd-disable-mainnet)
+ifneq ($(MAKECMDGOALS),systemd-disable-testnet)
+ifneq ($(MAKECMDGOALS),enable-linger)
 ifneq ($(MAKECMDGOALS),)
 
 NETWORK_MK_FILE    := network_$(HASH_NETWORK_CONFIG).mk
@@ -69,6 +76,13 @@ endif
 
 include $(NETWORK_MK_FILE)
 
+endif
+endif
+endif
+endif
+endif
+endif
+endif
 endif
 endif
 endif
@@ -144,6 +158,7 @@ include mk/iptables.mk
 include mk/zeromq.mk
 include mk/miniupnp.mk
 include mk/i-want-lightning.mk
+include mk/systemd.mk
 include mk/rsync.mk
 include mk/git.mk
 include mk/inotify.mk

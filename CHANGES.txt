@@ -1,14 +1,43 @@
 2026-05-05
-  * Removed lncli-web from the project. It is deprecated, has not been updated
-    upstream by us in a long time, and should no longer be used.
+  * Added per-user systemd unit files for bitcoind and lnd so the daemons
+    can start automatically at boot:
+        configs/systemd/bitcoind@.service
+        configs/systemd/lnd@.service
+        mk/systemd.mk
+    New 'make' targets:
+        systemd-install               install & daemon-reload unit files
+        enable-linger                 loginctl enable-linger for the user
+        systemd-enable-mainnet        enable+start mainnet services
+        systemd-enable-testnet        enable+start testnet services
+        systemd-disable-mainnet       stop+disable mainnet services
+        systemd-disable-testnet       stop+disable testnet services
+        systemd-status                show installed/active/enabled state
+        systemd-uninstall             remove the unit files
+    All systemd-* targets become friendly no-ops on hosts without systemd
+    (e.g. old CentOS). systemd-enable-<net> only enables a unit when its
+    matching ~/bin/<net>-<svc>-start wrapper exists, so hosts that only
+    installed lnd (or only bitcoind) do not get a stale unit.
+
+  * mainnet-lnd-start / testnet-lnd-start no longer prompt 'y/n' when lnd
+    is already running. The script now detects an existing lnd via either
+    the pid file or pgrep against the lnd command line, and proceeds
+    straight to 'lncli unlock'. This is what enables the systemd flow:
+    systemd starts lnd, the user runs <net>-lnd-start in a terminal to
+    enter the wallet password.
+    The unlock-prompt watcher now tails lnd's own log file
+    (~/.lnd/logs/bitcoin/<network>/lnd.log) instead of *-lnd-run.log, so
+    it works regardless of how lnd was launched.
+
+  * Removed lncli-web from the project. It is deprecated, has not been
+    updated upstream by us in a long time, and should no longer be used.
     - mk/lncli-web.mk and configs/bin/lncli-web/ are gone
     - 'make i-want-lightning' / 'make set-up-lightning-*' no longer build,
       configure, or install lncli-web
-    - update_lnd_cert_to_standard_cert.sh no longer touches lncli-web pid files
-      or the ~/opt/lncli-web/lnd.cert symlink
+    - update_lnd_cert_to_standard_cert.sh no longer touches lncli-web pid
+      files or the ~/opt/lncli-web/lnd.cert symlink
     - mk/lnd.mk no longer copies the admin macaroon into ~/opt/lncli-web/
-    To clean up an existing install run 'make purge-lncli-web'. It stops any
-    running lncli-web, then removes:
+    To clean up an existing install run 'make purge-lncli-web'. It stops
+    any running lncli-web, then removes:
       ~/opt/lncli-web
       ~/bin/{mainnet,testnet}-lncli-web-{start,stop}
       ~/.{mainnet,testnet}-lncli-web.pid

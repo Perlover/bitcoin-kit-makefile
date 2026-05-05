@@ -217,7 +217,41 @@ If you have old this repositary installed in your system you can easy upgrade up
     `ltoc` - same as `loc` only for testnet network
 
 
-9.  **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
+9.  **OPTIONAL** Auto-start at boot via per-user systemd:
+
+    If your OS has systemd (most modern Linux distributions), you can
+    install per-user unit files so `bitcoind` and `lnd` start automatically
+    after a reboot:
+
+    ```
+    make systemd-install
+    make enable-linger
+    make systemd-enable-mainnet
+    # and/or:
+    make systemd-enable-testnet
+    ```
+
+    `enable-linger` makes the user's services start at boot without an
+    active login. On modern systemd polkit usually allows this without
+    root; otherwise run `sudo make enable-linger LINGER_USER=bitcoin`.
+
+    On hosts without systemd (e.g. old CentOS) the `systemd-*` targets
+    print a warning and exit cleanly - they don't fail the build.
+
+    `make systemd-enable-mainnet` only enables those services whose
+    `~/bin/<network>-<service>-start` wrappers actually exist on the host,
+    so a server that only installed `lnd` (or only `bitcoind`) will not
+    get a stale unit.
+
+    After enabling, `lnd` comes up but blocks waiting for the wallet
+    unlock password. Run `<network>-lnd-start` in a terminal as usual to
+    enter it - the wrapper detects the systemd-managed `lnd` and proceeds
+    straight to `lncli unlock`.
+
+    Other useful targets: `make systemd-status`,
+    `make systemd-disable-mainnet`, `make systemd-uninstall`.
+
+10. **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
     This Makefile has helpers:
 

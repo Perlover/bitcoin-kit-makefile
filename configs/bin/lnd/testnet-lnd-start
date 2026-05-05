@@ -9,6 +9,10 @@ tcp_port=9736
 grpc_port=10010
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
+# lnd's own log file. We watch it for the wallet-unlock prompt because it
+# is written whether lnd was launched by this script or by the systemd unit
+# (which does not write to *-lnd-run.log).
+lnd_log_file=$HOME/.lnd/logs/bitcoin/${bitcoin_network}/lnd.log
 
 # Function to wait for a specific string in a file
 wait_for_string() {
@@ -28,8 +32,10 @@ wait_for_string() {
     show_progress &
     local progress_pid=$!
 
-    # Use timeout to limit the waiting time and suppress grep output
-    timeout "$timeout_seconds" tail -f "$file_to_watch" | grep --line-buffered -m 1 "$search_string" >/dev/null 2>&1
+    # Read from the start of the file (-n +1) and keep following with retry
+    # (-F = --follow=name --retry) so we match the unlock prompt whether lnd
+    # was just started or has been running for hours under systemd.
+    timeout "$timeout_seconds" tail -n +1 -F "$file_to_watch" | grep --line-buffered -m 1 "$search_string" >/dev/null 2>&1
     local pipe_status=("${PIPESTATUS[@]}")  # Capture exit codes of commands in the pipeline
 
     # Stop the background process for progress dots
@@ -49,18 +55,14 @@ wait_for_string() {
     fi
 }
 
-strstr() {
-    [ "${1#*$2*}" = "$1" ] && return 1
-    return 0
-}
-
+# Find an already-running lnd for this network so this script can be re-run
+# just to unlock the wallet — covering both the case where the user started
+# lnd earlier in another terminal AND the case where systemd started it.
 if [[ -f $pid_file ]] && kill -0 `cat $pid_file` &>/dev/null; then
     echo "The lnd is already running, pid="`cat $pid_file`
-    echo -n "Do you want to try unlock wallet? y/n [n]"
-    read answer; echo " $answer"
-    if strstr $"nN" "$answer" || [ "$answer" = "" ]; then
-	exit 2
-    fi
+elif lnd_pid=`pgrep -fn "lnd --configfile=.*lnd-${bitcoin_network}\.conf"` && [ -n "$lnd_pid" ]; then
+    echo "Detected externally started lnd (pid $lnd_pid). Will only unlock the wallet."
+    echo $lnd_pid > $pid_file
 else
     if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
 	echo -n "UPnP On (${service_name}/${bitcoin_network}) ..."
@@ -77,9 +79,13 @@ else
     sleep 1
 fi
 
+# Wait briefly for lnd's own log to appear (mostly relevant on the very
+# first launch — in all other cases the file already exists).
+for i in {1..30}; do [ -f "$lnd_log_file" ] && break; sleep 1; done
+
 echo -n "Waiting for LND to request the wallet unlock password (up to 15 minutes) "
 
-wait_for_string "$HOME/.lnd/${bitcoin_network}-${service_name}-run.log" "Waiting for wallet encryption password." 900
+wait_for_string "$lnd_log_file" "Waiting for wallet encryption password." 900
 
 echo $'\n\n\n******************************************************************\n\nPlease '"${1:-unlock} ${service_name} (${bitcoin_network})"$' daemon\n\n******************************************************************\nEnter password: ';
 lncli --macaroonpath ${macaroon_path} --rpcserver localhost:${grpc_port} ${1:-unlock}

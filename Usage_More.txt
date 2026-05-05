@@ -36,4 +36,44 @@ make bitcoin-core-update
 
 make electrumx-install
 
+PER-USER SYSTEMD UNITS (auto-start bitcoind & lnd at boot):
+
+make systemd-install
+    Install per-user systemd unit files into ~/.config/systemd/user/
+    Templates: bitcoind@.service and lnd@.service.
+    On hosts without systemd this becomes a friendly no-op.
+
+make enable-linger
+    Enables loginctl linger so the user services keep running (and start at
+    boot) without an active login session.
+    On modern systemd polkit lets you do this without root; otherwise:
+        sudo make enable-linger LINGER_USER=$(whoami)
+
+make systemd-enable-mainnet
+make systemd-enable-testnet
+    Enable & start bitcoind@<net> and lnd@<net> for the chosen network.
+    Each service is only enabled if its ~/bin/<net>-<svc>-start wrapper
+    exists, so a host with only lnd (or only bitcoind) installed will not
+    get a stale unit.
+    After enabling, lnd waits for the wallet unlock password — run
+    '<net>-lnd-start' in a terminal to enter it.
+
+make systemd-status
+    Show installed units and their active/enabled state plus current
+    linger status for the user.
+
+make systemd-disable-mainnet
+make systemd-disable-testnet
+    Stop and disable both services for that network.
+
+make systemd-uninstall
+    Disable everything and remove the unit files.
+
+DEPRECATED CLEANUP:
+
+make purge-lncli-web
+    One-shot cleanup of an old lncli-web install. Stops any running
+    lncli-web, then removes ~/opt/lncli-web/, the related ~/bin/ scripts,
+    pid files, and credential files.
+
 -------------------------------------------------------------------------------
