@@ -41,14 +41,6 @@ lnd-update:\
 	    echo "You must to stop mainnet lnd before update!";\
 	    exit 2;\
 	fi
-	if [[ -f $(HOME)/.testnet-lncli-web.pid ]] && kill -0 `cat $(HOME)/.testnet-lncli-web.pid` &>/dev/null; then\
-	    echo "You must to stop testnet lncli-web before update!";\
-	    exit 1;\
-	fi
-	if [[ -f $(HOME)/.mainnet-lncli-web.pid ]] && kill -0 `cat $(HOME)/.mainnet-lncli-web.pid` &>/dev/null; then\
-	    echo "You must to stop mainnet lncli-web before update!";\
-	    exit 2;\
-	fi
 	if [ "x${LND_BACKUP}" != "x" ]; then umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'; fi
 	./update_wallet_macaroon_files_to_standard_dir.sh
 	./update_lnd_cert_to_standard_cert.sh
@@ -229,9 +221,6 @@ $(HOME)/.lnd/data/chain/bitcoin/mainnet/admin.macaroon: | $(HOME)/.lnd/lnd-mainn
 	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
 	[ -f $@ ]
 
-$(HOME)/opt/lncli-web/admin-mainnet.macaroon: $(HOME)/.lnd/data/chain/bitcoin/mainnet/admin.macaroon
-	cp -f $< $@
-
 $(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db: override CREATE_WALLET_LOCK := .create_wallet_testnet_lock
 $(HOME)/.lnd/data/chain/bitcoin/testnet/wallet.db:
 	umask 077 && nohup lnd --configfile=$(HOME)/.lnd/lnd-testnet.conf &>$(CREATE_WALLET_LOCK).out.txt & echo $$! >$(CREATE_WALLET_LOCK).pid.txt
@@ -244,9 +233,6 @@ $(HOME)/.lnd/data/chain/bitcoin/testnet/admin.macaroon: | $(HOME)/.lnd/lnd-testn
 	if [ -f $(HOME)/.lnd/admin-testnet.macaroon ]; then echo $$'**************\n\nYou need stop LNDs; $(MAKE) lnd-update; and to run LND again\n\n**************'; false; fi
 	for i in {1..30}; do [ -f $@ ] && break; sleep 1; done
 	[ -f $@ ]
-
-$(HOME)/opt/lncli-web/admin-testnet.macaroon: $(HOME)/.lnd/data/chain/bitcoin/testnet/admin.macaroon
-	cp -f $< $@
 
 $(HOME)/bin/mainnet-lnd-start: build/bin/lnd/mainnet-lnd-start | $(HOME)/bin miniupnpc_install
 	umask 077 && cp -f $< $@

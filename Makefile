@@ -57,6 +57,7 @@ ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
+ifneq ($(MAKECMDGOALS),purge-lncli-web)
 ifneq ($(MAKECMDGOALS),)
 
 NETWORK_MK_FILE    := network_$(HASH_NETWORK_CONFIG).mk
@@ -68,6 +69,7 @@ endif
 
 include $(NETWORK_MK_FILE)
 
+endif
 endif
 endif
 endif
@@ -138,7 +140,6 @@ include mk/binutils.mk
 include mk/nodejs.mk
 include mk/golang.mk
 include mk/lnd.mk
-include mk/lncli-web.mk
 include mk/iptables.mk
 include mk/zeromq.mk
 include mk/miniupnp.mk

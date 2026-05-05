@@ -28,7 +28,6 @@ This is the Makefile for building from sources the software for the Bitcoin:
 
 1. [Bitcoin Core][bitcoin-core]
 2. [LND][lnd]
-3. [Lncli-Web][lncli-web] (web interface to *lnd*)
 
 This makefile was written for the CentOS 6.x because this OS very conservative
 for new libraries and tools. There are many dependencies which should have new
@@ -39,7 +38,6 @@ packet for any *nix i think.
 [bitcoin-core]: https://github.com/bitcoin/bitcoin "Bitcoin Core full-node"
 [lnd]:          https://github.com/lightningnetwork/lnd "Lightning node from Lightning Labs"
 [electrumx]:    https://github.com/kyuupichan/electrumx "Alternative Electrum server"
-[lncli-web]:    https://github.com/mably/lncli-web
 
 This compiling and installing doesn't affect to Unix system because all binaries
 and libraries installed to $HOME directory (for example to home of 'bitcoin'
@@ -142,7 +140,6 @@ If you have old this repositary installed in your system you can easy upgrade up
     * `[mainnet|testnet]-lightning-[start|stop]`
     * `[mainnet|testnet]-bitcoind-[start|stop]`
     * `[mainnet|testnet]-lnd-[start|stop]`
-    * `[mainnet|testnet]-lncli-web-[start|stop]`
 
 5.  You can start bitcoin &amp; lnd daemons as:
 
@@ -169,22 +166,14 @@ If you have old this repositary installed in your system you can easy upgrade up
         mainnet-bitcoind-stop
         ```
 
-    4.  If you want to use `lncli-web` you can start same way:
+    4.  Or you can start/stop both daemons at once:
 
         ```
         mainnet-lightning-start
-        ```
-
-        Stop daemon:
-
-        ```
         mainnet-lightning-stop
         ```
-        
-        But first time run after installation i recommend to run as described in #5.1
 
-        You can work with node same way: `https://your_listen_ip_address:[8280|8281]/`
-        The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
+        But first time run after installation i recommend to run as described in #5.1
 
 6.  If you want to change password of wallet you can do it by following commands:
 

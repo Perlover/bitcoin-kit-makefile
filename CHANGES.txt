@@ -1,3 +1,19 @@
+2026-05-05
+  * Removed lncli-web from the project. It is deprecated, has not been updated
+    upstream by us in a long time, and should no longer be used.
+    - mk/lncli-web.mk and configs/bin/lncli-web/ are gone
+    - 'make i-want-lightning' / 'make set-up-lightning-*' no longer build,
+      configure, or install lncli-web
+    - update_lnd_cert_to_standard_cert.sh no longer touches lncli-web pid files
+      or the ~/opt/lncli-web/lnd.cert symlink
+    - mk/lnd.mk no longer copies the admin macaroon into ~/opt/lncli-web/
+    To clean up an existing install run 'make purge-lncli-web'. It stops any
+    running lncli-web, then removes:
+      ~/opt/lncli-web
+      ~/bin/{mainnet,testnet}-lncli-web-{start,stop}
+      ~/.{mainnet,testnet}-lncli-web.pid
+      ~/credentials/lncli-web-{mainnet,testnet}-passwords.txt
+
 2026-03-17
   * Update LND to v0.20.1-beta
 

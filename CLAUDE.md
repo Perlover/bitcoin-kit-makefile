@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A pure-Make build system that compiles Bitcoin Core, LND, and all of their toolchain dependencies (gcc, binutils, autotools, OpenSSL, Boost, libevent, libzmq, miniupnp, Python 3, Node.js, Go, Rust) **from source into `$HOME`** under an unprivileged user account. Originally aimed at CentOS 6, where the system toolchain is too old; works on any *nix where you can't or don't want to install global packages. There is **no application code in this repo** — it is purely a Makefile + helper shell scripts + config templates that orchestrate building upstream projects (which are pulled in as git submodules under `external/` or cloned at build time).
 
-The end product is a set of `~/bin/{mainnet,testnet}-{bitcoind,lnd,lightning,lncli-web}-{start,stop,debug-start}` wrapper scripts plus `~/.bitcoin_envs`, `~/.golang_envs`, and `~/.bitcoin_aliases` sourced from the user's shell profile.
+The end product is a set of `~/bin/{mainnet,testnet}-{bitcoind,lnd,lightning}-{start,stop,debug-start}` wrapper scripts plus `~/.bitcoin_envs`, `~/.golang_envs`, and `~/.bitcoin_aliases` sourced from the user's shell profile.
 
 ## Common commands
 
@@ -28,7 +28,9 @@ make lnd-update-testnet
 # Single-component installs / updates
 make bitcoin-core-install
 make lnd-install
-make lncli-web-install lncli-web-update
+
+# One-shot cleanup of a previous lncli-web install (deprecated, removed from the project)
+make purge-lncli-web
 
 # Optional firewall helpers (run as root)
 sudo make iptables_install              # installs iptables.template
@@ -50,13 +52,13 @@ Two variables in the top-level `Makefile` drive what gets built:
 - `LND_ACTUAL_COMMIT` — exact LND git commit (currently a v0.20.1-beta commit). Bumping LND = edit this line and update `CHANGES.txt`.
 - `GOLANG_VER` — Go version. **Must also be reflected in `golang_envs.sh`'s `$PATH`** (see comment in `Makefile`).
 
-Bitcoin Core, OpenSSL, Boost, libevent, libzmq, miniupnp, pkg-config, inotify-tools, and Rust are pinned via the git submodules in `external/` (see `.gitmodules`); to bump them, `cd` into the submodule, check out the desired ref, commit the new submodule SHA in this repo. `lncli-web` is cloned at build time from master.
+Bitcoin Core, OpenSSL, Boost, libevent, libzmq, miniupnp, pkg-config, inotify-tools, and Rust are pinned via the git submodules in `external/` (see `.gitmodules`); to bump them, `cd` into the submodule, check out the desired ref, commit the new submodule SHA in this repo.
 
 ## Architecture
 
 ### Module layout
 
-`Makefile` (top-level) defines toolchain-comparison macros, network-config caching, and shell/profile detection, then `include`s every `mk/*.mk` module. Each module owns one component and stays self-contained — `bitcoind.mk`, `lnd.mk`, `lncli-web.mk`, `gcc.mk`, `binutils.mk`, `autotools.mk`, `golang.mk`, `python2.mk`, `python3.mk`, `nodejs.mk`, `rust.mk`, `cmake.mk`, `git.mk`, `libs.mk`, `tor.mk`, `electrumx.mk`, `zeromq.mk`, `miniupnp.mk`, `inotify.mk`, `iptables.mk`, `sqlite3.mk`, `rsync.mk`. Two glue modules orchestrate the rest: `i-want-lightning.mk` is the top-level "do everything" target; `common.mk` owns the shell-profile patching (`~/.bitcoin_envs`, `~/.bitcoin_aliases`), submodule init, and `clean`. `finally.mk` is included last so it can hook end-of-build steps.
+`Makefile` (top-level) defines toolchain-comparison macros, network-config caching, and shell/profile detection, then `include`s every `mk/*.mk` module. Each module owns one component and stays self-contained — `bitcoind.mk`, `lnd.mk`, `gcc.mk`, `binutils.mk`, `autotools.mk`, `golang.mk`, `python2.mk`, `python3.mk`, `nodejs.mk`, `rust.mk`, `cmake.mk`, `git.mk`, `libs.mk`, `tor.mk`, `electrumx.mk`, `zeromq.mk`, `miniupnp.mk`, `inotify.mk`, `iptables.mk`, `sqlite3.mk`, `rsync.mk`. Two glue modules orchestrate the rest: `i-want-lightning.mk` is the top-level "do everything" target; `common.mk` owns the shell-profile patching (`~/.bitcoin_envs`, `~/.bitcoin_aliases`), submodule init, `clean`, and the `purge-lncli-web` one-shot cleanup of legacy installs. `finally.mk` is included last so it can hook end-of-build steps.
 
 ### Network config caching (subtle)
 
@@ -94,7 +96,6 @@ After `make set-up-lightning-{mainnet,testnet}`, the user has in `$PATH`:
 - `{mainnet,testnet}-bitcoind-{start,stop}` — bitcoind on default ports (mainnet 8333, testnet 18333)
 - `{mainnet,testnet}-lnd-{start,debug-start,stop}` — lnd on TCP 9735, gRPC 10009 (mainnet) / 10010 (testnet)
 - `{mainnet,testnet}-lightning-{start,stop}` — bundle that calls bitcoind + lnd in sequence
-- `{mainnet,testnet}-lncli-web-{start,stop}` — web UI on 8280/8281
 
 PID files live at `~/.<network>-<service>.pid`. Wrapper scripts call `upnpc` to add port-forwarding when `BITCOIN_KIT_UPNP_SUPPORT=Yes`. Wallet creation runs lnd in a temporary nohup'd process during `set-up-lightning-*` (see the `wallet.db` rule in `mk/lnd.mk`).
 
