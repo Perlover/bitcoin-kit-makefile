@@ -18,6 +18,14 @@
     matching ~/bin/<net>-<svc>-start wrapper exists, so hosts that only
     installed lnd (or only bitcoind) do not get a stale unit.
 
+  * lnd@.service appends lnd's stdout/stderr to the same legacy log the
+    terminal wrapper has always written to (~/.lnd/<network>-lnd-run.log),
+    so the long-running history that accumulates across restarts keeps
+    growing as before. Redirection happens in the shell prior to exec, so
+    the lnd pid is preserved. As a tradeoff lnd's stdout/stderr no longer
+    reach journald — view the log with 'tail -f ~/.lnd/<net>-lnd-run.log'
+    or 'tail -f ~/.lnd/logs/bitcoin/<net>/lnd.log' (lnd's own rotated log).
+
   * mainnet-lnd-start / testnet-lnd-start no longer prompt 'y/n' when lnd
     is already running. The script now detects an existing lnd via either
     the pid file or pgrep against the lnd command line, and proceeds
