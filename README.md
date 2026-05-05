@@ -251,6 +251,30 @@ If you have old this repositary installed in your system you can easy upgrade up
     Other useful targets: `make systemd-status`,
     `make systemd-disable-mainnet`, `make systemd-uninstall`.
 
+    **Hosts where you do NOT want bitcoind to auto-start.** `lnd@<net>.service`
+    has `Wants=bitcoind@<net>.service`, so starting `lnd` pulls
+    `bitcoind` into the start transaction even if `bitcoind` was not
+    enabled. On servers where you do not want a local `bitcoind` at all
+    (remote `bitcoind`, neutrino, or simply not needed on this host),
+    just **disable is not enough** - the `Wants=` would still pull it
+    in. Use `mask`:
+
+    ```
+    systemctl --user disable --now bitcoind@mainnet.service
+    systemctl --user mask        bitcoind@mainnet.service
+    ```
+
+    `mask` replaces the unit with a symlink to `/dev/null`, so systemd
+    physically cannot start it. `lnd` starts as usual; the journal will
+    contain one harmless warning about the masked dependency.
+
+    To undo:
+
+    ```
+    systemctl --user unmask        bitcoind@mainnet.service
+    systemctl --user enable --now  bitcoind@mainnet.service
+    ```
+
 10. **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
     This Makefile has helpers:

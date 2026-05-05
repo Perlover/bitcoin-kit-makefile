@@ -26,6 +26,14 @@
     reach journald — view the log with 'tail -f ~/.lnd/<net>-lnd-run.log'
     or 'tail -f ~/.lnd/logs/bitcoin/<net>/lnd.log' (lnd's own rotated log).
 
+  * Documented how to keep bitcoind from auto-starting on a per-host
+    basis. lnd@<net>.service has 'Wants=bitcoind@<net>.service', so
+    'systemctl --user disable bitcoind@<net>' alone is not enough — lnd
+    pulls bitcoind back into the start transaction. The fix is to mask:
+        systemctl --user disable --now bitcoind@mainnet.service
+        systemctl --user mask        bitcoind@mainnet.service
+    See README.md and 'make help-more' for details.
+
   * mainnet-lnd-start / testnet-lnd-start no longer prompt 'y/n' when lnd
     is already running. The script now detects an existing lnd via either
     the pid file or pgrep against the lnd command line, and proceeds

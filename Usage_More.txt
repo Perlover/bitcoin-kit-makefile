@@ -69,6 +69,27 @@ make systemd-disable-testnet
 make systemd-uninstall
     Disable everything and remove the unit files.
 
+TIPS - per-host overrides:
+
+    lnd@<net>.service has 'Wants=bitcoind@<net>.service', which means
+    starting lnd also pulls bitcoind into the start transaction even if
+    bitcoind was not enabled. On hosts where you intentionally do NOT
+    want a local bitcoind (e.g. lnd talks to a remote bitcoind, or runs
+    via neutrino, or you simply do not need bitcoind on this server):
+
+        systemctl --user disable --now bitcoind@mainnet.service
+        systemctl --user mask        bitcoind@mainnet.service
+
+    'disable' alone is not enough - the Wants= dependency would still
+    pull bitcoind in. 'mask' replaces the unit with a symlink to
+    /dev/null so systemd cannot start it. lnd starts as usual; you will
+    see one harmless warning in the journal about the masked dependency.
+
+    To undo:
+
+        systemctl --user unmask        bitcoind@mainnet.service
+        systemctl --user enable --now  bitcoind@mainnet.service
+
 DEPRECATED CLEANUP:
 
 make purge-lncli-web
