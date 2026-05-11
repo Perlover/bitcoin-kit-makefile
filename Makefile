@@ -31,8 +31,8 @@ CREDENTIALS_DIR := $(HOME)/credentials
 # This hash will be used when defining the network configuration (as cache ID)
 HASH_NETWORK_CONFIG := $(shell echo `uname  -a` `/sbin/ifconfig | grep 'inet '|sed -r -e 's/[^0-9]+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'|grep -vE '^127\.'`|md5sum|awk '{print $$1}')
 
-# commit/tag of LND for installation - the current master branch (the lnd v0.19.0-beta)
-LND_ACTUAL_COMMIT := c52a6ddeb8e596c6f4fcd61382d2a0a0f6ee9abc
+# commit/tag of LND for installation - the current master branch (the lnd v0.20.1-beta)
+LND_ACTUAL_COMMIT := 848b72ce96eb68fa90fd4336523ca4c59bddcd4c
 
 # Should be updated in PATH of golang_envs.sh too!
 GOLANG_VER := 1.22.11
@@ -57,6 +57,14 @@ ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),help-more)
+ifneq ($(MAKECMDGOALS),purge-lncli-web)
+ifneq ($(MAKECMDGOALS),systemd-uninstall)
+ifneq ($(MAKECMDGOALS),systemd-status)
+ifneq ($(MAKECMDGOALS),systemd-enable-mainnet)
+ifneq ($(MAKECMDGOALS),systemd-enable-testnet)
+ifneq ($(MAKECMDGOALS),systemd-disable-mainnet)
+ifneq ($(MAKECMDGOALS),systemd-disable-testnet)
+ifneq ($(MAKECMDGOALS),enable-linger)
 ifneq ($(MAKECMDGOALS),)
 
 NETWORK_MK_FILE    := network_$(HASH_NETWORK_CONFIG).mk
@@ -68,6 +76,14 @@ endif
 
 include $(NETWORK_MK_FILE)
 
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
 endif
 endif
 endif
@@ -138,11 +154,11 @@ include mk/binutils.mk
 include mk/nodejs.mk
 include mk/golang.mk
 include mk/lnd.mk
-include mk/lncli-web.mk
 include mk/iptables.mk
 include mk/zeromq.mk
 include mk/miniupnp.mk
 include mk/i-want-lightning.mk
+include mk/systemd.mk
 include mk/rsync.mk
 include mk/git.mk
 include mk/inotify.mk

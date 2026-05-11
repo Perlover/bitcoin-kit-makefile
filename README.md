@@ -28,7 +28,6 @@ This is the Makefile for building from sources the software for the Bitcoin:
 
 1. [Bitcoin Core][bitcoin-core]
 2. [LND][lnd]
-3. [Lncli-Web][lncli-web] (web interface to *lnd*)
 
 This makefile was written for the CentOS 6.x because this OS very conservative
 for new libraries and tools. There are many dependencies which should have new
@@ -39,7 +38,6 @@ packet for any *nix i think.
 [bitcoin-core]: https://github.com/bitcoin/bitcoin "Bitcoin Core full-node"
 [lnd]:          https://github.com/lightningnetwork/lnd "Lightning node from Lightning Labs"
 [electrumx]:    https://github.com/kyuupichan/electrumx "Alternative Electrum server"
-[lncli-web]:    https://github.com/mably/lncli-web
 
 This compiling and installing doesn't affect to Unix system because all binaries
 and libraries installed to $HOME directory (for example to home of 'bitcoin'
@@ -142,7 +140,6 @@ If you have old this repositary installed in your system you can easy upgrade up
     * `[mainnet|testnet]-lightning-[start|stop]`
     * `[mainnet|testnet]-bitcoind-[start|stop]`
     * `[mainnet|testnet]-lnd-[start|stop]`
-    * `[mainnet|testnet]-lncli-web-[start|stop]`
 
 5.  You can start bitcoin &amp; lnd daemons as:
 
@@ -169,22 +166,14 @@ If you have old this repositary installed in your system you can easy upgrade up
         mainnet-bitcoind-stop
         ```
 
-    4.  If you want to use `lncli-web` you can start same way:
+    4.  Or you can start/stop both daemons at once:
 
         ```
         mainnet-lightning-start
-        ```
-
-        Stop daemon:
-
-        ```
         mainnet-lightning-stop
         ```
-        
-        But first time run after installation i recommend to run as described in #5.1
 
-        You can work with node same way: `https://your_listen_ip_address:[8280|8281]/`
-        The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
+        But first time run after installation i recommend to run as described in #5.1
 
 6.  If you want to change password of wallet you can do it by following commands:
 
@@ -228,7 +217,65 @@ If you have old this repositary installed in your system you can easy upgrade up
     `ltoc` - same as `loc` only for testnet network
 
 
-9.  **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
+9.  **OPTIONAL** Auto-start at boot via per-user systemd:
+
+    If your OS has systemd (most modern Linux distributions), you can
+    install per-user unit files so `bitcoind` and `lnd` start automatically
+    after a reboot:
+
+    ```
+    make systemd-install
+    make enable-linger
+    make systemd-enable-mainnet
+    # and/or:
+    make systemd-enable-testnet
+    ```
+
+    `enable-linger` makes the user's services start at boot without an
+    active login. On modern systemd polkit usually allows this without
+    root; otherwise run `sudo make enable-linger LINGER_USER=bitcoin`.
+
+    On hosts without systemd (e.g. old CentOS) the `systemd-*` targets
+    print a warning and exit cleanly - they don't fail the build.
+
+    `make systemd-enable-mainnet` only enables those services whose
+    `~/bin/<network>-<service>-start` wrappers actually exist on the host,
+    so a server that only installed `lnd` (or only `bitcoind`) will not
+    get a stale unit.
+
+    After enabling, `lnd` comes up but blocks waiting for the wallet
+    unlock password. Run `<network>-lnd-start` in a terminal as usual to
+    enter it - the wrapper detects the systemd-managed `lnd` and proceeds
+    straight to `lncli unlock`.
+
+    Other useful targets: `make systemd-status`,
+    `make systemd-disable-mainnet`, `make systemd-uninstall`.
+
+    **Hosts where you do NOT want bitcoind to auto-start.** `lnd@<net>.service`
+    has `Wants=bitcoind@<net>.service`, so starting `lnd` pulls
+    `bitcoind` into the start transaction even if `bitcoind` was not
+    enabled. On servers where you do not want a local `bitcoind` at all
+    (remote `bitcoind`, neutrino, or simply not needed on this host),
+    just **disable is not enough** - the `Wants=` would still pull it
+    in. Use `mask`:
+
+    ```
+    systemctl --user disable --now bitcoind@mainnet.service
+    systemctl --user mask        bitcoind@mainnet.service
+    ```
+
+    `mask` replaces the unit with a symlink to `/dev/null`, so systemd
+    physically cannot start it. `lnd` starts as usual; the journal will
+    contain one harmless warning about the masked dependency.
+
+    To undo:
+
+    ```
+    systemctl --user unmask        bitcoind@mainnet.service
+    systemctl --user enable --now  bitcoind@mainnet.service
+    ```
+
+10. **RECOMMENDATION** If your OS has firewall rules - **DON'T FORGET TO OPEN the 8333 TCP PORT**
 
     This Makefile has helpers:
 

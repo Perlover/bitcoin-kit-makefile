@@ -35,4 +35,27 @@ required_for_configure_install: |\
 clean:
 	rm -rf build network_*
 
+# One-shot cleanup of a previous lncli-web install. lncli-web was removed from
+# this project; this target prunes leftover artifacts under $HOME so old installs
+# can be tidied up. Stops any still-running lncli-web first.
+.PHONY: purge-lncli-web
+
+purge-lncli-web:
+	@for net in mainnet testnet; do \
+	    pid_file=$(HOME)/.$$net-lncli-web.pid; \
+	    if [ -f $$pid_file ] && kill -0 `cat $$pid_file` 2>/dev/null; then \
+	        echo "Stopping running lncli-web ($$net), pid="`cat $$pid_file`; \
+	        kill `cat $$pid_file` 2>/dev/null || true; \
+	        for i in 1 2 3 4 5; do kill -0 `cat $$pid_file` 2>/dev/null || break; sleep 1; done; \
+	        kill -9 `cat $$pid_file` 2>/dev/null || true; \
+	    fi; \
+	done
+	rm -rf $(HOME)/opt/lncli-web
+	rm -f $(HOME)/bin/mainnet-lncli-web-start $(HOME)/bin/mainnet-lncli-web-stop \
+	      $(HOME)/bin/testnet-lncli-web-start $(HOME)/bin/testnet-lncli-web-stop
+	rm -f $(HOME)/.mainnet-lncli-web.pid $(HOME)/.testnet-lncli-web.pid
+	rm -f $(CREDENTIALS_DIR)/lncli-web-mainnet-passwords.txt \
+	      $(CREDENTIALS_DIR)/lncli-web-testnet-passwords.txt
+	@echo "lncli-web artifacts purged from \$$HOME."
+
 GENERATE_PASSWORD = $(shell cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $(1) | head -n 1)

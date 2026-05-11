@@ -1,0 +1,48 @@
+[Unit]
+Description=LND daemon (%i)
+Documentation=https://github.com/lightningnetwork/lnd
+
+# Order after bitcoind on the same network if it exists. `Wants=` to a
+# missing unit produces only a warning, so this is safe on hosts that have
+# only lnd installed (no bitcoind on this host).
+After=network-online.target bitcoind@%i.service
+Wants=network-online.target bitcoind@%i.service
+
+# Skip silently if lnd was not set up for this network on this host.
+ConditionFileIsExecutable=%h/bin/%i-lnd-start
+
+[Service]
+Type=simple
+LimitNOFILE=4096
+
+ExecStartPre=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=9735;; testnet) p=9736;; *) p=9735;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "lnd (%i)" -a $$BITCOIN_KIT_LOCAL_IP$$ "$$p" "$$p" tcp || true; fi'
+
+# stdout/stderr are appended to the same legacy log the terminal wrapper
+# uses (~/.lnd/<network>-lnd-run.log). Redirection happens in the shell
+# before exec, so the lnd pid is preserved and $MAINPID stays correct.
+# Note: this means lnd's stdout/stderr do not reach journald — view it via
+#   tail -f ~/.lnd/<network>-lnd-run.log
+# or
+#   tail -f ~/.lnd/logs/bitcoin/<network>/lnd.log   # lnd's own rotated log
+ExecStart=/bin/bash -lc 'exec lnd --configfile=%h/.lnd/lnd-%i.conf >> %h/.lnd/%i-lnd-run.log 2>&1'
+
+# Make the pid file the existing terminal wrapper expects. systemd expands
+# $MAINPID to the pid of the lnd process started by ExecStart=.
+ExecStartPost=/bin/sh -c "echo $MAINPID > %h/.%i-lnd.pid"
+
+# Try a graceful shutdown via lncli first. If the wallet was never unlocked,
+# lncli has no admin RPC to authenticate against and exits non-zero — the
+# `|| true` swallows that, then systemd's normal SIGTERM finishes the job.
+ExecStop=/bin/bash -lc 'case "%i" in mainnet) g=10009;; testnet) g=10010;; *) g=10009;; esac; lncli --macaroonpath %h/.lnd/data/chain/bitcoin/%i/admin.macaroon --rpcserver localhost:$$g stop || true'
+
+ExecStopPost=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=9735;; testnet) p=9736;; *) p=9735;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d "$$p" tcp || true; fi'
+
+ExecStopPost=-/bin/sh -c 'rm -f %h/.%i-lnd.pid'
+
+Restart=on-failure
+RestartSec=30
+TimeoutStartSec=300
+TimeoutStopSec=600
+
+[Install]
+WantedBy=default.target

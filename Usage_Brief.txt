@@ -16,7 +16,7 @@ EASY INSTALLATION, LIGHTNING:
 
 After installation you will get compiled from sources and installed under $HOME:
 
-THE MOST FRESH: bitoind + lnd + lncli-web programs
+THE MOST FRESH: bitcoind + lnd programs
 
 And the necessary fresh accompanying equipment for compilation before (will be
 compiled from sources too):
@@ -42,7 +42,7 @@ This makefile also additionally contains some targets but are yet not documented
 	To logout from terminal/shell and login again. After you will have all environment variables for normal work.
 	And you will have scripts in $PATH for starting/stopping:
 
-	    Start & stop bitcoind + lnd + lncli-web:
+	    Start & stop bitcoind + lnd:
 
 	    [mainnet|testnet]-lightning-[start|stop]
 
@@ -50,9 +50,15 @@ This makefile also additionally contains some targets but are yet not documented
 
 	    [mainnet|testnet]-bitcoind-[start|stop]
 	    [mainnet|testnet]-lnd-[start|stop]
-	    [mainnet|testnet]-lncli-web-[start|stop]
 
-	You can work with node same way: https://your_listen_ip_address:[8280|8281]/
-	The passwords can be found in ~/credentials directory, 8280 - for mainnet, 8281 - for testnet
+    Stage 4 (optional - auto-start at boot via systemd):
+	make systemd-install
+	make enable-linger
+	make [ systemd-enable-mainnet | systemd-enable-testnet ]
+	    Installs per-user systemd unit files and enables them so bitcoind
+	    and lnd come up automatically after a reboot. After enabling, lnd
+	    waits for the wallet unlock password - just run
+	    [mainnet|testnet]-lnd-start in a terminal to enter it.
+	    See 'make help-more' for the full set of systemd-* targets.
 
     After installation to see ~/credentials/* files. After you can remove theirs.

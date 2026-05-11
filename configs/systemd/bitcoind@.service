@@ -1,0 +1,34 @@
+[Unit]
+Description=Bitcoin Core daemon (%i)
+Documentation=https://bitcoincore.org/en/doc/
+After=network-online.target
+Wants=network-online.target
+
+# Skip silently if this network was not set up on this host. The wrapper
+# script is what `make set-up-lightning-<network>` installs.
+ConditionFileIsExecutable=%h/bin/%i-bitcoind-start
+
+[Service]
+# bitcoin-<network>.conf has `daemon=1` and `pid=$HOME/.<network>-bitcoind.pid`,
+# so bitcoind forks itself and writes its own pid file.
+Type=forking
+PIDFile=%h/.%i-bitcoind.pid
+
+# UPnP up. The placeholders below are sed-replaced at `make systemd-install`
+# time with values from the cached network config — same convention as the
+# existing wrapper scripts.
+ExecStartPre=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=8333;; testnet) p=18333;; *) p=8333;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -e "bitcoind (%i)" -a $$BITCOIN_KIT_LOCAL_IP$$ "$$p" "$$p" tcp || true; fi'
+
+ExecStart=/bin/bash -lc 'exec bitcoind -conf=%h/.bitcoin/bitcoin-%i.conf'
+
+ExecStop=/bin/bash -lc 'exec bitcoin-cli -conf=%h/.bitcoin/bitcoin-%i.conf stop'
+
+ExecStopPost=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=8333;; testnet) p=18333;; *) p=8333;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d "$$p" tcp || true; fi'
+
+Restart=on-failure
+RestartSec=30
+TimeoutStartSec=300
+TimeoutStopSec=600
+
+[Install]
+WantedBy=default.target
