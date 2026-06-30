@@ -16,7 +16,7 @@
 # `systemd-enable-<net>` only enables those services whose corresponding
 # `~/bin/<net>-<svc>-start` wrapper actually exists, so a host that only
 # installed lnd (or only bitcoind) will not get a unit it cannot run. The
-# unit files themselves also carry `ConditionPathIsExecutable=` for the
+# unit files themselves also carry `ConditionFileIsExecutable=` for the
 # same wrapper, which makes the check defensive at start time too.
 #
 # After enabling lnd, the daemon comes up and waits for the wallet unlock
@@ -91,11 +91,20 @@ ifeq ($(SYSTEMCTL_OK),yes)
 	    echo "Skipping bitcoind@mainnet (no $(HOME)/bin/mainnet-bitcoind-start on this host)"; \
 	fi
 	@if [ -x $(HOME)/bin/mainnet-lnd-start ]; then \
-	    echo "Enabling lnd@mainnet.service..."; \
-	    systemctl --user enable --now lnd@mainnet.service; \
-	    echo; \
-	    echo "lnd is up and waiting for the wallet unlock password."; \
-	    echo "Run 'mainnet-lnd-start' in a terminal to enter it."; \
+	    if [ -f $(HOME)/.mainnet-lnd.pid ] && kill -0 `cat $(HOME)/.mainnet-lnd.pid` 2>/dev/null \
+	       && ! systemctl --user is-active --quiet lnd@mainnet.service; then \
+		echo "WARNING: a non-systemd lnd (mainnet) is already running (pid `cat $(HOME)/.mainnet-lnd.pid`)."; \
+		echo "         Enabling the unit for next boot, but NOT starting it now to avoid a double launch"; \
+		echo "         (the second lnd would fight the first for the wallet DB lock and gRPC port)."; \
+		echo "         Stop the running one first ('mainnet-lnd-stop'), then: systemctl --user start lnd@mainnet.service"; \
+		systemctl --user enable lnd@mainnet.service; \
+	    else \
+		echo "Enabling lnd@mainnet.service..."; \
+		systemctl --user enable --now lnd@mainnet.service; \
+		echo; \
+		echo "lnd is up and waiting for the wallet unlock password."; \
+		echo "Run 'mainnet-lnd-start' in a terminal to enter it."; \
+	    fi; \
 	else \
 	    echo "Skipping lnd@mainnet (no $(HOME)/bin/mainnet-lnd-start on this host)"; \
 	fi
@@ -112,11 +121,20 @@ ifeq ($(SYSTEMCTL_OK),yes)
 	    echo "Skipping bitcoind@testnet (no $(HOME)/bin/testnet-bitcoind-start on this host)"; \
 	fi
 	@if [ -x $(HOME)/bin/testnet-lnd-start ]; then \
-	    echo "Enabling lnd@testnet.service..."; \
-	    systemctl --user enable --now lnd@testnet.service; \
-	    echo; \
-	    echo "lnd is up and waiting for the wallet unlock password."; \
-	    echo "Run 'testnet-lnd-start' in a terminal to enter it."; \
+	    if [ -f $(HOME)/.testnet-lnd.pid ] && kill -0 `cat $(HOME)/.testnet-lnd.pid` 2>/dev/null \
+	       && ! systemctl --user is-active --quiet lnd@testnet.service; then \
+		echo "WARNING: a non-systemd lnd (testnet) is already running (pid `cat $(HOME)/.testnet-lnd.pid`)."; \
+		echo "         Enabling the unit for next boot, but NOT starting it now to avoid a double launch"; \
+		echo "         (the second lnd would fight the first for the wallet DB lock and gRPC port)."; \
+		echo "         Stop the running one first ('testnet-lnd-stop'), then: systemctl --user start lnd@testnet.service"; \
+		systemctl --user enable lnd@testnet.service; \
+	    else \
+		echo "Enabling lnd@testnet.service..."; \
+		systemctl --user enable --now lnd@testnet.service; \
+		echo; \
+		echo "lnd is up and waiting for the wallet unlock password."; \
+		echo "Run 'testnet-lnd-start' in a terminal to enter it."; \
+	    fi; \
 	else \
 	    echo "Skipping lnd@testnet (no $(HOME)/bin/testnet-lnd-start on this host)"; \
 	fi
