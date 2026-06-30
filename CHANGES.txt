@@ -1,3 +1,6 @@
+2026-06-30
+  * Update LND to v0.20.2-beta.rc1
+
 2026-05-05
   * Added per-user systemd unit files for bitcoind and lnd so the daemons
     can start automatically at boot:
