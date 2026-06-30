@@ -1,6 +1,17 @@
 2026-06-30
   * Update LND to v0.20.2-beta.rc1
 
+  * Hardened the lnd start/stop integration against the per-user systemd
+    unit:
+      - *-lnd-stop now detects an active lnd@<net>.service and stops it via
+        'systemctl --user stop' instead of killing the pid, so the unit is
+        left cleanly inactive and Restart=on-failure cannot resurrect lnd.
+        The pid/kill path stays as a fallback (no-systemd hosts, or lnd
+        launched by the wrapper rather than the unit).
+      - systemd-enable-<net> no longer blindly '--now' starts lnd when a
+        non-systemd lnd is already running for that network; it enables the
+        unit for next boot but refuses to launch a competing second daemon.
+
 2026-05-05
   * Added per-user systemd unit files for bitcoind and lnd so the daemons
     can start automatically at boot:
