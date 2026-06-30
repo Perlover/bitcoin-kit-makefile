@@ -9,6 +9,27 @@ service_name=lnd
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 macaroon_path=$HOME/.lnd/data/chain/bitcoin/${bitcoin_network}/admin.macaroon
 grpc_port=10010
+systemd_unit=${service_name}@${bitcoin_network}.service
+
+# If this lnd is managed by systemd, stop it the systemd way. Killing the
+# process by pid out from under an active unit would leave the unit's state
+# desynced and, with `Restart=on-failure`, could even resurrect lnd 30s
+# later. `systemctl stop` marks the unit cleanly inactive and suppresses the
+# restart. The unit's own ExecStopPost handles `lncli stop`, SIGTERM, the
+# UPnP teardown and pid-file removal, so we just delegate and exit.
+# Falls through to the legacy pid/kill path on hosts without systemd
+# (e.g. old CentOS) or when lnd was launched by the wrapper, not the unit.
+if command -v systemctl >/dev/null 2>&1 && \
+   systemctl --user is-active --quiet "$systemd_unit"; then
+    echo -n "The ${service_name} (${bitcoin_network}) is systemd-managed, stopping via 'systemctl --user stop $systemd_unit' ..."
+    if systemctl --user stop "$systemd_unit"; then
+	echo " OK"
+	rm -f $pid_file
+	exit 0
+    else
+	echo " ERROR: systemctl stop failed, falling back to the pid/kill path"
+    fi
+fi
 
 if [ ! -f $pid_file ]; then
     echo "ERROR: The ${service_name} (${bitcoin_network}) not run!"
