@@ -30,10 +30,24 @@ ExecStart=/bin/bash -lc 'exec lnd --configfile=%h/.lnd/lnd-%i.conf >> %h/.lnd/%i
 # $MAINPID to the pid of the lnd process started by ExecStart=.
 ExecStartPost=/bin/sh -c "echo $MAINPID > %h/.%i-lnd.pid"
 
-# Try a graceful shutdown via lncli first. If the wallet was never unlocked,
-# lncli has no admin RPC to authenticate against and exits non-zero — the
-# `|| true` swallows that, then systemd's normal SIGTERM finishes the job.
-ExecStop=/bin/bash -lc 'case "%i" in mainnet) g=10009;; testnet) g=10010;; *) g=10009;; esac; lncli --macaroonpath %h/.lnd/data/chain/bitcoin/%i/admin.macaroon --rpcserver localhost:$$g stop || true'
+# Graceful shutdown via lncli, then WAIT for lnd to actually finish it.
+#
+# `lncli stop` only *initiates* the shutdown ("shutdown initiated, check logs
+# for progress") and returns immediately. As soon as ExecStop= exits, systemd
+# SIGTERMs the cgroup — which used to kill lnd about a second into a shutdown
+# that needs ~2-4 s. The log then ended mid-way through unlinking channel
+# links, without the final `LTND: Shutdown complete`, i.e. chain arbitrator
+# and the bbolt databases were never closed cleanly. For a Lightning node
+# that is a real risk to channel state, so we poll $MAINPID until it is gone.
+#
+# If lncli fails (wallet never unlocked → no admin RPC to authenticate
+# against), we exit at once and let systemd's normal SIGTERM do the job: as
+# the *first* signal lnd receives it triggers the very same graceful path,
+# and systemd then waits TimeoutStopSec= for it to complete.
+#
+# The 540 s poll cap stays below TimeoutStopSec= so systemd's own escalation
+# (SIGTERM, then SIGKILL) remains the backstop for a truly stuck daemon.
+ExecStop=/bin/bash -lc 'case "%i" in mainnet) g=10009;; testnet) g=10010;; *) g=10009;; esac; lncli --macaroonpath %h/.lnd/data/chain/bitcoin/%i/admin.macaroon --rpcserver localhost:$$g stop || exit 0; for i in $$(seq 1 540); do kill -0 $MAINPID 2>/dev/null || exit 0; sleep 1; done'
 
 ExecStopPost=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=9735;; testnet) p=9736;; *) p=9735;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d "$$p" tcp || true; fi'
 
@@ -41,7 +55,13 @@ ExecStopPost=-/bin/sh -c 'rm -f %h/.%i-lnd.pid'
 
 Restart=on-failure
 RestartSec=30
-TimeoutStartSec=300
+
+# Opening the channel/graph databases can take a long time on a big node
+# (~10 min for a 7 GB channel.db is normal), so keep the start timeout well
+# above that. With Type=simple systemd considers the unit started as soon as
+# it forks, so this mostly bounds ExecStartPre= — but it is the value that
+# would matter the moment the type ever becomes notify.
+TimeoutStartSec=1800
 TimeoutStopSec=600
 
 [Install]

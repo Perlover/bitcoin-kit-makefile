@@ -1,3 +1,25 @@
+2026-07-26
+  * lnd@.service: fixed a shutdown that was cut short by systemd itself.
+    ExecStop= ran `lncli stop`, which merely *initiates* the shutdown and
+    returns at once; systemd took that as "stop finished" and SIGTERMed the
+    cgroup about a second into a shutdown that needs ~2-4 s. Evidence on a
+    production node: every wrapper-driven stop logged the final
+    `LTND: Shutdown complete` (1.6-3.4 s), while both systemd-driven stops
+    ended mid-way through unlinking channel links with no such line — chain
+    arbitrator and the bbolt databases were never closed cleanly.
+    ExecStop= now polls $MAINPID until lnd is really gone (capped at 540 s,
+    below TimeoutStopSec=). If `lncli` fails (wallet not unlocked, no admin
+    RPC) it exits immediately and lets systemd's SIGTERM drive the same
+    graceful path as the first signal lnd sees.
+
+  * lnd@.service: TimeoutStartSec= 300 -> 1800. Opening a multi-GB
+    channel.db can take ~10 minutes on a large node.
+
+  * bitcoind@.service: same fix for the same reason — `bitcoin-cli stop`
+    also returns before the daemon is down, so ExecStop= now waits for
+    $MAINPID (from PIDFile=) to disappear instead of letting systemd
+    SIGTERM bitcoind mid-flush.
+
 2026-07-12
   * Update LND to v0.20.2
 

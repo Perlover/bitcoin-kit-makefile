@@ -21,7 +21,18 @@ ExecStartPre=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then 
 
 ExecStart=/bin/bash -lc 'exec bitcoind -conf=%h/.bitcoin/bitcoin-%i.conf'
 
-ExecStop=/bin/bash -lc 'exec bitcoin-cli -conf=%h/.bitcoin/bitcoin-%i.conf stop'
+# Graceful shutdown, then WAIT for bitcoind to actually finish it.
+#
+# `bitcoin-cli stop` merely asks the daemon to stop and returns at once. If
+# ExecStop= returned there, systemd would SIGTERM the cgroup while bitcoind
+# is still flushing chainstate and the block index — survivable, but it can
+# cost a long recovery on the next start. So poll $MAINPID (taken from
+# PIDFile= here, since bitcoind daemonizes itself) until the process is gone.
+#
+# If bitcoin-cli fails (RPC not up yet, cookie mismatch), exit immediately
+# and let systemd's SIGTERM drive the shutdown instead — bitcoind handles it
+# the same way. The 540 s cap stays below TimeoutStopSec=.
+ExecStop=/bin/bash -lc 'bitcoin-cli -conf=%h/.bitcoin/bitcoin-%i.conf stop || exit 0; for i in $$(seq 1 540); do kill -0 $MAINPID 2>/dev/null || exit 0; sleep 1; done'
 
 ExecStopPost=/bin/bash -lc 'if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" = "Yes" ]; then case "%i" in mainnet) p=8333;; testnet) p=18333;; *) p=8333;; esac; upnpc -m $$BITCOIN_KIT_LOCAL_IP$$ -d "$$p" tcp || true; fi'
 
