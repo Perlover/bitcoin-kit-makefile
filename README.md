@@ -141,39 +141,93 @@ If you have old this repositary installed in your system you can easy upgrade up
     * `[mainnet|testnet]-bitcoind-[start|stop]`
     * `[mainnet|testnet]-lnd-[start|stop]`
 
-5.  You can start bitcoin &amp; lnd daemons as:
+5.  You can start bitcoin &amp; lnd daemons in one of two ways:
 
-    1.  First time after installation:
+    * **via systemd** - if your OS has systemd and you installed the
+      per-user unit files (see #9 below). This is the recommended way on
+      any modern Linux, because then the daemons also come up
+      automatically after a reboot.
+    * **via the wrapper scripts** `[mainnet|testnet]-*-[start|stop]` - the
+      original way. It is the only way on hosts without systemd (e.g. old
+      CentOS 6), and it keeps working everywhere.
+
+    Note that `[mainnet|testnet]-lnd-start` is needed in **both** cases: it
+    is not only a launcher but also the wallet-unlock helper. `lnd` always
+    comes up locked and waits for the wallet password, and there is no way
+    to type that password from a systemd unit. When `lnd` is already
+    running (started by systemd, or by an earlier run of the script), the
+    script detects the running daemon and goes straight to `lncli unlock`.
+
+    1.  **With systemd units installed** (see #9):
 
         ```
-        mainnet-bitcoind-start
-        # ... wait some minutes ...
+        systemctl --user start bitcoind@mainnet.service
+        # ... wait some seconds (minutes at the very first start) ...
+        systemctl --user start lnd@mainnet.service
+        # lnd is up but locked - enter the wallet password:
         mainnet-lnd-start
         ```
 
-    2.  Next time starting:
+        Stopping:
 
         ```
-        mainnet-bitcoind-start
-        # ... wait some seconds...
+        systemctl --user stop lnd@mainnet.service
+        systemctl --user stop bitcoind@mainnet.service
+        ```
+
+        `mainnet-lnd-stop` also works here - it detects an active
+        `lnd@mainnet.service` and delegates to `systemctl --user stop`, so
+        the unit is left cleanly inactive. `mainnet-bitcoind-stop` does
+        **not** have that detection, so for a systemd-managed `bitcoind`
+        prefer `systemctl --user stop bitcoind@mainnet.service`.
+
+        After a reboot nothing has to be started by hand at all (with
+        `make enable-linger` done) - only the unlock step remains:
+
+        ```
         mainnet-lnd-start
         ```
 
-    3.  Stopping:
+    2.  **Without systemd** (or when you did not install the units):
 
-        ```
-        mainnet-lnd-stop
-        mainnet-bitcoind-stop
-        ```
+        1.  First time after installation:
 
-    4.  Or you can start/stop both daemons at once:
+            ```
+            mainnet-bitcoind-start
+            # ... wait some minutes ...
+            mainnet-lnd-start
+            ```
 
-        ```
-        mainnet-lightning-start
-        mainnet-lightning-stop
-        ```
+        2.  Next time starting:
 
-        But first time run after installation i recommend to run as described in #5.1
+            ```
+            mainnet-bitcoind-start
+            # ... wait some seconds...
+            mainnet-lnd-start
+            ```
+
+        3.  Stopping:
+
+            ```
+            mainnet-lnd-stop
+            mainnet-bitcoind-stop
+            ```
+
+        4.  Or you can start/stop both daemons at once:
+
+            ```
+            mainnet-lightning-start
+            mainnet-lightning-stop
+            ```
+
+            But first time run after installation i recommend to run as described in #5.2.1
+
+    Do not mix the two ways for the same daemon: if the systemd unit is
+    installed and enabled, start `lnd` with `systemctl`, not with
+    `mainnet-lnd-start` on a stopped unit - otherwise you get an `lnd`
+    that systemd does not manage (and, after a reboot or a
+    `systemctl --user start`, a risk of two daemons fighting for the
+    wallet DB lock and the gRPC port).
 
 6.  If you want to change password of wallet you can do it by following commands:
 
@@ -183,6 +237,14 @@ If you have old this repositary installed in your system you can easy upgrade up
     ```
 
     You must to enter the old password and the new one. The seed password is kept old (it cannot be changed).
+
+    With the systemd units installed, restart the daemon through systemd
+    and use the script only for the password dialog:
+
+    ```
+    systemctl --user restart lnd@mainnet.service
+    mainnet-lnd-start changepassword
+    ```
 
 7.  For the `abandonchannel` command of lnd you need the debug lnd binary. You can start the LND in debug mode by same way:
 
@@ -201,6 +263,18 @@ If you have old this repositary installed in your system you can easy upgrade up
 
     ```
     mainnet-lnd-stop
+    mainnet-lnd-start
+    ```
+
+    The debug binary is started by the script, not by the unit, so on a
+    systemd host stop the unit first and start it again afterwards:
+
+    ```
+    systemctl --user stop lnd@mainnet.service
+    mainnet-lnd-debug-start
+    # ... work with `l abandonchannel ...` ...
+    mainnet-lnd-stop
+    systemctl --user start lnd@mainnet.service
     mainnet-lnd-start
     ```
 
@@ -246,10 +320,45 @@ If you have old this repositary installed in your system you can easy upgrade up
     After enabling, `lnd` comes up but blocks waiting for the wallet
     unlock password. Run `<network>-lnd-start` in a terminal as usual to
     enter it - the wrapper detects the systemd-managed `lnd` and proceeds
-    straight to `lncli unlock`.
+    straight to `lncli unlock`. The same is true after every reboot: the
+    daemons start on their own, only the unlock stays manual.
 
     Other useful targets: `make systemd-status`,
     `make systemd-disable-mainnet`, `make systemd-uninstall`.
+
+    **Day-to-day commands** (replace `mainnet` with `testnet` as needed):
+
+    ```
+    systemctl --user start   bitcoind@mainnet.service
+    systemctl --user start   lnd@mainnet.service
+    mainnet-lnd-start                       # unlock the wallet
+
+    systemctl --user stop    lnd@mainnet.service
+    systemctl --user stop    bitcoind@mainnet.service
+
+    systemctl --user restart lnd@mainnet.service
+    mainnet-lnd-start                       # unlock again after every restart
+
+    systemctl --user status  lnd@mainnet.service
+    make systemd-status                     # both networks at once
+    ```
+
+    **Where the logs are.** `lnd@.service` redirects the daemon's
+    stdout/stderr into the same append-only log the terminal wrapper has
+    always used, so `journalctl` shows only systemd lifecycle events:
+
+    ```
+    tail -f ~/.lnd/mainnet-lnd-run.log             # full history, all restarts
+    tail -f ~/.lnd/logs/bitcoin/mainnet/lnd.log    # lnd's own rotated log
+    journalctl --user -u lnd@mainnet.service       # unit start/stop events only
+    tail -f ~/.bitcoin/debug.log                   # bitcoind (mainnet)
+    ```
+
+    A clean `lnd` shutdown ends with `LTND: Shutdown complete` in
+    `~/.lnd/logs/bitcoin/mainnet/lnd.log` - that is the one-line check that
+    the daemon was stopped gracefully and the channel databases were closed
+    properly (both units deliberately wait for the daemon to finish
+    stopping instead of just asking it to stop).
 
     **Hosts where you do NOT want bitcoind to auto-start.** `lnd@<net>.service`
     has `Wants=bitcoind@<net>.service`, so starting `lnd` pulls
@@ -308,14 +417,28 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
     git pull
     ```
 
-3.  To stop bitcoind and/or LND, for example for mainnet:
+2.  To stop bitcoind and/or LND, for example for mainnet.
+
+    **With the systemd units installed** ([see #9 of the install
+    section](#how-to-install-the-bitcoin-core--lnd)):
+
+    ```
+    systemctl --user stop lnd@mainnet.service
+    systemctl --user stop bitcoind@mainnet.service   # only if you upgrade Bitcoin Core
+    ```
+
+    Note the units wait for the daemon to really finish its shutdown, so
+    `systemctl stop` returns only when `lnd`/`bitcoind` is actually gone.
+    Still, give it a couple of seconds before overwriting the binaries.
+
+    **Without systemd:**
 
     ```
     mainnet-lnd-stop
     mainnet-bitcoind-stop
     ```
 
-4.  Then, if you want to upgrade Bitcoin Core:
+3.  Then, if you want to upgrade Bitcoin Core:
 
     ```
     make prepare-bitcoin-core-update
@@ -355,7 +478,20 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
 
     Upgrade corrects LND config files and move *macaroon* files to standard for v0.5.* lnd directories.
 
-5.  After upgrade and before start please logout from terminal and login again. The upgrade process corrects `$PATH` after upgrade of *golang*
+4.  After upgrade and before start please logout from terminal and login again. The upgrade process corrects `$PATH` after upgrade of *golang*
+
+5.  **If you use the systemd units** - `git pull` may have brought new
+    versions of the unit files (`configs/systemd/*.service`), so reinstall
+    them after the upgrade:
+
+    ```
+    make systemd-install
+    ```
+
+    It re-templates the units into `~/.config/systemd/user/` and runs
+    `systemctl --user daemon-reload`. The new unit takes effect at the next
+    start of the service, so do this **before** step #7 below. Check
+    `CHANGES.txt` - unit changes are listed there.
 
 6.  **ONLY TESTNET!** After upgrade for testnet (if you use testnet network daemon) you may be needed to make reindex in bitcoind [to see details here why](https://bitcoin.stackexchange.com/questions/79662/solving-bitcoin-cores-activatebestchain-failed). You need to make once after upgrade:
 
@@ -365,12 +501,56 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
 
     When reindexing will be finished (you can check in logs by `tail -f ~/.bitcoin/testnet3/debug.log`) you can stop and start again the *bitcoind* (optionally)
 
-7.  To start bitcoind and/or LND again, for example for mainnet:
+7.  To start bitcoind and/or LND again, for example for mainnet.
+
+    **With the systemd units installed:**
+
+    ```
+    systemctl --user start bitcoind@mainnet.service
+    sleep 5
+    systemctl --user start lnd@mainnet.service
+    sleep 5
+    mainnet-lnd-start                 # unlock the wallet
+    ```
+
+    (`mainnet-lnd-start` here does not launch a second daemon - it finds
+    the systemd-managed `lnd` and only asks for the wallet password.)
+
+    **Without systemd:**
 
     ```
     mainnet-bitcoind-start
     mainnet-lnd-start
     ```
+
+### A short LND-only upgrade (systemd host)
+
+The most frequent case is bumping just LND on a host where `bitcoind`
+keeps running and does not need to be touched at all:
+
+```
+cd ~/bitcoin-kit-makefile
+git checkout master
+git pull
+
+systemctl --user stop lnd@mainnet.service && sleep 3 && make prepare-lnd-update && make lnd-update-mainnet
+
+systemctl --user start lnd@mainnet.service
+sleep 5
+mainnet-lnd-start
+```
+
+Add `LND_BACKUP=1` before `make lnd-update-mainnet` if you want the
+pre-upgrade tar archive of `~/.lnd` (recommended for a node with open
+channels). For testnet use `lnd@testnet.service`,
+`make lnd-update-testnet` and `testnet-lnd-start`.
+
+Two things this short form leaves out on purpose, check `CHANGES.txt`
+after `git pull` to see whether you need them:
+
+* `make systemd-install` - if the update changed the unit files;
+* logout/login of the shell - if the update also bumped *golang* (`$PATH`
+  changes), see step #4 above.
 
 Have a nice day ;-)
 
