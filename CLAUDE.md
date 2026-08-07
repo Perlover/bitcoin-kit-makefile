@@ -26,7 +26,7 @@ LND_BACKUP=1 make bitcoin-core-update lnd-update-mainnet     # LND_BACKUP=1 → 
 make lnd-update-testnet
 
 # Single-component installs / updates
-make bitcoin-core-install
+make bitcoin-core_install               # note the underscore, unlike lnd-install
 make lnd-install
 
 # One-shot cleanup of a previous lncli-web install (deprecated, removed from the project)
@@ -57,7 +57,7 @@ There are no tests, no linter, no CI in this repo. The only "test" is `test_ver.
 
 Two variables in the top-level `Makefile` drive what gets built:
 
-- `LND_ACTUAL_COMMIT` — exact LND git commit (currently a v0.20.1-beta commit). Bumping LND = edit this line and update `CHANGES.txt`.
+- `LND_ACTUAL_COMMIT` — exact LND git commit (currently the v0.21.1 commit). Bumping LND = edit this line and update `CHANGES.txt`.
 - `GOLANG_VER` — Go version. **Must also be reflected in `golang_envs.sh`'s `$PATH`** (see comment in `Makefile`).
 
 Bitcoin Core, OpenSSL, Boost, libevent, libzmq, miniupnp, pkg-config, inotify-tools, and Rust are pinned via the git submodules in `external/` (see `.gitmodules`); to bump them, `cd` into the submodule, check out the desired ref, commit the new submodule SHA in this repo.
