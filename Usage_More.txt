@@ -6,35 +6,46 @@
 
 MORE TARGETS:
 
-make bitcoin-core-install
-    The official bitcoin-core install
-    Version: v0.16.0
+INSTALL (single components - 'make i-want-lightning' does all of it at once):
 
-make btcd-install
-    The official bitcoin-core install
-    Version: v0.16.0
+make bitcoin-core_install
+    Build & install Bitcoin Core from the external/bitcoin-core submodule
+    (with all its dependencies: gcc, binutils, boost, openssl, libevent,
+    zeromq, python3, miniupnpc, cmake).
+    Version: whatever external/bitcoin-core is checked out at.
 
 make lnd-install
-    The lnd daemon install
-    Version: $(LND_ACTUAL_COMMIT)
+    Build & install the lnd daemon.
+    Version: the LND_ACTUAL_COMMIT variable in the Makefile.
 
-make lnd-update
-    To update already installed LND
-    Version: $(LND_ACTUAL_COMMIT)
+UPDATE:
 
-make lnd-bitcoin-core-bundle-install
-    The bundle of: lnd + bitcoin-core install
-    Same as: make bitcoin-core-install lnd-install
+Stop the daemons before updating (see README, "Upgrade LND & Bitcoin Core").
+lnd-update refuses to run while an lnd pid file of a running daemon exists.
 
-make lnd-btcd-bundle-install
-    The bundle of: lnd + btcd install ()
-    Same as: make lnd-install btcd-install
+make prepare-bitcoin-core-update
+    'git pull' this repo + refresh the submodules, then drop the stamp files
+    of bitcoin-core and its libs so they get rebuilt.
 
 make bitcoin-core-update
-    Update up to current bitcoin core version
-    Version: master beanch at github.com
+    Rebuild & reinstall Bitcoin Core after prepare-bitcoin-core-update.
 
-make electrumx-install
+make prepare-lnd-update
+    'git pull' this repo + refresh the submodules, then drop the lnd update
+    stamp files so lnd gets rebuilt.
+
+make lnd-update-mainnet
+make lnd-update-testnet
+    Rebuild & reinstall lnd at LND_ACTUAL_COMMIT, then refresh the
+    ~/bin/<net>-lnd-* scripts, the aliases and the macaroon/cert layout for
+    that network.
+    Prefix with LND_BACKUP=1 to get ~/lnd-backup-<epoch>-YYYY-MM-DD.tgz
+    (a tar of ~/.lnd) made before anything is replaced:
+
+        LND_BACKUP=1 make lnd-update-mainnet
+
+make lnd-bin-update
+    Rebuild only the lnd binaries (no config/script/macaroon steps).
 
 PER-USER SYSTEMD UNITS (auto-start bitcoind & lnd at boot):
 
@@ -42,6 +53,7 @@ make systemd-install
     Install per-user systemd unit files into ~/.config/systemd/user/
     Templates: bitcoind@.service and lnd@.service.
     On hosts without systemd this becomes a friendly no-op.
+    Rerun it after a 'git pull' that changed the unit files.
 
 make enable-linger
     Enables loginctl linger so the user services keep running (and start at
@@ -69,6 +81,19 @@ make systemd-disable-testnet
 make systemd-uninstall
     Disable everything and remove the unit files.
 
+Day-to-day, once the units are installed, the daemons are driven by systemd
+and only the wallet unlock stays manual:
+
+    systemctl --user start bitcoind@mainnet.service
+    systemctl --user start lnd@mainnet.service
+    mainnet-lnd-start                 # enter the wallet password
+
+    systemctl --user stop  lnd@mainnet.service
+    systemctl --user stop  bitcoind@mainnet.service
+
+lnd's output goes to ~/.lnd/<net>-lnd-run.log (and to its own
+~/.lnd/logs/bitcoin/<net>/lnd.log), not to journald.
+
 TIPS - per-host overrides:
 
     lnd@<net>.service has 'Wants=bitcoind@<net>.service', which means
@@ -90,11 +115,41 @@ TIPS - per-host overrides:
         systemctl --user unmask        bitcoind@mainnet.service
         systemctl --user enable --now  bitcoind@mainnet.service
 
-DEPRECATED CLEANUP:
+FIREWALL (these two are the only targets that must be run by root):
+
+make iptables_install
+    Install the suggested iptables.template rules (without the bitcoin
+    port). Requires pressing ENTER twice - the rules are auto-reverted if
+    the internet connectivity check after applying them fails.
+
+make bitcoin_iptables_install
+    Add the '--dport 8333 ACCEPT' rule to the installed iptables rules.
+
+MISC:
+
+make this_repo_update
+    'git pull' this repo and hard-refresh all submodules. Called by both
+    prepare-*-update targets.
+
+make clean
+    Remove build/ and the cached network_<hash>.{mk,sh} files. The next
+    'make' run will ask about the IP addresses / UPnP again.
 
 make purge-lncli-web
-    One-shot cleanup of an old lncli-web install. Stops any running
-    lncli-web, then removes ~/opt/lncli-web/, the related ~/bin/ scripts,
-    pid files, and credential files.
+    One-shot cleanup of an old lncli-web install. lncli-web was removed
+    from this project. Stops any running lncli-web, then removes
+    ~/opt/lncli-web/, the related ~/bin/ scripts, pid files, and
+    credential files.
+
+make test-versions
+    Developer target: print the minimum versions the Makefile compares the
+    already-installed toolchain against.
+
+make rsync
+    Developer target: rsync this repo and its submodules to the host in
+    the BITCOIN_TOOLS_RSYNC_SERVER_AND_PATH make variable, for testing.
+
+UNDOCUMENTED / EXPERIMENTAL (present in the Makefile, not part of the
+supported lightning setup): electrumx_install, tor_install, btcd_install.
 
 -------------------------------------------------------------------------------

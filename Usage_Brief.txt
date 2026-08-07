@@ -21,8 +21,8 @@ THE MOST FRESH: bitcoind + lnd programs
 And the necessary fresh accompanying equipment for compilation before (will be
 compiled from sources too):
 
-gcc 7.1, python 2 & python3, required fresh some libs (libevent, openssl, boost, sqlite3, zeromq),
-golang, nodeJS
+gcc 11.2, binutils, cmake, python 2 & python 3, required fresh some libs
+(libevent, openssl, boost, sqlite3, zeromq, miniupnpc), golang, nodeJS
 
 This makefile also additionally contains some targets but are yet not documented: ElectrumX server
 
@@ -51,14 +51,35 @@ This makefile also additionally contains some targets but are yet not documented
 	    [mainnet|testnet]-bitcoind-[start|stop]
 	    [mainnet|testnet]-lnd-[start|stop]
 
-    Stage 4 (optional - auto-start at boot via systemd):
+	These scripts are the way to run the daemons on a host without systemd.
+	Note that [mainnet|testnet]-lnd-start is ALSO the wallet-unlock helper,
+	so you need it in any case: if lnd already runs (started by systemd or
+	by an earlier run of the script) it does not start a second daemon - it
+	goes straight to 'lncli unlock'.
+
+    Stage 4 (recommended on any host with systemd - auto-start at boot):
 	make systemd-install
 	make enable-linger
 	make [ systemd-enable-mainnet | systemd-enable-testnet ]
 	    Installs per-user systemd unit files and enables them so bitcoind
-	    and lnd come up automatically after a reboot. After enabling, lnd
-	    waits for the wallet unlock password - just run
-	    [mainnet|testnet]-lnd-start in a terminal to enter it.
+	    and lnd come up automatically after a reboot. After enabling (and
+	    after every reboot) lnd waits for the wallet unlock password - just
+	    run [mainnet|testnet]-lnd-start in a terminal to enter it.
+
+	    Then the daemons are driven by systemd:
+
+		systemctl --user start bitcoind@mainnet.service
+		systemctl --user start lnd@mainnet.service
+		mainnet-lnd-start                 # enter the wallet password
+
+		systemctl --user stop  lnd@mainnet.service
+		systemctl --user stop  bitcoind@mainnet.service
+
+	    Do not mix the two ways for the same daemon: with the unit installed
+	    and enabled, start lnd through systemctl, not through the script.
+
 	    See 'make help-more' for the full set of systemd-* targets.
+	    On hosts without systemd these targets are friendly no-ops - just
+	    use the scripts of Stage 3.
 
     After installation to see ~/credentials/* files. After you can remove theirs.
