@@ -1,3 +1,6 @@
+2026-08-07
+  * Update LND to v0.21.1
+
 2026-07-26
   * lnd@.service: fixed a shutdown that was cut short by systemd itself.
     ExecStop= ran `lncli stop`, which merely *initiates* the shutdown and
