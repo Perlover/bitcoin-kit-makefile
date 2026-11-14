@@ -57,10 +57,16 @@ There are no tests, no linter, no CI in this repo. The only "test" is `test_ver.
 
 Two variables in the top-level `Makefile` drive what gets built:
 
-- `LND_ACTUAL_COMMIT` — exact LND git commit (currently the v0.21.1 commit). Bumping LND = edit this line and update `CHANGES.txt`.
+- `LND_ACTUAL_COMMIT` — exact LND git commit (currently the v0.21.8 commit). Bumping LND = edit this line and update `CHANGES.txt`.
 - `GOLANG_VER` — Go version. **Must also be reflected in `golang_envs.sh`'s `$PATH`** (see comment in `Makefile`).
 
 Bitcoin Core, OpenSSL, Boost, libevent, libzmq, miniupnp, pkg-config, inotify-tools, and Rust are pinned via the git submodules in `external/` (see `.gitmodules`); to bump them, `cd` into the submodule, check out the desired ref, commit the new submodule SHA in this repo.
+
+A Bitcoin Core bump (currently v32.1) is more than the submodule SHA — check `doc/dependencies.md` and the CMake options of the new release against the kit:
+
+- **Minimum gcc.** The `COMPARE_VERSIONS … GCC_MIN` line in `Makefile` and the gcc tarball + stamp name in `mk/gcc.mk` (`gcc_install_12_1_0_min`, referenced by `mk/bitcoind.mk` and `mk/tor.mk`). The stamp name carries the minimum version on purpose: renaming it is what forces hosts with an older kit-built gcc to rebuild.
+- **CMake options** live in `BITCOIN_CORE_CMAKE_VARS` (`mk/bitcoind.mk`) and go to the *configure* step (`cmake -B`); `cmake --build` rejects `-D…`. `ENABLE_IPC=OFF` is required because the kit does not build Cap'n Proto.
+- **Removed daemon options.** Compare `configs/bitcoind/*.conf` and any `bitcoind` command lines with the release notes. An unknown option in a config *file* is only a warning, on the command line it is a hard error.
 
 ## Architecture
 

@@ -462,7 +462,15 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
 
     Bitcoin Core v32 also needs gcc 12.1 or newer. If the system gcc is
     older, `make bitcoin-core-update` builds gcc 12.4.0 into `$HOME` first -
-    this adds about an hour to the first upgrade.
+    this adds about an hour to the first upgrade. To keep the daemons'
+    downtime short you can build that gcc in advance, **before** stopping
+    anything (step 2) - it only adds a newer compiler and its runtime
+    library next to the old ones:
+
+    ```
+    cd ~/bitcoin-kit-makefile && git pull
+    make gcc_install_12_1_0_min
+    ```
 
     A node whose data directory was opened by the new version may not be
     able to go back to a much older `bitcoind`.
