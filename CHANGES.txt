@@ -43,6 +43,11 @@
     `make bitcoind-start` no longer passes -upnp=0 on the command line,
     where the unknown option is a hard error.
 
+  * README: an upgrade of Bitcoin Core from a version older than v30
+    discards the saved fee estimates, and LND falls back to a hard-coded
+    25 sat/vbyte while bitcoind has none. Wait until `estimatesmartfee`
+    answers before starting LND (see README, "Upgrade LND & Bitcoin Core").
+
   * *-bitcoind-stop: stops a systemd-managed bitcoind through its unit
     (like *-lnd-stop does) and waits up to 10 minutes for the daemon to
     finish its shutdown instead of giving up after 20 seconds.

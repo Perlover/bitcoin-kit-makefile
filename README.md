@@ -487,6 +487,24 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
 
     A node whose data directory was opened by the new version may not be
     able to go back to a much older `bitcoind`.
+
+    **Fee estimates are lost on such an upgrade - do not start LND right
+    after it.** Bitcoin Core v30+ cannot read the fee estimates saved by an
+    older version (`Unable to read policy estimator data ... Too old to be
+    read` in `debug.log`), so for the first hours after the upgrade
+    `estimatesmartfee` answers `Insufficient data or no feerate found`.
+    LND does not wait for it: with no estimate from `bitcoind` it silently
+    uses a hard-coded 25 sat/vbyte for everything, the commitment fees of
+    your channels included - many times the market rate when fees are low.
+    So after the first start of the new `bitcoind` check
+
+    ```
+    bitcoin-cli -conf=$HOME/.bitcoin/bitcoin-mainnet.conf estimatesmartfee 6
+    ```
+
+    and start LND (step 7) only when it returns a `feerate`. The same
+    applies to any `bitcoind` that was down for more than 60 hours: stale
+    estimates are discarded too.
    
     If upgrade LND for mainnet:
 
