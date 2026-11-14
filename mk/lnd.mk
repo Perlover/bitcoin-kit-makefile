@@ -19,7 +19,7 @@ lnd-install: lnd_install
 .PHONY: lnd-install
 
 prepare-lnd-update: this_repo_update
-	-rm -f lnd-bin-update lnd-update
+	-rm -f lnd-bin-build lnd-bin-update lnd-update
 
 lnd-update-testnet:
 	$(MAKE) lnd-update BITCOIN_NETWORK=testnet
@@ -27,12 +27,17 @@ lnd-update-testnet:
 lnd-update-mainnet:
 	$(MAKE) lnd-update BITCOIN_NETWORK=mainnet
 
-lnd-update:\
-    lnd-bin-update\
-    $(HOME)/.bitcoin_aliases\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
-    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop
+# The lnd update is split so that the daemon has to be down only for the swap
+# of the binaries:
+#
+#   lnd-bin-build  - clone + build; the fresh lnd/lncli go to $(LND_STAGED_BIN),
+#                    the installed binaries are not touched. Safe while the old
+#                    lnd is running.
+#   lnd-bin-update - refuses to run while lnd is alive, then copies the staged
+#                    binaries into $$GOPATH/bin. A matter of seconds.
+LND_STAGED_BIN = $$GOPATH/src/github.com/lightningnetwork/lnd/kit-staged-bin
+
+define LND_MUST_BE_STOPPED
 	if [[ -f $(HOME)/.testnet-lnd.pid ]] && kill -0 `cat $(HOME)/.testnet-lnd.pid` &>/dev/null; then\
 	    echo "You must to stop testnet lnd before update!";\
 	    exit 1;\
@@ -41,6 +46,21 @@ lnd-update:\
 	    echo "You must to stop mainnet lnd before update!";\
 	    exit 2;\
 	fi
+endef
+
+# Optional step of an upgrade: build the new lnd while the old one is still
+# running, then stop it and run `make lnd-update-<network>`, which only has
+# to swap the binaries.
+lnd-build:
+	$(MAKE) lnd-bin-build
+
+lnd-update:\
+    lnd-bin-update\
+    $(HOME)/.bitcoin_aliases\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-debug-start\
+    $(HOME)/bin/$(BITCOIN_NETWORK)-lnd-stop
+	$(LND_MUST_BE_STOPPED)
 	if [ "x${LND_BACKUP}" != "x" ]; then umask 077 && cd $(HOME) && tar czf lnd-backup-`date +%s-%Y-%m-%d`.tgz .lnd && echo $$'**********\n\nWe did backup of LND in home dir!\n\n**********'; fi
 	./update_wallet_macaroon_files_to_standard_dir.sh
 	./update_lnd_cert_to_standard_cert.sh
@@ -49,7 +69,7 @@ lnd-update:\
 	echo $$'\n\n*****************************************************'
 	@touch $@
 
-lnd-bin-update: |\
+lnd-bin-build: |\
     new_git_install\
     lnd_install
 	rm -rf $$GOPATH/pkg/dep
@@ -59,7 +79,16 @@ lnd-bin-update: |\
 	git clone https://github.com/lightningnetwork/lnd &&\
 	cd lnd &&\
 	git fetch -f --tags origin && git checkout $(LND_ACTUAL_COMMIT) &&\
-	$(MAKE) clean && $(MAKE) && $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc monitoring peersrpc"
+	$(MAKE) clean && $(MAKE) && GOBIN=$(LND_STAGED_BIN) $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc monitoring peersrpc"
+	@touch $@
+
+lnd-bin-update: |\
+    lnd-bin-build
+	$(LND_MUST_BE_STOPPED)
+	@[ -x $(LND_STAGED_BIN)/lnd -a -x $(LND_STAGED_BIN)/lncli ] || { \
+		echo "ERROR: no freshly built lnd in $(LND_STAGED_BIN) - run 'make prepare-lnd-update' first"; false; \
+	}
+	mkdir -p $$GOPATH/bin && install -m 755 $(LND_STAGED_BIN)/lnd $(LND_STAGED_BIN)/lncli $$GOPATH/bin/
 	@touch lnd_install
 	@touch $@
 

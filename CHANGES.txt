@@ -15,14 +15,23 @@
     `-dumpfullversion`, so a system gcc that reports only its major number
     is compared correctly.
 
-  * Short downtime for a Bitcoin Core upgrade: the new optional target
-    `make bitcoin-core-build` (after `prepare-bitcoin-core-update`) builds
-    gcc if needed, the libraries and Bitcoin Core itself without installing
-    anything, so it can run while the old bitcoind is still working. After
-    that `make bitcoin-core-update` only installs the ready binaries - the
-    daemon has to be down for seconds instead of the whole build. The old
+  * Short downtime for an upgrade: the long builds no longer have to happen
+    while the daemons are down. Two new optional targets build everything
+    without replacing the installed binaries, so they can run while the old
+    daemons are still working:
+        make prepare-bitcoin-core-update bitcoin-core-build
+            gcc if needed, the libraries and Bitcoin Core itself
+        make prepare-lnd-update lnd-build
+            lnd/lncli, kept in a staging directory inside the lnd sources
+    After that `make bitcoin-core-update` / `make lnd-update-<network>` only
+    install the ready binaries - seconds instead of the whole build. The old
     way (stop, prepare, update) works as before. See README, "Upgrade LND &
     Bitcoin Core".
+
+  * lnd-update: the "You must to stop lnd before update" check now runs
+    BEFORE the lnd binaries are replaced. It used to run after them, so an
+    update started against a running lnd swapped the binary under it and
+    only then refused to continue.
 
   * libevent is no longer a Bitcoin Core dependency (still built for Tor).
 

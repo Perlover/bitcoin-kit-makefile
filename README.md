@@ -417,25 +417,25 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
     git pull
     ```
 
-    **Optional: a short downtime for a Bitcoin Core upgrade.** The long
-    part of it - a newer gcc if your system one is too old, the libraries
-    and the compilation itself - does not touch the installed binaries. So
-    you can do it right now, while the old `bitcoind` is still running:
+    **Optional: a short downtime.** The long part of an upgrade - a newer
+    gcc if your system one is too old, the libraries, the compilation of
+    Bitcoin Core and of LND - does not touch the installed binaries. So you
+    can do it right now, while the old daemons are still running:
 
     ```
+    # only Bitcoin Core:
     make prepare-bitcoin-core-update bitcoin-core-build
-    ```
-
-    or, if you upgrade LND too:
-
-    ```
-    make prepare-bitcoin-core-update prepare-lnd-update bitcoin-core-build
+    # only LND:
+    make prepare-lnd-update lnd-build
+    # both (use this single command, not the two above one after another):
+    make prepare-bitcoin-core-update prepare-lnd-update bitcoin-core-build lnd-build
     ```
 
     Then only the installation of the ready binaries (seconds) is left for
-    the downtime: in step 3 run `make bitcoin-core-update` **without** any
-    `prepare-*` target - a `prepare-*` target refreshes the submodules and
-    throws the prepared build away, so everything would be compiled again.
+    the downtime: in step 3 run just `make bitcoin-core-update` and/or
+    `make lnd-update-mainnet`, **without** the `prepare-*` targets. Every
+    `prepare-*` run refreshes the submodules and throws a prepared build
+    away, so it would be compiled again while the daemons are down.
 
 2.  To stop bitcoind and/or LND, for example for mainnet.
 
@@ -491,7 +491,7 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
     If upgrade LND for mainnet:
 
     ```
-    make prepare-lnd-update
+    make prepare-lnd-update            # NOT needed if you have built in advance (see step 1)
     # without a LND backup
     make lnd-update-mainnet
     # OR for backup of LND before:

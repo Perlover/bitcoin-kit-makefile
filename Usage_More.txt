@@ -20,7 +20,10 @@ make lnd-install
 
 UPDATE:
 
-Stop the daemons before updating (see README, "Upgrade LND & Bitcoin Core").
+Stop the daemons before the *-update targets (see README, "Upgrade LND &
+Bitcoin Core"). The long builds can be done in advance, while the daemons
+are still running, with bitcoin-core-build / lnd-build - then the daemons
+have to be down only for the installation of the ready binaries.
 lnd-update refuses to run while an lnd pid file of a running daemon exists.
 
 make prepare-bitcoin-core-update
@@ -41,9 +44,16 @@ make prepare-lnd-update
     'git pull' this repo + refresh the submodules, then drop the lnd update
     stamp files so lnd gets rebuilt.
 
+make lnd-build
+    Optional, for a short downtime: after prepare-lnd-update build lnd at
+    LND_ACTUAL_COMMIT WITHOUT replacing the installed binaries. Safe while
+    the old lnd is running. Then stop lnd and run 'make lnd-update-<net>' -
+    it only swaps the binaries.
+
 make lnd-update-mainnet
 make lnd-update-testnet
-    Rebuild & reinstall lnd at LND_ACTUAL_COMMIT, then refresh the
+    Rebuild (unless already built by lnd-build) & reinstall lnd at
+    LND_ACTUAL_COMMIT, then refresh the
     ~/bin/<net>-lnd-* scripts, the aliases and the macaroon/cert layout for
     that network.
     Prefix with LND_BACKUP=1 to get ~/lnd-backup-<epoch>-YYYY-MM-DD.tgz
@@ -52,7 +62,8 @@ make lnd-update-testnet
         LND_BACKUP=1 make lnd-update-mainnet
 
 make lnd-bin-update
-    Rebuild only the lnd binaries (no config/script/macaroon steps).
+    Rebuild (unless already built) and replace only the lnd binaries (no
+    config/script/macaroon steps). Refuses to run while lnd is running.
 
 PER-USER SYSTEMD UNITS (auto-start bitcoind & lnd at boot):
 
