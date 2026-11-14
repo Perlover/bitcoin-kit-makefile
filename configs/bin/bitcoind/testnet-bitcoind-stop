@@ -7,6 +7,28 @@ bitcoin_network=testnet
 pid_file=$HOME/.${bitcoin_network}-${service_name}.pid
 tcp_port=18333
 
+systemd_unit=${service_name}@${bitcoin_network}.service
+
+# If this bitcoind is managed by systemd, stop it the systemd way: the unit
+# waits for the daemon to really finish its shutdown, marks itself cleanly
+# inactive and handles the UPnP teardown. Falls through to the legacy path
+# on hosts without systemd or when bitcoind was launched by the wrapper.
+if command -v systemctl >/dev/null 2>&1 && \
+   systemctl --user is-active --quiet "$systemd_unit"; then
+    echo -n "The ${service_name} (${bitcoin_network}) is systemd-managed, stopping via 'systemctl --user stop $systemd_unit' ..."
+    if systemctl --user stop "$systemd_unit"; then
+	echo " OK"
+	exit 0
+    else
+	echo " ERROR: systemctl stop failed, falling back to the bitcoin-cli path"
+    fi
+fi
+
+if [ ! -f $pid_file ]; then
+    echo "ERROR: The ${service_name} (${bitcoin_network}) not run!"
+    exit 1
+fi
+
 if [ "$$BITCOIN_KIT_UPNP_SUPPORT$$" == "Yes" ]; then
     echo -n "UPnP Off (${service_name}/${bitcoin_network}) ..."
     {
@@ -19,7 +41,9 @@ pid=`cat $pid_file`
 bitcoin-cli -conf=$HOME/.bitcoin/bitcoin-${bitcoin_network}.conf stop
 
 echo -n "The ${service_name} (${bitcoin_network}) terminating ..."
-for i in {1..20}; do
+# `bitcoin-cli stop` only *asks* the daemon to stop. Flushing the chainstate
+# and the block index can take minutes on a big node - wait for it.
+for i in {1..600}; do
     kill -0 $pid &>/dev/null || break
     echo -n '.'
     sleep 1

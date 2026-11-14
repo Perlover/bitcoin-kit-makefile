@@ -1,21 +1,21 @@
 ifeq ($(GCC_MIN),FAIL)
-gcc_install_11_2_0_min: |\
+gcc_install_12_1_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_6_1_2_install\
     mpfr_4_1_0_install\
     mpc_1_1_0_install\
     isl_0_18_install\
-    gcc-11.2.0.tar.gz
-	tar xvzf gcc-11.2.0.tar.gz
-	cd gcc-11.2.0 && { \
+    gcc-12.4.0.tar.gz
+	tar xvzf gcc-12.4.0.tar.gz
+	cd gcc-12.4.0 && { \
 		./configure --prefix=$(BASE_INSTALL_DIR) $(CONFIGURE_VARS) --disable-multilib && $(MAKE_COMPILE) && $(MAKE) install && echo "The gcc was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	-rm -f $(BASE_INSTALL_DIR)/bin/cc
 	ln -s $(BASE_INSTALL_DIR)/bin/gcc $(BASE_INSTALL_DIR)/bin/cc
 	@touch $@
 else
-gcc_install_11_2_0_min: |\
+gcc_install_12_1_0_min: |\
     $(HOME)/.bitcoin_envs\
     autotools_install\
     gmp_6_1_2_install\
@@ -26,12 +26,12 @@ gcc_install_11_2_0_min: |\
 endif
 
 # gcc
-gcc-11.2.0.tar.gz:
-	$(WGET) http://ftp.gnu.org/gnu/gcc/gcc-11.2.0/$@
-	echo 'dc6886bd44bb49e2d3d662aed9729278  $@'|md5sum --check - || \
+gcc-12.4.0.tar.gz:
+	$(WGET) https://ftp.gnu.org/gnu/gcc/gcc-12.4.0/$@
+	echo '5a30de2be740062bb3ddd3fd13c9b1bb4584d8f85616d33f23a713439d714148  $@'|sha256sum --check - || \
 		{ \
 			mv $@ $@.bad.tar.gz &&\
-			echo "Bad gcc md5 sum"; false;\
+			echo "Bad gcc sha256 sum"; false;\
 		}
 
 # gmp

@@ -51,7 +51,9 @@ $(eval $(call COMPARE_VERSIONS,1,'autoconf --version',2.69,AUTOCONF_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'libtoolize --version',2.4.6,LIBTOOL_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'pkg-config --version',0.29,PKG_CONFIG_MIN))
 $(eval $(call COMPARE_VERSIONS,1,'ld --version',2.37,BINUTILS_MIN))
-$(eval $(call COMPARE_VERSIONS,2,'gcc -dumpversion',11.2.0,GCC_MIN))
+# -dumpfullversion: modern gcc prints only the major number for -dumpversion ("12"),
+# which would compare as older than 12.1.0
+$(eval $(call COMPARE_VERSIONS,2,'gcc -dumpfullversion -dumpversion',12.1.0,GCC_MIN))
 
 ifneq ($(MAKECMDGOALS),rsync)
 ifneq ($(MAKECMDGOALS),clean)
@@ -117,7 +119,7 @@ help-more:
 	@cat Usage_More.txt
 
 bitcoind-start:
-	nice -n 20 bitcoind -daemon -upnp=0 -maxconnections=500 -maxmempool=100 -mempoolexpiry=24
+	nice -n 20 bitcoind -daemon -maxconnections=500 -maxmempool=100 -mempoolexpiry=24
 	@echo "The bitcoind started"
 
 bitcoind-stop:

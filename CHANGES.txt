@@ -1,6 +1,33 @@
 2026-11-14
   * Update LND to v0.21.8
 
+  * Update Bitcoin Core to v32.1
+
+  * Fixed the Bitcoin Core build recipe: the -D options were passed to
+    `cmake --build` (which rejects them) instead of the configure step, so
+    `make bitcoin-core_install` could not succeed. Bitcoin Core is now
+    configured with ENABLE_IPC=OFF (no Cap'n Proto needed) and
+    BUILD_TESTS=OFF (faster build), and finds our Boost / ZeroMQ through
+    CMAKE_PREFIX_PATH.
+
+  * Bitcoin Core needs gcc >= 12.1 now: on hosts with an older system gcc
+    the kit builds gcc 12.4.0 (was 11.2.0). The gcc version check uses
+    `-dumpfullversion`, so a system gcc that reports only its major number
+    is compared correctly.
+
+  * libevent is no longer a Bitcoin Core dependency (still built for Tor).
+
+  * Config templates: dropped `upnp=0` (the option was removed in Bitcoin
+    Core v30 - bitcoind refuses to start with it) and the
+    limitancestor*/limitdescendant* lines (no effect / deprecated since the
+    cluster mempool of v31). EXISTING configs are not touched by an upgrade:
+    remove `upnp=0` from ~/.bitcoin/bitcoin-*.conf by hand before the first
+    start of the new bitcoind (see README, "Upgrade LND & Bitcoin Core").
+
+  * *-bitcoind-stop: stops a systemd-managed bitcoind through its unit
+    (like *-lnd-stop does) and waits up to 10 minutes for the daemon to
+    finish its shutdown instead of giving up after 20 seconds.
+
 2026-10-10
   * Update LND to v0.21.4
 

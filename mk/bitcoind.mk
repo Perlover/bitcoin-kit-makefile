@@ -1,36 +1,42 @@
-CMAKE_CONFIGURE_VARS += -DAPPEND_LDFLAGS:STRING="$(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))"
-CMAKE_CONFIGURE_VARS += -DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))"
+# Bitcoin Core (v32.x) needs: gcc >= 12.1, cmake >= 3.22, Boost >= 1.74.
+# libevent is not a dependency any more (since v32.0).
+#
+# The -D options belong to the *configure* step (cmake -B); `cmake --build`
+# does not accept them.
+#   ENABLE_IPC=OFF   - multiprocess binaries need Cap'n Proto, which we do not build
+#   BUILD_TESTS=OFF  - test_bitcoin & co. are not installed anyway, saves a lot of time
+#   CMAKE_PREFIX_PATH - lets cmake find our own Boost / ZeroMQ under $(BASE_INSTALL_DIR)
+BITCOIN_CORE_CMAKE_VARS = \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) \
+    -DCMAKE_PREFIX_PATH:PATH=$(BASE_INSTALL_DIR) \
+    -DAPPEND_LDFLAGS:STRING="-lrt $(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))" \
+    -DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))" \
+    -DENABLE_WALLET:BOOL=OFF \
+    -DENABLE_IPC:BOOL=OFF \
+    -DWITH_ZMQ:BOOL=ON \
+    -DBUILD_GUI:BOOL=OFF \
+    -DBUILD_TESTS:BOOL=OFF \
+    -DBUILD_BENCH:BOOL=OFF
 
 bitcoin-core_install: |\
     required_for_configure_install\
     cmake_3_31_install\
-    gcc_install_11_2_0_min\
+    gcc_install_12_1_0_min\
     binutils_install\
     boost_install\
     openssl_install\
-    libevent_install\
     zlib_install\
     zeromq_install\
     python39_install\
     miniupnpc_install
 	cd external/bitcoin-core && git checkout -f && git clean -fdx && { \
-		cmake -B build && \
-		cmake --build build \
-		-DAPPEND_LDFLAGS:STRING="-lrt $(patsubst %,-L%,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$LD_LIBRARY_PATH')))" \
-		-DAPPEND_CPPFLAGS:STRING="$(patsubst %,-isystem %,$(subst :, ,$(shell bash -c '. bitcoin_envs.sh; echo $$CPATH')))" \
-		-DCMAKE_INSTALL_PREFIX:PATH=$(BASE_INSTALL_DIR) \
-		-DENABLE_WALLET:BOOL=OFF \
-		-DWITH_ZMQ:BOOL=ON \
-		-DBUILD_GUI:BOOL=OFF \
-		-DWARN_INCOMPATIBLE_BDB=OFF \
-		-DWITH_SQLITE=OFF \
-		-j 4 && \
-                cmake --install build -j 4 && \
+		cmake -B build $(BITCOIN_CORE_CMAKE_VARS) && \
+		cmake --build build -j 4 && \
+		cmake --install build && \
 		echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
-
-#-DBoost_INCLUDE_DIR:PATH=$(BASE_INSTALL_DIR)
 
 MAKE_DIRS +=  $(CREDENTIALS_DIR)
 
@@ -41,7 +47,7 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
 	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
 prepare-bitcoin-core-update: this_repo_update
-	-rm -f bitcoin-core_install zeromq_install openssl_install libevent_install binutils_install boost_install
+	-rm -f bitcoin-core_install zeromq_install openssl_install binutils_install boost_install
 
 bitcoin-core-update:
 	$(MAKE) bitcoin-core_install

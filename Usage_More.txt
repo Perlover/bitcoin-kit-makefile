@@ -10,7 +10,7 @@ INSTALL (single components - 'make i-want-lightning' does all of it at once):
 
 make bitcoin-core_install
     Build & install Bitcoin Core from the external/bitcoin-core submodule
-    (with all its dependencies: gcc, binutils, boost, openssl, libevent,
+    (with all its dependencies: gcc, binutils, boost, openssl,
     zeromq, python3, miniupnpc, cmake).
     Version: whatever external/bitcoin-core is checked out at.
 

@@ -21,7 +21,7 @@ THE MOST FRESH: bitcoind + lnd programs
 And the necessary fresh accompanying equipment for compilation before (will be
 compiled from sources too):
 
-gcc 11.2, binutils, cmake, python 2 & python 3, required fresh some libs
+gcc 12, binutils, cmake, python 2 & python 3, required fresh some libs
 (libevent, openssl, boost, sqlite3, zeromq, miniupnpc), golang, nodeJS
 
 This makefile also additionally contains some targets but are yet not documented: ElectrumX server
