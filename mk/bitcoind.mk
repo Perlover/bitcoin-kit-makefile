@@ -33,6 +33,13 @@ BITCOIN_CORE_BUILD_JOBS = $(filter -j%,$(MAKE_COMPILE))
 #
 # `this_repo_update` (mk/common.mk) wipes the submodule work trees, the build
 # directory included - that is why it also drops the bitcoin-core_build stamp.
+#
+# bitcoin-core_install deliberately has NO prerequisites and calls the build
+# through a sub-make instead. Many other targets reach bitcoin-core_install
+# through their order-only prerequisites (configs, wrapper scripts, lnd-update):
+# as a prerequisite, a missing bitcoin-core_build or compiler stamp would make
+# them rebuild gcc and Bitcoin Core on a host where Bitcoin Core is already
+# installed.
 bitcoin-core_build: |\
     required_for_configure_install\
     cmake_3_31_install\
@@ -51,7 +58,8 @@ bitcoin-core_build: |\
 	} &> make_out.txt && tail make_out.txt
 	@touch $@
 
-bitcoin-core_install: | bitcoin-core_build
+bitcoin-core_install:
+	$(MAKE) bitcoin-core_build
 	@[ -d external/bitcoin-core/build ] || { \
 		echo "ERROR: external/bitcoin-core/build does not exist - run 'make prepare-bitcoin-core-update' first"; false; \
 	}

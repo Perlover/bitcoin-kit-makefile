@@ -82,8 +82,11 @@ lnd-bin-build: |\
 	$(MAKE) clean && $(MAKE) && GOBIN=$(LND_STAGED_BIN) $(MAKE) install tags="autopilotrpc signrpc walletrpc chainrpc invoicesrpc routerrpc watchtowerrpc wtclientrpc monitoring peersrpc"
 	@touch $@
 
-lnd-bin-update: |\
-    lnd-bin-build
+# No prerequisites here on purpose, the build is called through a sub-make: as
+# a prerequisite, a missing lnd-bin-build stamp would rebuild lnd on a host
+# updated before this split whenever something reaches lnd-bin-update.
+lnd-bin-update:
+	$(MAKE) lnd-bin-build
 	$(LND_MUST_BE_STOPPED)
 	@[ -x $(LND_STAGED_BIN)/lnd -a -x $(LND_STAGED_BIN)/lncli ] || { \
 		echo "ERROR: no freshly built lnd in $(LND_STAGED_BIN) - run 'make prepare-lnd-update' first"; false; \
