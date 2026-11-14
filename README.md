@@ -445,19 +445,20 @@ If you have installed old LND and/or Bitcoin Core by this repository this makefi
     make bitcoin-core-update
     ```
 
-    **Upgrading Bitcoin Core from a version older than v30?** Check your
-    existing `~/.bitcoin/bitcoin-mainnet.conf` (and `bitcoin-testnet.conf`)
-    **before** the first start of the new `bitcoind` - the upgrade never
-    overwrites your configs:
+    **Upgrading Bitcoin Core from a version older than v30?** The upgrade
+    never overwrites your existing `~/.bitcoin/bitcoin-mainnet.conf` /
+    `bitcoin-testnet.conf`, and configs made by older versions of this
+    repository carry a few lines the new `bitcoind` no longer knows. It
+    still starts with them, but each start logs a warning - better to
+    remove them:
 
-    * `upnp=0` (or any `upnp=...`) **must be removed**: the option does not
-      exist since Bitcoin Core v30 and `bitcoind` refuses to start with
-      `Invalid configuration value upnp`. Old configs made by this
-      repository do have this line.
-    * `limitancestorsize=...` / `limitdescendantsize=...` have no effect
-      since v31 (cluster mempool) and only produce a warning;
-      `limitancestorcount=...` / `limitdescendantcount=...` are deprecated.
-      Better to remove all four.
+    * `upnp=0` - the option does not exist since Bitcoin Core v30
+      (`Ignoring unknown configuration value upnp` in `debug.log`). Note
+      that the same option on the *command line* (`-upnp=0`) is a hard
+      error.
+    * `limitancestorsize=...` / `limitdescendantsize=...` - no effect since
+      v31 (cluster mempool); `limitancestorcount=...` /
+      `limitdescendantcount=...` are deprecated.
 
     Bitcoin Core v32 also needs gcc 12.1 or newer. If the system gcc is
     older, `make bitcoin-core-update` builds gcc 12.4.0 into `$HOME` first -
