@@ -22,6 +22,7 @@ make set-up-lightning-testnet
 
 # Upgrade flow (run after `git pull`)
 make prepare-bitcoin-core-update prepare-lnd-update
+make bitcoin-core-build                                      # optional: build Bitcoin Core while the old daemons still run
 LND_BACKUP=1 make bitcoin-core-update lnd-update-mainnet     # LND_BACKUP=1 → ~/lnd-backup-<epoch>-YYYY-MM-DD.tgz
 make lnd-update-testnet
 
@@ -66,6 +67,7 @@ A Bitcoin Core bump (currently v32.1) is more than the submodule SHA — check `
 
 - **Minimum gcc.** The `COMPARE_VERSIONS … GCC_MIN` line in `Makefile` and the gcc tarball + stamp name in `mk/gcc.mk` (`gcc_install_12_1_0_min`, referenced by `mk/bitcoind.mk` and `mk/tor.mk`). The stamp name carries the minimum version on purpose: renaming it is what forces hosts with an older kit-built gcc to rebuild.
 - **CMake options** live in `BITCOIN_CORE_CMAKE_VARS` (`mk/bitcoind.mk`) and go to the *configure* step (`cmake -B`); `cmake --build` rejects `-D…`. `ENABLE_IPC=OFF` is required because the kit does not build Cap'n Proto.
+- **Build/install split.** `bitcoin-core_build` (compiler, libs, compilation — safe under a running daemon) and `bitcoin-core_install` (`cmake --install` only) are separate stamps so an upgrade needs seconds of downtime. `this_repo_update` wipes the submodule work trees and therefore drops the `bitcoin-core_build` stamp; keep that pairing if either side changes.
 - **Removed daemon options.** Compare `configs/bitcoind/*.conf` and any `bitcoind` command lines with the release notes. An unknown option in a config *file* is only a warning, on the command line it is a hard error.
 
 ## Architecture
@@ -132,7 +134,7 @@ Aliases installed via `configs/aliases.sh`: `l`/`lt` = mainnet/testnet `lncli` w
 ## Conventions when modifying the build
 
 - **No root in build recipes.** Only `iptables_install` / `bitcoin_iptables_install` need root, and they're invoked separately. Everything else must work as the `bitcoin` user.
-- **Stamp files** (e.g. `lnd_install`, `bitcoin-core_install`, `required_for_configure_install`) are empty marker files in the repo root used as Make targets. `prepare-*-update` removes the relevant stamps to force rebuilds. Don't `.gitignore` patterns that would track these — `.gitignore` is the source of truth for what's allowed to appear.
+- **Stamp files** (e.g. `lnd_install`, `bitcoin-core_build`, `bitcoin-core_install`, `required_for_configure_install`) are empty marker files in the repo root used as Make targets. `prepare-*-update` removes the relevant stamps to force rebuilds. Don't `.gitignore` patterns that would track these — `.gitignore` is the source of truth for what's allowed to appear.
 - **Configs are templated, not generated.** When changing a runtime config or a wrapper script, edit `configs/...` and the matching `sed` rule in `mk/*.mk` if a new `$$VAR$$` is introduced. Never edit files in `build/` or `~/`.
 - **Existing user configs are preserved.** Install rules for `~/.bitcoin/*.conf` and `~/.lnd/*.conf` write `<name>.new.conf` instead of overwriting — keep this behavior on any new config.
 - **`CHANGES.txt` is the changelog.** Update it when bumping `LND_ACTUAL_COMMIT`, Bitcoin Core, Go, or other pinned components, mirroring the existing `YYYY-MM-DD` format.

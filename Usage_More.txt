@@ -27,8 +27,15 @@ make prepare-bitcoin-core-update
     'git pull' this repo + refresh the submodules, then drop the stamp files
     of bitcoin-core and its libs so they get rebuilt.
 
+make bitcoin-core-build
+    Optional, for a short downtime: after prepare-bitcoin-core-update build
+    everything (gcc if needed, libs, Bitcoin Core) WITHOUT installing it.
+    Safe while the old bitcoind is running. Then stop bitcoind and run
+    'make bitcoin-core-update' - it only installs the ready binaries.
+
 make bitcoin-core-update
-    Rebuild & reinstall Bitcoin Core after prepare-bitcoin-core-update.
+    Rebuild (unless already built by bitcoin-core-build) & reinstall
+    Bitcoin Core after prepare-bitcoin-core-update.
 
 make prepare-lnd-update
     'git pull' this repo + refresh the submodules, then drop the lnd update

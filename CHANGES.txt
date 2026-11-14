@@ -15,6 +15,15 @@
     `-dumpfullversion`, so a system gcc that reports only its major number
     is compared correctly.
 
+  * Short downtime for a Bitcoin Core upgrade: the new optional target
+    `make bitcoin-core-build` (after `prepare-bitcoin-core-update`) builds
+    gcc if needed, the libraries and Bitcoin Core itself without installing
+    anything, so it can run while the old bitcoind is still working. After
+    that `make bitcoin-core-update` only installs the ready binaries - the
+    daemon has to be down for seconds instead of the whole build. The old
+    way (stop, prepare, update) works as before. See README, "Upgrade LND &
+    Bitcoin Core".
+
   * libevent is no longer a Bitcoin Core dependency (still built for Tor).
 
   * Config templates: dropped `upnp=0` (the option was removed in Bitcoin

@@ -13,7 +13,11 @@ git_submodule_install: .gitmodules
 	git submodule update --init --recursive
 	@touch $@
 
+# The submodule work trees are wiped below (build directories included), so a
+# Bitcoin Core tree built by `make bitcoin-core-build` is gone after this -
+# drop its stamp to get it rebuilt.
 this_repo_update:
+	-rm -f bitcoin-core_build
 	git pull
 	git submodule deinit -f --all
 	git submodule foreach --recursive 'git reset --hard HEAD && git clean -fdx'

@@ -23,7 +23,17 @@ BITCOIN_CORE_CMAKE_VARS = \
 # single-CPU host
 BITCOIN_CORE_BUILD_JOBS = $(filter -j%,$(MAKE_COMPILE))
 
-bitcoin-core_install: |\
+# The build is split in two stamps so that an upgrade needs only a short downtime:
+#
+#   bitcoin-core_build   - everything that takes long: the compiler, the libraries and
+#                          the compilation itself. It does not touch the installed
+#                          bitcoind, so it is safe to run while the old daemon works.
+#   bitcoin-core_install - `cmake --install` only: a matter of seconds, to be done
+#                          when the daemon is stopped.
+#
+# `this_repo_update` (mk/common.mk) wipes the submodule work trees, the build
+# directory included - that is why it also drops the bitcoin-core_build stamp.
+bitcoin-core_build: |\
     required_for_configure_install\
     cmake_3_31_install\
     gcc_install_12_1_0_min\
@@ -37,9 +47,15 @@ bitcoin-core_install: |\
 	cd external/bitcoin-core && git checkout -f && git clean -fdx && { \
 		cmake -B build $(BITCOIN_CORE_CMAKE_VARS) && \
 		cmake --build build $(BITCOIN_CORE_BUILD_JOBS) && \
-		cmake --install build && \
-		echo "The bitcoin-core was installed - OK"; \
+		echo "The bitcoin-core was built - OK"; \
 	} &> make_out.txt && tail make_out.txt
+	@touch $@
+
+bitcoin-core_install: | bitcoin-core_build
+	@[ -d external/bitcoin-core/build ] || { \
+		echo "ERROR: external/bitcoin-core/build does not exist - run 'make prepare-bitcoin-core-update' first"; false; \
+	}
+	cd external/bitcoin-core && cmake --install build && echo "The bitcoin-core was installed - OK"
 	@touch $@
 
 MAKE_DIRS +=  $(CREDENTIALS_DIR)
@@ -51,7 +67,13 @@ $(CREDENTIALS_DIR)/bitcoind-lnd-mainnet-auth.txt: |\
 	cd external/bitcoin-core && umask 077 && LANG=C ./share/rpcauth/rpcauth.py lnd >$@
 
 prepare-bitcoin-core-update: this_repo_update
-	-rm -f bitcoin-core_install zeromq_install openssl_install binutils_install boost_install
+	-rm -f bitcoin-core_build bitcoin-core_install zeromq_install openssl_install binutils_install boost_install
+
+# Optional step of an upgrade: build everything while the old bitcoind is
+# still running, then stop it and run `make bitcoin-core-update`, which only
+# has to install the ready binaries.
+bitcoin-core-build:
+	$(MAKE) bitcoin-core_build
 
 bitcoin-core-update:
 	$(MAKE) bitcoin-core_install

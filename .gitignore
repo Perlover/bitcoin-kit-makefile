@@ -19,6 +19,7 @@
 /electrumx
 *.tar.gz
 /*_install
+/*_build
 /*_download
 /*_update
 /*-update
