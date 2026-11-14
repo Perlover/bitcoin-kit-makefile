@@ -19,6 +19,10 @@ BITCOIN_CORE_CMAKE_VARS = \
     -DBUILD_TESTS:BOOL=OFF \
     -DBUILD_BENCH:BOOL=OFF
 
+# The same parallelism as $(MAKE_COMPILE) uses: -j<CPUs - 1>, or nothing on a
+# single-CPU host
+BITCOIN_CORE_BUILD_JOBS = $(filter -j%,$(MAKE_COMPILE))
+
 bitcoin-core_install: |\
     required_for_configure_install\
     cmake_3_31_install\
@@ -32,7 +36,7 @@ bitcoin-core_install: |\
     miniupnpc_install
 	cd external/bitcoin-core && git checkout -f && git clean -fdx && { \
 		cmake -B build $(BITCOIN_CORE_CMAKE_VARS) && \
-		cmake --build build -j 4 && \
+		cmake --build build $(BITCOIN_CORE_BUILD_JOBS) && \
 		cmake --install build && \
 		echo "The bitcoin-core was installed - OK"; \
 	} &> make_out.txt && tail make_out.txt
